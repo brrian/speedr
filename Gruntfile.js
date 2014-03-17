@@ -94,7 +94,7 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.app %>/scripts',
+                    cwd: '<%= yeoman.app %>/scripts/coffee',
                     src: '{,*/}*.coffee',
                     // dest: '.tmp/scripts',
                     dest: '<%= yeoman.app %>/scripts',
@@ -113,7 +113,7 @@ module.exports = function (grunt) {
         },
         compass: {
             options: {
-                sassDir: '<%= yeoman.app %>/styles',
+                sassDir: '<%= yeoman.app %>/styles/sass',
                 // cssDir: '.tmp/styles',
                 cssDir: '<%= yeoman.app %>/styles',
                 generatedImagesDir: '.tmp/images/generated',

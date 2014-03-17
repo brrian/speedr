@@ -1,11 +1,5 @@
-@import 'animations';
-@import 'utility';
-
-body {
-    background: #fafafa;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #333;
-}
+@import 'speedr/animations';
+@import 'speedr/utility';
 
 * [class^='speedr'] {
     box-sizing: border-box;
