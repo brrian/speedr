@@ -34,9 +34,11 @@ User = {
 		'r': 'reset'
 		'&': 'bigger'
 		'(': 'smaller'
-		'%': 'prev sentence'
-		'\'': 'next sentence'
+		'%': 'prev word'
+		'shift+%': 'prev sentence'
 		'ctrl+%': 'prev paragraph'
+		'\'': 'next word'
+		'shift+\'': 'next sentence'
 		'ctrl+\'': 'next paragraph'
 	}
 }
@@ -156,15 +158,19 @@ window.App = {
 			player.className = 'speedr-player'
 
 			# Player buttons
-			buttons = ['prev-paragraph', 'prev-sentence', 'play-pause', 'next-sentence', 'next-paragraph']
+			buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph']
 			for button in buttons
 				switch button
 					when 'prev-paragraph'
 						elementFunction = App.actions.prevParagraph
 					when 'prev-sentence'
 						elementFunction = App.actions.prevSentence
+					when 'prev-word'
+						elementFunction = App.actions.prevWord
 					when 'play-pause'
 						elementFunction = App.speedr.loop.toggle
+					when 'next-word'
+						elementFunction = App.actions.nextWord
 					when 'next-sentence'
 						elementFunction = App.actions.nextSentence
 					when 'next-paragraph'
@@ -177,6 +183,9 @@ window.App = {
 				if button is 'play-pause' then element.id = 'js-play-pause'
 
 				player.appendChild(element)
+
+				# Add whitespace after the element, otherwise the spacing will be off
+				player.appendChild(document.createTextNode('\x20'))
 
 			# WPM display
 			wpm = document.createElement('div')
@@ -249,6 +258,9 @@ window.App = {
 				App.pause = true
 				clearTimeout(App.loop)
 				document.getElementById('js-play-pause').className = 'play-pause button'
+
+				# Correct the counter
+				App.i--
 
 				App.actions.getWordCount()
 
@@ -401,6 +413,31 @@ window.App = {
 
 			App.chrome.saveSettings()
 
+		prevWord: ->
+			i = App.i
+
+			return if i is 0
+
+			App.speedr.showWord(App.i = i - 1)
+
+			if User.settings.minimap
+				App.minimap.update()
+				if App.scrollWatcher then App.minimap.updateScroll()
+
+		prevSentence: ->
+			i = App.i
+
+			return if i is 0
+
+			App.i = if i is App.text[i].sentenceStart then App.text[i - 1].sentenceStart else App.text[i].sentenceStart
+			App.speedr.showWord()
+
+			App.wordCount = App.i
+
+			if User.settings.minimap
+				App.minimap.update()
+				if App.scrollWatcher then App.minimap.updateScroll()
+
 		prevParagraph: ->
 			i = App.i
 
@@ -415,13 +452,12 @@ window.App = {
 				App.minimap.update()
 				if App.scrollWatcher then App.minimap.updateScroll()
 
-		prevSentence: ->
+		nextWord: ->
 			i = App.i
 
-			return if i is 0
+			return if i is App.text.length - 1
 
-			App.i = if i is App.text[i].sentenceStart then App.text[i - 1].sentenceStart else App.text[i].sentenceStart
-			App.speedr.showWord()
+			App.speedr.showWord(App.i = i + 1)
 
 			App.wordCount = App.i
 
@@ -537,17 +573,25 @@ window.onkeydown = (event) ->
 			if App.active
 				App.speedr.loop.reset()
 				false
+		when 'prev word'
+			if App.active
+				App.actions.prevWord()
+				false
 		when 'prev sentence'
 			if App.active
 				App.actions.prevSentence()
 				false
-		when 'next sentence'
-			if App.active
-				App.actions.nextSentence()
-				false
 		when 'prev paragraph'
 			if App.active
 				App.actions.prevParagraph()
+				false
+		when 'next word'
+			if App.active
+				App.actions.nextWord()
+				false
+		when 'next sentence'
+			if App.active
+				App.actions.nextSentence()
 				false
 		when 'next paragraph'
 			if App.active

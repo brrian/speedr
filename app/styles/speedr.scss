@@ -1,6 +1,12 @@
 @import 'animations';
 @import 'utility';
 
+body {
+    background: #fafafa;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
 * [class^='speedr'] {
     box-sizing: border-box;
 }
@@ -119,19 +125,26 @@
     .speedr-player {
         position: absolute;
         right: 0;
-        bottom: 6px;
+        bottom: 12px;
         left: 0;
-        display: table;
-        table-layout: fixed;
         margin: auto;
-        width: 200px;
-        text-align: center;
+        width: 220px;
+        text-align: justify;
+        font-size: 0;
+
+        &:after {
+            content: '';
+            width: 100%;
+            display: inline-block;
+        }
 
         .button {
-            display: table-cell;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding: 5px;
+            display: inline-block;
+            background-image: url('chrome-extension://__MSG_@@extension_id__/images/triangle.svg');
+            background-size: 10px;
+            background-position: 0;
+            background-repeat: repeat-x;
+            height: 12px;
             opacity: .2;
             transition: opacity 200ms ease-in;
 
@@ -142,28 +155,29 @@
 
         .play-pause {
             position: relative;
-            background-image: url('../images/big-triangle.svg');
-            height: 14px;
-            width: 12px;
+            top: 2px;
+            background-size: 14px;
+            height: 16px;
+            width: 14px;
 
             &.pause {
-                background-image: url('../images/double-bar.svg');
+                background-image: url('chrome-extension://__MSG_@@extension_id__/images/double-bar.svg');
             }
         }
 
+        .next-word, .prev-word {
+            width: 10px;
+        }
+
         .next-sentence, .prev-sentence {
-            background-image: url('../images/double-triangle.svg');
-            height: 10px;
-            width: 16px;
+            width: 20px;
         }
 
         .next-paragraph, .prev-paragraph {
-            background-image: url('../images/triple-triangle.svg');
-            height: 10px;
-            width: 24px;
+            width: 30px;
         }
 
-        .prev-sentence, .prev-paragraph {
+        .prev-word, .prev-sentence, .prev-paragraph {
             transform: rotate(180deg);
         }
     }

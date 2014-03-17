@@ -35,9 +35,11 @@
       'r': 'reset',
       '&': 'bigger',
       '(': 'smaller',
-      '%': 'prev sentence',
-      '\'': 'next sentence',
+      '%': 'prev word',
+      'shift+%': 'prev sentence',
       'ctrl+%': 'prev paragraph',
+      '\'': 'next word',
+      'shift+\'': 'next sentence',
       'ctrl+\'': 'next paragraph'
     }
   };
@@ -153,7 +155,7 @@
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
         player = document.createElement('div');
         player.className = 'speedr-player';
-        buttons = ['prev-paragraph', 'prev-sentence', 'play-pause', 'next-sentence', 'next-paragraph'];
+        buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph'];
         for (_i = 0, _len = buttons.length; _i < _len; _i++) {
           button = buttons[_i];
           switch (button) {
@@ -163,8 +165,14 @@
             case 'prev-sentence':
               elementFunction = App.actions.prevSentence;
               break;
+            case 'prev-word':
+              elementFunction = App.actions.prevWord;
+              break;
             case 'play-pause':
               elementFunction = App.speedr.loop.toggle;
+              break;
+            case 'next-word':
+              elementFunction = App.actions.nextWord;
               break;
             case 'next-sentence':
               elementFunction = App.actions.nextSentence;
@@ -179,6 +187,7 @@
             element.id = 'js-play-pause';
           }
           player.appendChild(element);
+          player.appendChild(document.createTextNode('\x20'));
         }
         wpm = document.createElement('div');
         wpm.id = 'js-speedr-wpm';
@@ -241,6 +250,7 @@
           App.pause = true;
           clearTimeout(App.loop);
           document.getElementById('js-play-pause').className = 'play-pause button';
+          App.i--;
           App.actions.getWordCount();
           if (App.scrollWatcher) {
             return clearTimeout(App.scrollWatcher);
@@ -393,6 +403,36 @@
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
         return App.chrome.saveSettings();
       },
+      prevWord: function() {
+        var i;
+        i = App.i;
+        if (i === 0) {
+          return;
+        }
+        App.speedr.showWord(App.i = i - 1);
+        if (User.settings.minimap) {
+          App.minimap.update();
+          if (App.scrollWatcher) {
+            return App.minimap.updateScroll();
+          }
+        }
+      },
+      prevSentence: function() {
+        var i;
+        i = App.i;
+        if (i === 0) {
+          return;
+        }
+        App.i = i === App.text[i].sentenceStart ? App.text[i - 1].sentenceStart : App.text[i].sentenceStart;
+        App.speedr.showWord();
+        App.wordCount = App.i;
+        if (User.settings.minimap) {
+          App.minimap.update();
+          if (App.scrollWatcher) {
+            return App.minimap.updateScroll();
+          }
+        }
+      },
       prevParagraph: function() {
         var i;
         i = App.i;
@@ -409,14 +449,13 @@
           }
         }
       },
-      prevSentence: function() {
+      nextWord: function() {
         var i;
         i = App.i;
-        if (i === 0) {
+        if (i === App.text.length - 1) {
           return;
         }
-        App.i = i === App.text[i].sentenceStart ? App.text[i - 1].sentenceStart : App.text[i].sentenceStart;
-        App.speedr.showWord();
+        App.speedr.showWord(App.i = i + 1);
         App.wordCount = App.i;
         if (User.settings.minimap) {
           App.minimap.update();
@@ -556,21 +595,33 @@
           return false;
         }
         break;
+      case 'prev word':
+        if (App.active) {
+          App.actions.prevWord();
+          return false;
+        }
+        break;
       case 'prev sentence':
         if (App.active) {
           App.actions.prevSentence();
           return false;
         }
         break;
-      case 'next sentence':
-        if (App.active) {
-          App.actions.nextSentence();
-          return false;
-        }
-        break;
       case 'prev paragraph':
         if (App.active) {
           App.actions.prevParagraph();
+          return false;
+        }
+        break;
+      case 'next word':
+        if (App.active) {
+          App.actions.nextWord();
+          return false;
+        }
+        break;
+      case 'next sentence':
+        if (App.active) {
+          App.actions.nextSentence();
           return false;
         }
         break;
