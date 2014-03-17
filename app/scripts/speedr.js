@@ -383,13 +383,15 @@
       changeWPM: function(wpm) {
         User.settings.wpm = User.settings.wpm + wpm;
         this.calculateInterval();
-        return this.updateWPM();
+        this.updateWPM();
+        return App.chrome.saveSettings();
       },
       changeFontSize: function(px) {
         var wordContainer;
         User.settings.fontSize = User.settings.fontSize + px;
         wordContainer = document.getElementById('js-speedr-word');
-        return wordContainer.style.fontSize = User.settings.fontSize + 'px';
+        wordContainer.style.fontSize = User.settings.fontSize + 'px';
+        return App.chrome.saveSettings();
       },
       prevParagraph: function() {
         var i;
@@ -482,6 +484,23 @@
         count = App.i - App.wordCount;
         return App.wordCount = App.i;
       }
+    },
+    chrome: {
+      getSettings: function() {
+        return chrome.storage.sync.get(function(data) {
+          if (data.settings) {
+            User.settings = data.settings;
+            return App.actions.calculateInterval();
+          }
+        });
+      },
+      saveSettings: function() {
+        return chrome.storage.sync.set(User);
+      }
+    },
+    init: function() {
+      App.speedr.reset();
+      return App.chrome.getSettings();
     }
   };
 
@@ -562,6 +581,6 @@
     }
   };
 
-  App.speedr.reset();
+  App.init();
 
 }).call(this);
