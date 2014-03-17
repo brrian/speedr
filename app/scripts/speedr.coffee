@@ -177,7 +177,7 @@ window.App = {
 						elementFunction = App.actions.nextParagraph
 
 				element = document.createElement('span')
-				element.className = button + ' button'
+				element.className = button + ' speedr-button'
 				element.addEventListener('click', elementFunction, false)
 
 				if button is 'play-pause' then element.id = 'js-play-pause'
@@ -257,7 +257,7 @@ window.App = {
 			stop: ->
 				App.pause = true
 				clearTimeout(App.loop)
-				document.getElementById('js-play-pause').className = 'play-pause button'
+				document.getElementById('js-play-pause').className = 'play-pause speedr-button'
 
 				# Correct the counter
 				App.i--
@@ -272,7 +272,7 @@ window.App = {
 
 				App.pause = false
 				App.loop = @.create()
-				document.getElementById('js-play-pause').className = 'play-pause pause button'
+				document.getElementById('js-play-pause').className = 'play-pause pause speedr-button'
 				if App.scrollWatcher then App.minimap.scrollWatcher()
 
 			reset: ->
@@ -530,8 +530,7 @@ window.App = {
 							App.actions.calculateInterval()
 				)
 			save: ->
-				saveSettings: ->
-					chrome.storage.sync.set(User)
+				chrome.storage.sync.set(User)
 		}
 		wordCount: {
 			save: (count) ->

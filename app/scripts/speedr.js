@@ -181,7 +181,7 @@
               elementFunction = App.actions.nextParagraph;
           }
           element = document.createElement('span');
-          element.className = button + ' button';
+          element.className = button + ' speedr-button';
           element.addEventListener('click', elementFunction, false);
           if (button === 'play-pause') {
             element.id = 'js-play-pause';
@@ -249,7 +249,7 @@
         stop: function() {
           App.pause = true;
           clearTimeout(App.loop);
-          document.getElementById('js-play-pause').className = 'play-pause button';
+          document.getElementById('js-play-pause').className = 'play-pause speedr-button';
           App.i--;
           App.actions.getWordCount();
           if (App.scrollWatcher) {
@@ -262,7 +262,7 @@
           }
           App.pause = false;
           App.loop = this.create();
-          document.getElementById('js-play-pause').className = 'play-pause pause button';
+          document.getElementById('js-play-pause').className = 'play-pause pause speedr-button';
           if (App.scrollWatcher) {
             return App.minimap.scrollWatcher();
           }
@@ -536,11 +536,7 @@
           });
         },
         save: function() {
-          return {
-            saveSettings: function() {
-              return chrome.storage.sync.set(User);
-            }
-          };
+          return chrome.storage.sync.set(User);
         }
       },
       wordCount: {

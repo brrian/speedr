@@ -42,6 +42,7 @@ body {
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
         transform: translateY(-50%);
+        line-height: 1.4em;
 
         &:before {
             @include triangle(12px, #ccc, down);
@@ -129,6 +130,7 @@ body {
         left: 0;
         margin: auto;
         width: 220px;
+        height: 20px;
         text-align: justify;
         font-size: 0;
 
@@ -138,7 +140,7 @@ body {
             display: inline-block;
         }
 
-        .button {
+        .speedr-button {
             display: inline-block;
             background-image: url('chrome-extension://__MSG_@@extension_id__/images/triangle.svg');
             background-size: 10px;
