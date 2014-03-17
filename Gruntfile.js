@@ -39,7 +39,7 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass:server']
+                tasks: ['compass:server', 'autoprefixer']
             }
         },
         connect: {
@@ -96,7 +96,8 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>/scripts',
                     src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
+                    // dest: '.tmp/scripts',
+                    dest: '<%= yeoman.app %>/scripts',
                     ext: '.js'
                 }]
             },
@@ -113,7 +114,8 @@ module.exports = function (grunt) {
         compass: {
             options: {
                 sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
+                // cssDir: '.tmp/styles',
+                cssDir: '<%= yeoman.app %>/styles',
                 generatedImagesDir: '.tmp/images/generated',
                 imagesDir: '<%= yeoman.app %>/images',
                 javascriptsDir: '<%= yeoman.app %>/scripts',
@@ -127,7 +129,24 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     debugInfo: true
+                },
+                server: {
+                    expand: true,
+                    src: '.tmp/styles/**/*.css'
                 }
+            }
+        },
+        autoprefixer: {
+            options: {
+                browsers: ['last 2 versions']
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles',
+                    src: '{,*/}*.css',
+                    dest: '<%= yeoman.app %>/styles'
+                }]
             }
         },
         // not used since Uglify task does concat,
@@ -179,12 +198,12 @@ module.exports = function (grunt) {
         },
         cssmin: {
             dist: {
-                files: {
-                    '<%= yeoman.dist %>/styles/main.css': [
-                        '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css'
-                    ]
-                }
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles',
+                    src: '**/*.css',
+                    dest: '<%= yeoman.dist %>/styles'
+                }]
             }
         },
         htmlmin: {
@@ -287,6 +306,7 @@ module.exports = function (grunt) {
         'chromeManifest:dist',
         'useminPrepare',
         'concurrent:dist',
+        'autoprefixer',
         'cssmin',
         'concat',
         'uglify',
