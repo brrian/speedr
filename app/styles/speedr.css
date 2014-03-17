@@ -1,0 +1,390 @@
+@-webkit-keyframes fade-in {
+  /* line 2, _animations.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 5, _animations.scss */
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  /* line 2, _animations.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 5, _animations.scss */
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fade-out {
+  /* line 11, _animations.scss */
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  /* line 11, _animations.scss */
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes flip-in {
+  /* line 17, _animations.scss */
+  0% {
+    -webkit-transform: perspective(400) rotateX(90deg);
+    transform: perspective(400) rotateX(90deg);
+    opacity: 0;
+  }
+
+  /* line 21, _animations.scss */
+  60% {
+    -webkit-transform: perspective(400) rotateX(-5deg);
+    transform: perspective(400) rotateX(-5deg);
+    opacity: 1;
+  }
+
+  /* line 25, _animations.scss */
+  80% {
+    -webkit-transform: perspective(400) rotateX(5deg);
+    transform: perspective(400) rotateX(5deg);
+  }
+
+  /* line 28, _animations.scss */
+  100% {
+    -webkit-transform: perspective(400) rotateX(0);
+    transform: perspective(400) rotateX(0);
+  }
+}
+@keyframes flip-in {
+  /* line 17, _animations.scss */
+  0% {
+    -webkit-transform: perspective(400) rotateX(90deg);
+    transform: perspective(400) rotateX(90deg);
+    opacity: 0;
+  }
+
+  /* line 21, _animations.scss */
+  60% {
+    -webkit-transform: perspective(400) rotateX(-5deg);
+    transform: perspective(400) rotateX(-5deg);
+    opacity: 1;
+  }
+
+  /* line 25, _animations.scss */
+  80% {
+    -webkit-transform: perspective(400) rotateX(5deg);
+    transform: perspective(400) rotateX(5deg);
+  }
+
+  /* line 28, _animations.scss */
+  100% {
+    -webkit-transform: perspective(400) rotateX(0);
+    transform: perspective(400) rotateX(0);
+  }
+}
+@-webkit-keyframes flip-out {
+  /* line 34, _animations.scss */
+  0% {
+    -webkit-transform: perspective(400) rotateX(0);
+    transform: perspective(400) rotateX(0);
+  }
+
+  /* line 37, _animations.scss */
+  100% {
+    -webkit-transform: perspective(400) rotateX(90deg);
+    transform: perspective(400) rotateX(90deg);
+    opacity: 0;
+  }
+}
+@keyframes flip-out {
+  /* line 34, _animations.scss */
+  0% {
+    -webkit-transform: perspective(400) rotateX(0);
+    transform: perspective(400) rotateX(0);
+  }
+
+  /* line 37, _animations.scss */
+  100% {
+    -webkit-transform: perspective(400) rotateX(90deg);
+    transform: perspective(400) rotateX(90deg);
+    opacity: 0;
+  }
+}
+@-webkit-keyframes flip-in-left {
+  /* line 44, _animations.scss */
+  0% {
+    -webkit-transform: perspective(400) rotateY(90deg);
+    transform: perspective(400) rotateY(90deg);
+  }
+
+  /* line 47, _animations.scss */
+  50% {
+    -webkit-transform: perspective(400) rotateY(-5deg);
+    transform: perspective(400) rotateY(-5deg);
+  }
+
+  /* line 50, _animations.scss */
+  80% {
+    -webkit-transform: perspective(400) rotateY(5deg);
+    transform: perspective(400) rotateY(5deg);
+  }
+
+  /* line 53, _animations.scss */
+  100% {
+    -webkit-transform: perspective(400) rotateY(0deg);
+    transform: perspective(400) rotateY(0deg);
+  }
+}
+@keyframes flip-in-left {
+  /* line 44, _animations.scss */
+  0% {
+    -webkit-transform: perspective(400) rotateY(90deg);
+    transform: perspective(400) rotateY(90deg);
+  }
+
+  /* line 47, _animations.scss */
+  50% {
+    -webkit-transform: perspective(400) rotateY(-5deg);
+    transform: perspective(400) rotateY(-5deg);
+  }
+
+  /* line 50, _animations.scss */
+  80% {
+    -webkit-transform: perspective(400) rotateY(5deg);
+    transform: perspective(400) rotateY(5deg);
+  }
+
+  /* line 53, _animations.scss */
+  100% {
+    -webkit-transform: perspective(400) rotateY(0deg);
+    transform: perspective(400) rotateY(0deg);
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/_animations\.scss}line{font-family:\0000358}}
+.fade-in {
+  -webkit-animation: fade-in 400ms ease-in;
+  animation: fade-in 400ms ease-in;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/_animations\.scss}line{font-family:\0000359}}
+.fade-out {
+  -webkit-animation: fade-out 400ms ease-out;
+  animation: fade-out 400ms ease-out;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/_animations\.scss}line{font-family:\0000360}}
+.flip-in {
+  -webkit-animation: flip-in 400ms ease-in;
+  animation: flip-in 400ms ease-in;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/_animations\.scss}line{font-family:\0000361}}
+.flip-out {
+  -webkit-animation: flip-out 300ms ease-out;
+  animation: flip-out 300ms ease-out;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/_animations\.scss}line{font-family:\0000362}}
+.flip-in-left {
+  -webkit-animation: flip-in-left 400ms ease-in;
+  animation: flip-in-left 400ms ease-in;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\000034}}
+* [class^='speedr'] {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\000038}}
+.speedr-container {
+  position: fixed;
+  z-index: 2147483646;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000320}}
+.speedr-container .speedr-box {
+  position: absolute;
+  z-index: 2147483647;
+  top: -webkit-calc(50% - 92.5px);
+  top: calc(50% - 92.5px);
+  left: -webkit-calc(50% - 200px);
+  left: calc(50% - 200px);
+  width: 400px;
+  height: 185px;
+  background-color: #fff;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000331}}
+.speedr-container .speedr-word-container {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  padding: 6px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000340}}
+.speedr-container .speedr-word-container:before {
+  height: 0;
+  width: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 6px;
+  border-top-color: #cccccc;
+  position: absolute;
+  top: 0;
+  left: -webkit-calc(45% - 6px);
+  left: calc(45% - 6px);
+  content: '';
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000348}}
+.speedr-container .speedr-word-container:after {
+  height: 0;
+  width: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 6px;
+  border-bottom-color: #cccccc;
+  position: absolute;
+  bottom: -1px;
+  left: -webkit-calc(45% - 6px);
+  left: calc(45% - 6px);
+  content: '';
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000356}}
+.speedr-container .speedr-word-container div {
+  display: table-cell;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000359}}
+.speedr-container .speedr-word-container div.orp {
+  color: red;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000363}}
+.speedr-container .speedr-word-container div:first-child {
+  width: 45%;
+  text-align: right;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000368}}
+.speedr-container .speedr-word-container div:last-child {
+  width: 55%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000374}}
+.speedr-container .speedr-minimap {
+  position: absolute;
+  right: -110px;
+  width: 110px;
+  height: 100%;
+  padding: 10px;
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-transform-origin: left;
+  transform-origin: left;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  font-size: 5px;
+  line-height: 4px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000390}}
+.speedr-container .speedr-minimap::-webkit-scrollbar {
+  width: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000394}}
+.speedr-container .speedr-minimap::-webkit-scrollbar-track {
+  background-color: #e8e8e8;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\0000398}}
+.speedr-container .speedr-minimap::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003102}}
+.speedr-container .speedr-minimap p {
+  margin-bottom: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003106}}
+.speedr-container .speedr-minimap span {
+  display: inline-block;
+  height: 2px;
+  color: transparent;
+  background-color: #ddd;
+  letter-spacing: -0.1em;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003113}}
+.speedr-container .speedr-minimap span.active {
+  background-color: #666;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003119}}
+.speedr-container .speedr-player {
+  position: absolute;
+  right: 0;
+  bottom: 6px;
+  left: 0;
+  display: table;
+  table-layout: fixed;
+  margin: auto;
+  width: 200px;
+  text-align: center;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003130}}
+.speedr-container .speedr-player .button {
+  display: table-cell;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 5px;
+  opacity: .2;
+  -webkit-transition: opacity 200ms ease-in;
+  transition: opacity 200ms ease-in;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003138}}
+.speedr-container .speedr-player .button:hover {
+  opacity: .8;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003143}}
+.speedr-container .speedr-player .play-pause {
+  position: relative;
+  background-image: url("../images/big-triangle.svg");
+  height: 14px;
+  width: 12px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003149}}
+.speedr-container .speedr-player .play-pause.pause {
+  background-image: url("../images/double-bar.svg");
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003154}}
+.speedr-container .speedr-player .next-sentence, .speedr-container .speedr-player .prev-sentence {
+  background-image: url("../images/double-triangle.svg");
+  height: 10px;
+  width: 16px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003160}}
+.speedr-container .speedr-player .next-paragraph, .speedr-container .speedr-player .prev-paragraph {
+  background-image: url("../images/triple-triangle.svg");
+  height: 10px;
+  width: 24px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003166}}
+.speedr-container .speedr-player .prev-sentence, .speedr-container .speedr-player .prev-paragraph {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/speedr\.scss}line{font-family:\00003171}}
+.speedr-container .speedr-wpm {
+  position: absolute;
+  font-size: 11px;
+  right: 10px;
+  bottom: 10px;
+  color: #666;
+}
