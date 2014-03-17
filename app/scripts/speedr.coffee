@@ -403,7 +403,7 @@ window.App = {
 			@.calculateInterval()
 			@.updateWPM()
 
-			App.chrome.saveSettings()
+			App.chrome.settings.save()
 
 		changeFontSize: (px) ->
 			User.settings.fontSize = User.settings.fontSize + px
@@ -411,7 +411,7 @@ window.App = {
 			wordContainer = document.getElementById('js-speedr-word')
 			wordContainer.style.fontSize = User.settings.fontSize + 'px'
 
-			App.chrome.saveSettings()
+			App.chrome.settings.save()
 
 		prevWord: ->
 			i = App.i
@@ -516,25 +516,37 @@ window.App = {
 		getWordCount: ->
 			count = App.i - App.wordCount
 			App.wordCount = App.i
+			App.chrome.wordCount.save(count)
 	}
 	chrome: {
-		getSettings: ->
-			chrome.storage.sync.get(
-				(data) ->
-					# If we have some stored settings, replace over the defaults
-					if data.settings
-						User.settings = data.settings
-						App.actions.calculateInterval()
-			)
+		settings: {
+			get: ->
+				chrome.storage.sync.get(
+					'settings'
+					(data) ->
+						# If we have some stored settings, replace over the defaults
+						if data.settings
+							User.settings = data.settings
+							App.actions.calculateInterval()
+				)
+			save: ->
+				saveSettings: ->
+					chrome.storage.sync.set(User)
+		}
+		wordCount: {
+			save: (count) ->
+				chrome.storage.sync.get(
+					'wordCount'
+					(data) ->
+						wordCount = data.wordCount || 0
 
-		saveSettings: ->
-			chrome.storage.sync.set(
-				User
-			)
+						chrome.storage.sync.set({wordCount: wordCount + count})
+				)
+		}
 	}
 	init: ->
 		App.speedr.reset()
-		App.chrome.getSettings()
+		App.chrome.settings.get()
 }
 
 window.onkeydown = (event) ->

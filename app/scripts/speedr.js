@@ -394,14 +394,14 @@
         User.settings.wpm = User.settings.wpm + wpm;
         this.calculateInterval();
         this.updateWPM();
-        return App.chrome.saveSettings();
+        return App.chrome.settings.save();
       },
       changeFontSize: function(px) {
         var wordContainer;
         User.settings.fontSize = User.settings.fontSize + px;
         wordContainer = document.getElementById('js-speedr-word');
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
-        return App.chrome.saveSettings();
+        return App.chrome.settings.save();
       },
       prevWord: function() {
         var i;
@@ -521,25 +521,43 @@
       getWordCount: function() {
         var count;
         count = App.i - App.wordCount;
-        return App.wordCount = App.i;
+        App.wordCount = App.i;
+        return App.chrome.wordCount.save(count);
       }
     },
     chrome: {
-      getSettings: function() {
-        return chrome.storage.sync.get(function(data) {
-          if (data.settings) {
-            User.settings = data.settings;
-            return App.actions.calculateInterval();
-          }
-        });
+      settings: {
+        get: function() {
+          return chrome.storage.sync.get('settings', function(data) {
+            if (data.settings) {
+              User.settings = data.settings;
+              return App.actions.calculateInterval();
+            }
+          });
+        },
+        save: function() {
+          return {
+            saveSettings: function() {
+              return chrome.storage.sync.set(User);
+            }
+          };
+        }
       },
-      saveSettings: function() {
-        return chrome.storage.sync.set(User);
+      wordCount: {
+        save: function(count) {
+          return chrome.storage.sync.get('wordCount', function(data) {
+            var wordCount;
+            wordCount = data.wordCount || 0;
+            return chrome.storage.sync.set({
+              wordCount: wordCount + count
+            });
+          });
+        }
       }
     },
     init: function() {
       App.speedr.reset();
-      return App.chrome.getSettings();
+      return App.chrome.settings.get();
     }
   };
 
