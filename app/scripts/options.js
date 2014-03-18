@@ -7,6 +7,7 @@
     settings: {
       wpm: 350,
       minimap: true,
+      controls: true,
       fontSize: 33,
       delayOnPunctuation: false,
       punctuationDelayTime: 1000,
@@ -20,20 +21,20 @@
       longWordDelayTime: 100
     },
     bindings: {
-      'alt+v': 'open',
-      'q': 'close',
       ' ': 'toggle',
-      'û': 'slower',
-      'ý': 'faster',
-      'r': 'reset',
-      '&': 'bigger',
-      '(': 'smaller',
       '%': 'prev word',
-      'shift+%': 'prev sentence',
-      'ctrl+%': 'prev paragraph',
+      '&': 'bigger',
       '\'': 'next word',
+      '(': 'smaller',
+      'Q': 'close',
+      'R': 'reset',
+      'alt+V': 'open',
+      'ctrl+%': 'prev paragraph',
+      'ctrl+\'': 'next paragraph',
+      'shift+%': 'prev sentence',
       'shift+\'': 'next sentence',
-      'ctrl+\'': 'next paragraph'
+      'Û': 'slower',
+      'Ý': 'faster'
     }
   };
 

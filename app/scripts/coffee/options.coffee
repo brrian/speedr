@@ -5,6 +5,7 @@ User = {
     settings: {
         wpm: 350
         minimap: true
+        controls: true
         fontSize: 33
 
         delayOnPunctuation: false
@@ -22,20 +23,20 @@ User = {
         longWordDelayTime: 100
     }
     bindings: {
-        'alt+v': 'open'
-        'q': 'close'
         ' ': 'toggle'
-        'û': 'slower'
-        'ý': 'faster'
-        'r': 'reset'
-        '&': 'bigger'
-        '(': 'smaller'
         '%': 'prev word'
-        'shift+%': 'prev sentence'
-        'ctrl+%': 'prev paragraph'
+        '&': 'bigger'
         '\'': 'next word'
-        'shift+\'': 'next sentence'
+        '(': 'smaller'
+        'Q': 'close'
+        'R': 'reset'
+        'alt+V': 'open'
+        'ctrl+%': 'prev paragraph'
         'ctrl+\'': 'next paragraph'
+        'shift+%': 'prev sentence'
+        'shift+\'': 'next sentence'
+        'Û': 'slower'
+        'Ý': 'faster'
     }
 }
 

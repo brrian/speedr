@@ -6,41 +6,42 @@ Math.easeInOutQuad = (t, b, c, d) ->
 
 # Set some settings
 User = {
-	settings: {
-		wpm: 350
-		minimap: true
-		fontSize: 33
+    settings: {
+        wpm: 350
+        minimap: true
+        controls: true
+        fontSize: 33
 
-		delayOnPunctuation: false
-		punctuationDelayTime: 1000
+        delayOnPunctuation: false
+        punctuationDelayTime: 1000
 
-		delayOnSentence: false
-		sentenceDelayTime: 150
+        delayOnSentence: false
+        sentenceDelayTime: 150
 
-		pauseOnParagraph: false
-		delayOnParagraph: false
-		paragraphDelayTime: 300
+        pauseOnParagraph: false
+        delayOnParagraph: false
+        paragraphDelayTime: 300
 
-		delayOnLongWords: false
-		longWordLength: 8
-		longWordDelayTime: 100
-	}
-	bindings: {
-		'alt+v': 'open'
-		'q': 'close'
-		' ': 'toggle'
-		'û': 'slower'
-		'ý': 'faster'
-		'r': 'reset'
-		'&': 'bigger'
-		'(': 'smaller'
-		'%': 'prev word'
-		'shift+%': 'prev sentence'
-		'ctrl+%': 'prev paragraph'
-		'\'': 'next word'
-		'shift+\'': 'next sentence'
-		'ctrl+\'': 'next paragraph'
-	}
+        delayOnLongWords: false
+        longWordLength: 8
+        longWordDelayTime: 100
+    }
+    bindings: {
+        ' ': 'toggle'
+        '%': 'prev word'
+        '&': 'bigger'
+        '\'': 'next word'
+        '(': 'smaller'
+        'Q': 'close'
+        'R': 'reset'
+        'alt+V': 'open'
+        'ctrl+%': 'prev paragraph'
+        'ctrl+\'': 'next paragraph'
+        'shift+%': 'prev sentence'
+        'shift+\'': 'next sentence'
+        'Û': 'slower'
+        'Ý': 'faster'
+    }
 }
 
 window.App = {
@@ -153,39 +154,42 @@ window.App = {
 			wordContainer.className = 'speedr-word-container'
 			wordContainer.style.fontSize = User.settings.fontSize + 'px'
 
-			# Create the player
-			player = document.createElement('div')
-			player.className = 'speedr-player'
+			if User.settings.controls
+				# Create the player
+				player = document.createElement('div')
+				player.className = 'speedr-player'
 
-			# Player buttons
-			buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph']
-			for button in buttons
-				switch button
-					when 'prev-paragraph'
-						elementFunction = App.actions.prevParagraph
-					when 'prev-sentence'
-						elementFunction = App.actions.prevSentence
-					when 'prev-word'
-						elementFunction = App.actions.prevWord
-					when 'play-pause'
-						elementFunction = App.speedr.loop.toggle
-					when 'next-word'
-						elementFunction = App.actions.nextWord
-					when 'next-sentence'
-						elementFunction = App.actions.nextSentence
-					when 'next-paragraph'
-						elementFunction = App.actions.nextParagraph
+				# Player buttons
+				buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph']
+				for button in buttons
+					switch button
+						when 'prev-paragraph'
+							elementFunction = App.actions.prevParagraph
+						when 'prev-sentence'
+							elementFunction = App.actions.prevSentence
+						when 'prev-word'
+							elementFunction = App.actions.prevWord
+						when 'play-pause'
+							elementFunction = App.speedr.loop.toggle
+						when 'next-word'
+							elementFunction = App.actions.nextWord
+						when 'next-sentence'
+							elementFunction = App.actions.nextSentence
+						when 'next-paragraph'
+							elementFunction = App.actions.nextParagraph
 
-				element = document.createElement('span')
-				element.className = button + ' speedr-button'
-				element.addEventListener('click', elementFunction, false)
+					element = document.createElement('span')
+					element.className = button + ' speedr-button'
+					element.addEventListener('click', elementFunction, false)
 
-				if button is 'play-pause' then element.id = 'js-play-pause'
+					if button is 'play-pause' then element.id = 'js-play-pause'
 
-				player.appendChild(element)
+					player.appendChild(element)
 
-				# Add whitespace after the element, otherwise the spacing will be off
-				player.appendChild(document.createTextNode('\x20'))
+					# Add whitespace after the element, otherwise the spacing will be off
+					player.appendChild(document.createTextNode('\x20'))
+
+					box.appendChild(player)
 
 			# WPM display
 			wpm = document.createElement('div')
@@ -193,7 +197,7 @@ window.App = {
 			wpm.className = 'speedr-wpm'
 
 			box.appendChild(wordContainer)
-			box.appendChild(player)
+			
 			box.appendChild(wpm)
 			overlay.appendChild(box)
 
@@ -257,13 +261,13 @@ window.App = {
 			stop: ->
 				App.pause = true
 				clearTimeout(App.loop)
-				document.getElementById('js-play-pause').className = 'play-pause speedr-button'
 
 				# Correct the counter
 				App.i--
 
 				App.actions.getWordCount()
 
+				if User.settings.controls then document.getElementById('js-play-pause').className = 'play-pause speedr-button'
 				if App.scrollWatcher then clearTimeout(App.scrollWatcher)
 
 			start: ->
@@ -275,7 +279,8 @@ window.App = {
 
 				App.pause = false
 				App.loop = @.create()
-				document.getElementById('js-play-pause').className = 'play-pause pause speedr-button'
+
+				if User.settings.controls then document.getElementById('js-play-pause').className = 'play-pause pause speedr-button'
 				if App.scrollWatcher then App.minimap.scrollWatcher()
 
 			reset: ->

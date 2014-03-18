@@ -14,6 +14,7 @@
     settings: {
       wpm: 350,
       minimap: true,
+      controls: true,
       fontSize: 33,
       delayOnPunctuation: false,
       punctuationDelayTime: 1000,
@@ -27,20 +28,20 @@
       longWordDelayTime: 100
     },
     bindings: {
-      'alt+v': 'open',
-      'q': 'close',
       ' ': 'toggle',
-      'û': 'slower',
-      'ý': 'faster',
-      'r': 'reset',
-      '&': 'bigger',
-      '(': 'smaller',
       '%': 'prev word',
-      'shift+%': 'prev sentence',
-      'ctrl+%': 'prev paragraph',
+      '&': 'bigger',
       '\'': 'next word',
+      '(': 'smaller',
+      'Q': 'close',
+      'R': 'reset',
+      'alt+V': 'open',
+      'ctrl+%': 'prev paragraph',
+      'ctrl+\'': 'next paragraph',
+      'shift+%': 'prev sentence',
       'shift+\'': 'next sentence',
-      'ctrl+\'': 'next paragraph'
+      'Û': 'slower',
+      'Ý': 'faster'
     }
   };
 
@@ -153,47 +154,49 @@
         wordContainer.id = 'js-speedr-word';
         wordContainer.className = 'speedr-word-container';
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
-        player = document.createElement('div');
-        player.className = 'speedr-player';
-        buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph'];
-        for (_i = 0, _len = buttons.length; _i < _len; _i++) {
-          button = buttons[_i];
-          switch (button) {
-            case 'prev-paragraph':
-              elementFunction = App.actions.prevParagraph;
-              break;
-            case 'prev-sentence':
-              elementFunction = App.actions.prevSentence;
-              break;
-            case 'prev-word':
-              elementFunction = App.actions.prevWord;
-              break;
-            case 'play-pause':
-              elementFunction = App.speedr.loop.toggle;
-              break;
-            case 'next-word':
-              elementFunction = App.actions.nextWord;
-              break;
-            case 'next-sentence':
-              elementFunction = App.actions.nextSentence;
-              break;
-            case 'next-paragraph':
-              elementFunction = App.actions.nextParagraph;
+        if (User.settings.controls) {
+          player = document.createElement('div');
+          player.className = 'speedr-player';
+          buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph'];
+          for (_i = 0, _len = buttons.length; _i < _len; _i++) {
+            button = buttons[_i];
+            switch (button) {
+              case 'prev-paragraph':
+                elementFunction = App.actions.prevParagraph;
+                break;
+              case 'prev-sentence':
+                elementFunction = App.actions.prevSentence;
+                break;
+              case 'prev-word':
+                elementFunction = App.actions.prevWord;
+                break;
+              case 'play-pause':
+                elementFunction = App.speedr.loop.toggle;
+                break;
+              case 'next-word':
+                elementFunction = App.actions.nextWord;
+                break;
+              case 'next-sentence':
+                elementFunction = App.actions.nextSentence;
+                break;
+              case 'next-paragraph':
+                elementFunction = App.actions.nextParagraph;
+            }
+            element = document.createElement('span');
+            element.className = button + ' speedr-button';
+            element.addEventListener('click', elementFunction, false);
+            if (button === 'play-pause') {
+              element.id = 'js-play-pause';
+            }
+            player.appendChild(element);
+            player.appendChild(document.createTextNode('\x20'));
+            box.appendChild(player);
           }
-          element = document.createElement('span');
-          element.className = button + ' speedr-button';
-          element.addEventListener('click', elementFunction, false);
-          if (button === 'play-pause') {
-            element.id = 'js-play-pause';
-          }
-          player.appendChild(element);
-          player.appendChild(document.createTextNode('\x20'));
         }
         wpm = document.createElement('div');
         wpm.id = 'js-speedr-wpm';
         wpm.className = 'speedr-wpm';
         box.appendChild(wordContainer);
-        box.appendChild(player);
         box.appendChild(wpm);
         overlay.appendChild(box);
         document.body.appendChild(overlay);
@@ -249,9 +252,11 @@
         stop: function() {
           App.pause = true;
           clearTimeout(App.loop);
-          document.getElementById('js-play-pause').className = 'play-pause speedr-button';
           App.i--;
           App.actions.getWordCount();
+          if (User.settings.controls) {
+            document.getElementById('js-play-pause').className = 'play-pause speedr-button';
+          }
           if (App.scrollWatcher) {
             return clearTimeout(App.scrollWatcher);
           }
@@ -263,7 +268,9 @@
           App.i++;
           App.pause = false;
           App.loop = this.create();
-          document.getElementById('js-play-pause').className = 'play-pause pause speedr-button';
+          if (User.settings.controls) {
+            document.getElementById('js-play-pause').className = 'play-pause pause speedr-button';
+          }
           if (App.scrollWatcher) {
             return App.minimap.scrollWatcher();
           }
