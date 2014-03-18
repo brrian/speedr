@@ -110,7 +110,6 @@ parseKeyBinding = (binding) ->
     # Return the joined binding
     bindingArray = binding.split('+')
     lastKey = bindingArray[bindingArray.length - 1]
-    console.log Bindings
     if Bindings.hasOwnProperty(lastKey)
         bindingArray[bindingArray.length - 1] = Bindings[lastKey]
 

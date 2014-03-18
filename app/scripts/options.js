@@ -52,17 +52,17 @@
     'y': 'f10',
     'z': 'f11',
     '{': 'f12',
-    'À': '`',
-    '½': '-',
-    '»': '=',
-    'Û': '[',
-    'Ý': ']',
-    'Ü': '\\',
-    'º': ';',
-    'Þ': '\'',
-    '¼': ',',
-    '¾': '.',
-    '¿': '/',
+    '\u00C0': '`',
+    '\u00BD': '-',
+    '\u00BB': '=',
+    '\u00DB': '[',
+    '\u00DD': ']',
+    '\u00DC': '\\',
+    '\u00BA': ';',
+    '\u00DE': '\'',
+    '\u00BC': ',',
+    '\u00BE': '.',
+    '\u00BF': '/',
     '$': 'home',
     '#': 'end',
     '!': 'page up',
@@ -115,7 +115,6 @@
     var bindingArray, lastKey;
     bindingArray = binding.split('+');
     lastKey = bindingArray[bindingArray.length - 1];
-    console.log(Bindings);
     if (Bindings.hasOwnProperty(lastKey)) {
       bindingArray[bindingArray.length - 1] = Bindings[lastKey];
     }
