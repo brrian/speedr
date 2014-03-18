@@ -53,7 +53,7 @@ window.App = {
 			if event.altKey then keyCombo += 'alt+'
 			if event.shiftKey then keyCombo += 'shift+'
 
-			keyCombo += String.fromCharCode(event.keyCode).toLowerCase()
+			keyCombo += String.fromCharCode(event.keyCode)
 
 		runOnceAfterAnimation: (element, callback) ->
 			prefixes = ['webkitAnimationEnd', 'animationend']
@@ -522,12 +522,14 @@ window.App = {
 		settings: {
 			get: ->
 				chrome.storage.sync.get(
-					'settings'
+					['settings', 'bindings']
 					(data) ->
 						# If we have some stored settings, replace over the defaults
 						if data.settings
 							User.settings = data.settings
 							App.actions.calculateInterval()
+
+						if data.bindings then User.bindings = data.bindings
 				)
 			save: ->
 				chrome.storage.sync.set(User)

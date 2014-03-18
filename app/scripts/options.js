@@ -1,5 +1,5 @@
 (function() {
-  var $, Bindings, User, appendKeyBindings, appendUserSettings, generateKeyCombo, getSettings, parseKeyBinding, replaceWhiteSpace;
+  var $, Bindings, User, appendKeyBindings, appendUserSettings, generateKeyCombo, parseKeyBinding, replaceWhiteSpace, saveBindings, saveSettings;
 
   $ = jQuery;
 
@@ -89,21 +89,6 @@
     'i': 'num 9'
   };
 
-  getSettings = function() {
-    var dfd;
-    dfd = $.Deferred();
-    chrome.storage.sync.get(['settings', 'bindings'], function(data) {
-      if (data.settings) {
-        User.settings = data.settings;
-      }
-      if (data.bindings) {
-        User.bindings = data.bindings;
-      }
-      return dfd.resolve();
-    });
-    return dfd.promise();
-  };
-
   appendUserSettings = function() {
     var setting, value, _ref, _results;
     _ref = User.settings;
@@ -130,6 +115,7 @@
     var bindingArray, lastKey;
     bindingArray = binding.split('+');
     lastKey = bindingArray[bindingArray.length - 1];
+    console.log(Bindings);
     if (Bindings.hasOwnProperty(lastKey)) {
       bindingArray[bindingArray.length - 1] = Bindings[lastKey];
     }
@@ -137,14 +123,14 @@
   };
 
   appendKeyBindings = function() {
-    var action, binding, _ref, _results;
+    var action, binding, humanBinding, _ref, _results;
     _ref = User.bindings;
     _results = [];
     for (binding in _ref) {
       action = _ref[binding];
       action = replaceWhiteSpace(action);
-      binding = parseKeyBinding(binding);
-      _results.push($('#js-' + action).val(binding));
+      humanBinding = parseKeyBinding(binding).toLowerCase();
+      _results.push($('#js-' + action).attr('data-binding', binding).val(humanBinding));
     }
     return _results;
   };
@@ -164,7 +150,44 @@
     return keyCombo += String.fromCharCode(event.keyCode);
   };
 
-  getSettings().then(appendUserSettings(), appendKeyBindings());
+  saveSettings = function() {
+    var newSettings;
+    newSettings = {};
+    $('.settings-section').find('input').each(function() {
+      var setting, type;
+      setting = $(this).attr('id').replace('js-', '');
+      type = $(this).attr('type');
+      if (type === 'text') {
+        newSettings[setting] = parseInt($(this).val(), 10);
+      } else if (type === 'checkbox') {
+        newSettings[setting] = $(this).prop('checked');
+      }
+    });
+    return newSettings;
+  };
+
+  saveBindings = function() {
+    var newBindings;
+    newBindings = {};
+    $('.bindings-section').find('input').each(function() {
+      var binding, setting;
+      setting = $(this).attr('id').replace('js-', '').replace('-', ' ');
+      binding = $(this).attr('data-binding');
+      newBindings[binding] = setting;
+    });
+    return newBindings;
+  };
+
+  chrome.storage.sync.get(['settings', 'bindings'], function(data) {
+    if (data.settings) {
+      User.settings = data.settings;
+    }
+    if (data.bindings) {
+      User.bindings = data.bindings;
+    }
+    appendUserSettings();
+    return appendKeyBindings();
+  });
 
   $('input.binding').keydown(function(event) {
     var humanKeyCombo, keyCombo;
@@ -174,6 +197,15 @@
     return false;
   });
 
-  console.log(User);
+  $('#js-save-settings').click(function() {
+    var newSettings;
+    newSettings = {
+      settings: saveSettings(),
+      bindings: saveBindings()
+    };
+    return chrome.storage.sync.set(newSettings, function() {
+      return alert('Settings successfully saved!');
+    });
+  });
 
 }).call(this);

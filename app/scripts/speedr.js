@@ -58,7 +58,7 @@
         if (event.shiftKey) {
           keyCombo += 'shift+';
         }
-        return keyCombo += String.fromCharCode(event.keyCode).toLowerCase();
+        return keyCombo += String.fromCharCode(event.keyCode);
       },
       runOnceAfterAnimation: function(element, callback) {
         var prefix, prefixes, _i, _len, _results;
@@ -528,10 +528,13 @@
     chrome: {
       settings: {
         get: function() {
-          return chrome.storage.sync.get('settings', function(data) {
+          return chrome.storage.sync.get(['settings', 'bindings'], function(data) {
             if (data.settings) {
               User.settings = data.settings;
-              return App.actions.calculateInterval();
+              App.actions.calculateInterval();
+            }
+            if (data.bindings) {
+              return User.bindings = data.bindings;
             }
           });
         },
