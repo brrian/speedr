@@ -206,7 +206,9 @@ window.App = {
 			App.utility.runOnceAfterAnimation(
 				box
 				->
-					if User.settings.minimap then App.minimap.create()
+					if User.settings.minimap
+						App.minimap.create()
+						App.minimap.update()
 					overlay.className = overlay.className.replace('fade-in', '')
 					box.className = box.className.replace('flip-in', '')
 			)

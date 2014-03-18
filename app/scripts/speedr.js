@@ -203,6 +203,7 @@
         App.utility.runOnceAfterAnimation(box, function() {
           if (User.settings.minimap) {
             App.minimap.create();
+            App.minimap.update();
           }
           overlay.className = overlay.className.replace('fade-in', '');
           return box.className = box.className.replace('flip-in', '');
