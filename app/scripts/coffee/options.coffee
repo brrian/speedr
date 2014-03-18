@@ -39,19 +39,81 @@ User = {
 	}
 }
 
+Bindings = {
+	' ': 'space'
+	'\'': 'right arrow'
+	'%': 'left arrow'
+	'ý': ']'
+	'û': '['
+	'&': 'up arrow'
+	'(': 'down arrow'
+}
+
 getSettings = ->
 	dfd = $.Deferred()
 
 	chrome.storage.sync.get(
 		['settings', 'bindings']
 		(data) ->
-			dfd.resolve(data)
+			if data.settings then User.settings = data.settings
+			if data.bindings then User.bindings = data.bindings
+			dfd.resolve()
 	)
 
 	dfd.promise()
 
+appendUserSettings = ->
+	# If it's a boolean, we check it or uncheck it
+	# If it's a number we change the value
+	for setting, value of User.settings
+		if typeof value is 'boolean'
+			$('#js-' + setting).prop('checked', value)
+		else if typeof value is 'number'
+			$('#js-' + setting).val(value)
+
+replaceWhiteSpace = (word) ->
+	word = word.split(' ')
+	word.join('-')
+
+parseKeyBinding = (binding) ->
+	# Split the binding into an array and get the last item
+	# If there is an entry in the key bindings object, replace it
+	# Return the joined binding
+	bindingArray = binding.split('+')
+	lastKey = bindingArray[bindingArray.length - 1]
+
+	if Bindings.hasOwnProperty(lastKey)
+		bindingArray[bindingArray.length - 1] = Bindings[lastKey]
+
+	bindingArray.join('+')
+
+appendKeyBindings = ->
+	for binding, action of User.bindings
+		action = replaceWhiteSpace(action)
+		binding = parseKeyBinding(binding)
+
+		$('#js-' + action).val(binding)
+
+generateKeyCombo = (event) ->
+	# Create key binding
+	keyCombo = ''
+
+	if event.ctrlKey then keyCombo += 'ctrl+'
+	if event.altKey then keyCombo += 'alt+'
+	if event.shiftKey then keyCombo += 'shift+'
+
+	keyCombo += String.fromCharCode(event.keyCode)
+
 getSettings().then(
-	(data) ->
-		console.log 'here is your data'
-		console.log data
+	appendUserSettings()
+	appendKeyBindings()
 )
+
+$('input.binding').keydown(
+	(event) ->
+		keyCombo = parseKeyBinding(generateKeyCombo(event)).toLowerCase()
+
+		$(@).val(keyCombo)
+		false
+)
+console.log User

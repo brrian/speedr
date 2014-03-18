@@ -1,0 +1,37 @@
+@font-face {
+	font-family: 'Nunito';
+	src: url('chrome-extension://__MSG_@@extension_id__/fonts/Nunito-Light.ttf');
+	font-weight: 300;
+}
+
+body {
+	font-family: 'Nunito', sans-serif;
+}
+
+section {
+	width: 800px;
+	margin: 0 auto 50px auto;
+}
+
+input {
+	&[type=text] {
+		text-align: center;
+	}
+
+	&.short {
+		width: 30px;
+	}
+
+	&.long {
+		width: 155px;
+	}
+}
+
+.form-group {
+	border-bottom: 1px solid #eee;
+	padding: 10px 0;
+}
+
+.disabled {
+	opacity: .3;
+}
