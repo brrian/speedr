@@ -260,6 +260,7 @@
           if (App.i === App.text.length) {
             App.speedr.loop.reset();
           }
+          App.i++;
           App.pause = false;
           App.loop = this.create();
           document.getElementById('js-play-pause').className = 'play-pause pause speedr-button';
@@ -304,8 +305,7 @@
                 delay = User.settings.paragraphDelayTime;
               }
               if (User.settings.pauseOnParagraph) {
-                App.speedr.loop.stop();
-                return;
+                return App.speedr.loop.stop();
               }
             }
             return App.loop = setTimeout(App.speedr.loop.create, App.interval + delay);

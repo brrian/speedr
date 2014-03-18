@@ -270,6 +270,9 @@ window.App = {
 				# Check to see if we're at the end, if so, then we need to reset it first
 				if App.i is App.text.length then App.speedr.loop.reset()
 
+				# Start on the next word
+				App.i++
+
 				App.pause = false
 				App.loop = @.create()
 				document.getElementById('js-play-pause').className = 'play-pause pause speedr-button'
@@ -310,8 +313,7 @@ window.App = {
 					if word.paragraphEnd
 						if User.settings.delayOnParagraph then delay = User.settings.paragraphDelayTime
 						if User.settings.pauseOnParagraph
-							App.speedr.loop.stop()
-							return
+							return App.speedr.loop.stop()
 
 					App.loop = setTimeout(App.speedr.loop.create, App.interval + delay)
 				else
