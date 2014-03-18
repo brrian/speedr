@@ -39,12 +39,54 @@
 
   Bindings = {
     ' ': 'space',
-    '\'': 'right arrow',
-    '%': 'left arrow',
-    'ý': ']',
-    'û': '[',
-    '&': 'up arrow',
-    '(': 'down arrow'
+    '\t': 'tab',
+    'p': 'f1',
+    'q': 'f2',
+    'r': 'f3',
+    's': 'f4',
+    't': 'f5',
+    'u': 'f6',
+    'v': 'f7',
+    'w': 'f8',
+    'x': 'f9',
+    'y': 'f10',
+    'z': 'f11',
+    '{': 'f12',
+    'À': '`',
+    '½': '-',
+    '»': '=',
+    'Û': '[',
+    'Ý': ']',
+    'Ü': '\\',
+    'º': ';',
+    'Þ': '\'',
+    '¼': ',',
+    '¾': '.',
+    '¿': '/',
+    '$': 'home',
+    '#': 'end',
+    '!': 'page up',
+    '"': 'page down',
+    '.': 'delete',
+    '&': 'up',
+    '(': 'down',
+    '%': 'left',
+    '\'': 'right',
+    'o': 'num /',
+    'j': 'num *',
+    'm': 'num -',
+    'k': 'num +',
+    'n': 'num .',
+    '`': 'num 0',
+    'a': 'num 1',
+    'b': 'num 2',
+    'c': 'num 3',
+    'd': 'num 4',
+    'e': 'num 5',
+    'f': 'num 6',
+    'g': 'num 7',
+    'h': 'num 8',
+    'i': 'num 9'
   };
 
   getSettings = function() {
@@ -125,9 +167,10 @@
   getSettings().then(appendUserSettings(), appendKeyBindings());
 
   $('input.binding').keydown(function(event) {
-    var keyCombo;
-    keyCombo = parseKeyBinding(generateKeyCombo(event)).toLowerCase();
-    $(this).val(keyCombo);
+    var humanKeyCombo, keyCombo;
+    keyCombo = generateKeyCombo(event);
+    humanKeyCombo = parseKeyBinding(keyCombo).toLowerCase();
+    $(this).attr('data-binding', keyCombo).val(humanKeyCombo);
     return false;
   });
 
