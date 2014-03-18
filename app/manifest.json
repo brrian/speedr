@@ -42,6 +42,7 @@
         "storage"
     ],
     "web_accessible_resources": [
-        "images/*.svg"
+        "images/*.svg",
+        "fonts/SourceSansPro-Regular.ttf"
     ]
 }
