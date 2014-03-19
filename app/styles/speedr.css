@@ -422,3 +422,20 @@
 .speedr-container .speedr-options:hover {
   opacity: .8;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003213}}
+.speedr-container .speedr-alpha {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-block;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/images/alpha.svg");
+  width: 10px;
+  height: 10px;
+  opacity: .2;
+  -webkit-transition: opacity 200ms ease-in;
+  transition: opacity 200ms ease-in;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003224}}
+.speedr-container .speedr-alpha:hover {
+  opacity: .8;
+}

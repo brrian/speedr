@@ -147,7 +147,7 @@
     },
     speedr: {
       create: function() {
-        var box, button, buttons, element, elementFunction, options, overlay, player, wordContainer, wpm, _i, _len;
+        var alpha, box, button, buttons, element, elementFunction, options, overlay, player, wordContainer, wpm, _i, _len;
         App.active = true;
         overlay = document.createElement('div');
         overlay.id = 'js-speedr-container';
@@ -213,6 +213,16 @@
           return event.preventDefault();
         });
         box.appendChild(options);
+        alpha = document.createElement('a');
+        alpha.className = 'speedr-alpha';
+        alpha.href = 'alpha.html';
+        alpha.addEventListener('click', function(event) {
+          var href;
+          href = this.getAttribute('href');
+          App.utility.openUrl(href);
+          return event.preventDefault();
+        });
+        box.appendChild(alpha);
         overlay.appendChild(box);
         document.body.appendChild(overlay);
         App.utility.runOnceAfterAnimation(box, function() {

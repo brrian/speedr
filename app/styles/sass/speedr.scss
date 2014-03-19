@@ -209,4 +209,20 @@
             opacity: .8;
         }
     }
+
+    .speedr-alpha {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: inline-block;
+        background-image: url('chrome-extension://__MSG_@@extension_id__/images/alpha.svg');
+        width: 10px;
+        height: 10px;
+        opacity: .2;
+        transition: opacity 200ms ease-in;
+
+        &:hover {
+            opacity: .8;
+        }
+    }
 }

@@ -221,6 +221,22 @@ window.App = {
 
 			box.appendChild(options)
 
+			# Alpha button
+			alpha = document.createElement('a')
+			alpha.className = 'speedr-alpha'
+			alpha.href = 'alpha.html'
+
+			# Create a listener for the alpha button
+			alpha.addEventListener(
+				'click'
+				(event) ->
+					href = @.getAttribute('href')
+					App.utility.openUrl(href)
+					event.preventDefault()
+			)
+
+			box.appendChild(alpha)
+
 			# Add the box to the overlay
 			overlay.appendChild(box)
 
