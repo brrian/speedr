@@ -193,4 +193,20 @@
         bottom: 10px;
         color: #666;
     }
+
+    .speedr-options {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        display: inline-block;
+        background-image: url('chrome-extension://__MSG_@@extension_id__/images/cog.svg');
+        width: 15px;
+        height: 15px;
+        opacity: .2;
+        transition: opacity 200ms ease-in;
+
+        &:hover {
+            opacity: .8;
+        }
+    }
 }

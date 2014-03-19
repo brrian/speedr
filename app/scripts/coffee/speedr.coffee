@@ -84,6 +84,11 @@ window.App = {
 			animateScroll()
 
 			App.scrolling = false
+
+		openUrl: (href) ->
+			chrome.runtime.sendMessage(
+				{url: href}
+			)
 	}
 	parse: {
 		selection: ->
@@ -154,6 +159,8 @@ window.App = {
 			wordContainer.className = 'speedr-word-container'
 			wordContainer.style.fontSize = User.settings.fontSize + 'px'
 
+			box.appendChild(wordContainer)
+
 			if User.settings.controls
 				# Create the player
 				player = document.createElement('div')
@@ -196,11 +203,28 @@ window.App = {
 			wpm.id = 'js-speedr-wpm'
 			wpm.className = 'speedr-wpm'
 
-			box.appendChild(wordContainer)
-			
 			box.appendChild(wpm)
+
+			# Options button
+			options = document.createElement('a')
+			options.className = 'speedr-options'
+			options.href = 'options.html'
+
+			# Create a listener for the options button
+			options.addEventListener(
+				'click'
+				(event) ->
+					href = @.getAttribute('href')
+					App.utility.openUrl(href)
+					event.preventDefault()
+			)
+
+			box.appendChild(options)
+
+			# Add the box to the overlay
 			overlay.appendChild(box)
 
+			# Add overlay to body
 			document.body.appendChild(overlay)
 
 			App.utility.runOnceAfterAnimation(

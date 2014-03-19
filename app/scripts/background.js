@@ -1,5 +1,10 @@
-'use strict';
+(function() {
+  chrome.runtime.onMessage.addListener(function(request, sender, sendReponse) {
+    if (request.url) {
+      return chrome.tabs.create({
+        url: request.url
+      });
+    }
+  });
 
-chrome.runtime.onInstalled.addListener(function (details) {
-    console.log('previousVersion', details.previousVersion);
-});
+}).call(this);

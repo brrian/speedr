@@ -91,6 +91,11 @@
         };
         animateScroll();
         return App.scrolling = false;
+      },
+      openUrl: function(href) {
+        return chrome.runtime.sendMessage({
+          url: href
+        });
       }
     },
     parse: {
@@ -142,7 +147,7 @@
     },
     speedr: {
       create: function() {
-        var box, button, buttons, element, elementFunction, overlay, player, wordContainer, wpm, _i, _len;
+        var box, button, buttons, element, elementFunction, options, overlay, player, wordContainer, wpm, _i, _len;
         App.active = true;
         overlay = document.createElement('div');
         overlay.id = 'js-speedr-container';
@@ -154,6 +159,7 @@
         wordContainer.id = 'js-speedr-word';
         wordContainer.className = 'speedr-word-container';
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
+        box.appendChild(wordContainer);
         if (User.settings.controls) {
           player = document.createElement('div');
           player.className = 'speedr-player';
@@ -196,8 +202,17 @@
         wpm = document.createElement('div');
         wpm.id = 'js-speedr-wpm';
         wpm.className = 'speedr-wpm';
-        box.appendChild(wordContainer);
         box.appendChild(wpm);
+        options = document.createElement('a');
+        options.className = 'speedr-options';
+        options.href = 'options.html';
+        options.addEventListener('click', function(event) {
+          var href;
+          href = this.getAttribute('href');
+          App.utility.openUrl(href);
+          return event.preventDefault();
+        });
+        box.appendChild(options);
         overlay.appendChild(box);
         document.body.appendChild(overlay);
         App.utility.runOnceAfterAnimation(box, function() {
