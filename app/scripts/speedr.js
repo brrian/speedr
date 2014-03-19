@@ -147,7 +147,7 @@
     },
     speedr: {
       create: function() {
-        var alpha, box, button, buttons, element, elementFunction, options, overlay, player, wordContainer, wpm, _i, _len;
+        var alpha, box, button, buttons, close, element, elementFunction, options, overlay, player, wordContainer, wpm, _i, _len;
         App.active = true;
         overlay = document.createElement('div');
         overlay.id = 'js-speedr-container';
@@ -203,6 +203,12 @@
         wpm.id = 'js-speedr-wpm';
         wpm.className = 'speedr-wpm';
         box.appendChild(wpm);
+        close = document.createElement('div');
+        close.className = 'speedr-close';
+        close.addEventListener('click', function() {
+          return App.speedr.destroy();
+        });
+        box.appendChild(close);
         options = document.createElement('a');
         options.className = 'speedr-options';
         options.href = 'options.html';

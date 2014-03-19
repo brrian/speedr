@@ -406,6 +406,23 @@
   color: #666;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003197}}
+.speedr-container .speedr-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-block;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/images/x.svg");
+  width: 14px;
+  height: 14px;
+  opacity: .2;
+  -webkit-transition: opacity 200ms ease-in;
+  transition: opacity 200ms ease-in;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003208}}
+.speedr-container .speedr-close:hover {
+  opacity: .8;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003213}}
 .speedr-container .speedr-options {
   position: absolute;
   left: 10px;
@@ -418,11 +435,11 @@
   -webkit-transition: opacity 200ms ease-in;
   transition: opacity 200ms ease-in;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003208}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003224}}
 .speedr-container .speedr-options:hover {
   opacity: .8;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003213}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003229}}
 .speedr-container .speedr-alpha {
   position: absolute;
   top: 10px;
@@ -435,7 +452,7 @@
   -webkit-transition: opacity 200ms ease-in;
   transition: opacity 200ms ease-in;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003224}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003240}}
 .speedr-container .speedr-alpha:hover {
   opacity: .8;
 }

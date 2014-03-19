@@ -205,6 +205,19 @@ window.App = {
 
 			box.appendChild(wpm)
 
+			# Close button
+			close = document.createElement('div')
+			close.className = 'speedr-close'
+
+			# Create a listener for the close button
+			close.addEventListener(
+				'click'
+				->
+					App.speedr.destroy()
+			)
+
+			box.appendChild(close)
+
 			# Options button
 			options = document.createElement('a')
 			options.className = 'speedr-options'
