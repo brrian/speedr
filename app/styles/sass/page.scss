@@ -4,8 +4,20 @@
     font-weight: 400;
 }
 
+a {
+	color: #ff2f04;
+
+	&:hover {
+		text-decoration: none;
+	}
+}
+
 body {
 	font-family: 'Source Sans', sans-serif;
+
+	&.popup {
+		width: 300px;
+	}
 }
 
 section {
