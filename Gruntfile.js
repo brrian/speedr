@@ -270,9 +270,9 @@ module.exports = function (grunt) {
         chromeManifest: {
             dist: {
                 options: {
-                    buildnumber: true,
+                    buildnumber: false,
                     background: {
-                        target:'scripts/background.js'
+                        target: 'scripts/background.js'
                     }
                 },
                 src: '<%= yeoman.app %>',
