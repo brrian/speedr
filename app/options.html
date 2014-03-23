@@ -13,6 +13,10 @@
             </div>
             <div class="form-group">
                 <label>
+                    Countdown time: <input type="text" id="js-countdownSpeed" class="short"> ms</label>
+            </div>
+            <div class="form-group">
+                <label>
                     <input type="checkbox" id="js-delayOnPunctuation"> Delay <input type="text" id="js-punctuationDelayTime" class="short"> ms on punctuation</label>
             </div>
             <div class="form-group">
@@ -37,16 +41,65 @@
             <h1>Visual</h1>
             <div class="form-group">
                 <label>
-                    Font size: <input type="text" id="js-fontSize" class="short"> px</label>
+                    Theme: 
+                    <select id="js-primaryTheme">
+                        <option value="Solarized (Light)">Solarized (Light)</option>
+                        <option value="Solarized (Dark)">Solarized (Dark)</option>
+                    </select>
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="js-minimap"> Show minimap
+                    Speedr width: <input type="text" id="js-boxWidth" class="short"> px
                 </label>
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="js-controls"> Show player controls
+                    Speedr height: <input type="text" id="js-boxHeight" class="short"> px
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Font size: <input type="text" id="js-fontSize" class="short"> px
+                </label>
+            </div>
+            <input type="hidden" id="js-fontFamily" value="Source Sans Pro">
+        </section>
+
+        <section class="settings-section">
+            <h1>Add ons</h1>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showCountdown"> Show countdown
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showStatus"> Show status bar
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showMinimap"> Show minimap
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showControls"> Show player controls
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showWPM"> Show WPM
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showMenuButton"> Show menu button
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Minimap width: <input type="text" id="js-minimapWidth" class="short"> px
                 </label>
             </div>
         </section>
@@ -66,6 +119,11 @@
             <div class="form-group">
                 <label>
                     <input type="text" id="js-reset" class="binding long"> Restart
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-toggle-menu" class="binding long"> Toggle menu
                 </label>
             </div>
             <div class="form-group">

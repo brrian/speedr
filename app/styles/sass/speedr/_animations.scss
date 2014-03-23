@@ -1,3 +1,5 @@
+@import 'timings';
+
 @keyframes fade-in {
 	0% {
 		opacity: 0;
@@ -15,18 +17,14 @@
 
 @keyframes flip-in {
 	0% {
-		transform: perspective(400) rotateX(90deg);
 		opacity: 0;
+		transform: perspective(400) rotateX(40deg) scale(.8)
 	}
-	60% {
-		transform: perspective(400) rotateX(-5deg);
+	50% {
 		opacity: 1;
 	}
-	80% {
-		transform: perspective(400) rotateX(5deg);
-	}
 	100% {
-		transform: perspective(400) rotateX(0);
+		transform: perspective(400) rotateX(0) scale(1)
 	}
 }
 
@@ -35,53 +33,12 @@
 		transform: perspective(400) rotateX(0);
 	}
 	100% {
-		transform: perspective(400) rotateX(90deg);
+		transform: perspective(400) rotateX(30deg) scale(.9);
 		opacity: 0;
-	}
-}
-
-@keyframes flip-in-left {
-	0% {
-		transform: perspective(400) rotateY(90deg)
-	}
-	50% {
-		transform: perspective(400) rotateY(-5deg)
-	}
-	80% {
-		transform: perspective(400) rotateY(5deg)
-	}
-	100% {
-		transform: perspective(400) rotateY(0deg)
-	}
-}
-
-@keyframes flip-out-right {
-	from {
-		transform-origin: right;
-	}
-	to {
-		transform-origin: right;
-		transform: rotateY(-90deg);
-	}
-}
-
-@keyframes reset-rotation {
-	to {
-		transform: perspective(400) rotate3d(0, 0, 0, 0);
 	}
 }
 
 .fade-in { animation: fade-in 400ms ease-in; }
 .fade-out { animation: fade-out 400ms ease-out; }
-.flip-in { animation: flip-in 400ms ease-in; }
+.flip-in { animation: flip-in 400ms $ease-out-back; }
 .flip-out { animation: flip-out 300ms ease-out; }
-.flip-in-left { animation: flip-in-left 400ms ease-in; }
-
-.speedr-reset-rotation {
-	animation: reset-rotation 200ms ease-in;
-}
-
-.speedr-flipped-up-top {
-	transform-origin: top;
-	transform: perspective(400) rotateX(-90deg);
-}

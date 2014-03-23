@@ -153,14 +153,20 @@
   saveSettings = function() {
     var newSettings;
     newSettings = {};
-    $('.settings-section').find('input').each(function() {
-      var setting, type;
+    $('.settings-section').find('input, select').each(function() {
+      var setting, tag, type;
+      tag = $(this).prop('tagName');
       setting = $(this).attr('id').replace('js-', '');
       type = $(this).attr('type');
-      if (type === 'text') {
+      console.log($(this).find(':selected').val());
+      if (tag === 'SELECT') {
+        newSettings[setting] = $(this).val();
+      } else if (type === 'text') {
         newSettings[setting] = parseInt($(this).val(), 10);
       } else if (type === 'checkbox') {
         newSettings[setting] = $(this).prop('checked');
+      } else {
+        newSettings[setting] = $(this).val();
       }
     });
     return newSettings;

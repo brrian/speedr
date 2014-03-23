@@ -1,20 +1,30 @@
 (function() {
   var User;
 
-  Math.easeInOutQuad = function(t, b, c, d) {
-    t /= d / 2;
-    if (t < 1) {
-      c / 2 * t * t + b;
+  Math.easeInOutQuad = function(time, begin, change, duration) {
+    if ((time = time / (duration / 2)) < 1) {
+      return change / 2 * time * time + begin;
+    } else {
+      return -change / 2 * ((time -= 1) * (time - 2) - 1) + begin;
     }
-    t--;
-    return -c / 2 * (t * (t - 2) - 1) + b;
   };
 
   User = {
     settings: {
+      fontFamily: 'Source Sans Pro',
+      primaryTheme: 'Solarized (Light)',
+      boxWidth: 500,
+      boxHeight: 245,
+      minimapWidth: 175,
+      countdownSpeed: 1000,
+      showControls: true,
+      showCountdown: true,
+      showMenuButton: true,
+      showMinimap: true,
+      showStatus: true,
+      showWPM: true,
       wpm: 350,
       minimap: true,
-      controls: true,
       fontSize: 33,
       delayOnPunctuation: false,
       punctuationDelayTime: 1000,
@@ -26,6 +36,22 @@
       delayOnLongWords: false,
       longWordLength: 8,
       longWordDelayTime: 100
+    },
+    themes: {
+      'Solarized (Light)': {
+        primaryText: '#444',
+        secondaryText: '#657b83',
+        boxColor: '#fdf6e3',
+        borderColor: 'rgba(175, 150, 190, .2)',
+        highlightColor: '#dc322f;'
+      },
+      'Solarized (Dark)': {
+        primaryText: '#93a1a1',
+        secondaryText: '#657b83',
+        boxColor: '#073642',
+        borderColor: 'rgba(175, 150, 190, .2)',
+        highlightColor: '#cb4b16;'
+      }
     },
     bindings: {
       ' ': 'toggle',
@@ -41,12 +67,41 @@
       'shift+%': 'prev sentence',
       'shift+\'': 'next sentence',
       'Û': 'slower',
-      'Ý': 'faster'
+      'Ý': 'faster',
+      'M': 'toggle menu'
     }
   };
 
   window.App = {
     utility: {
+      formatNumber: function(number) {
+        return Number(number).toLocaleString('en');
+      },
+      findNextOfType: function(type) {
+        var currentTypeStart, i;
+        i = App.i;
+        currentTypeStart = App.text[i][type];
+        while (true) {
+          i++;
+          if (App.text[i][type] !== currentTypeStart) {
+            break;
+          }
+          if (App.text[i + 1] === void 0) {
+            i = App.text.length - 1;
+            break;
+          }
+        }
+        return i;
+      },
+      findPrevOfType: function(type) {
+        var i;
+        i = App.i;
+        if (i === App.text[i][type]) {
+          return App.text[i - 1][type];
+        } else {
+          return App.text[i][type];
+        }
+      },
       generateKeyCombo: function(event) {
         var keyCombo;
         keyCombo = '';
@@ -60,6 +115,15 @@
           keyCombo += 'shift+';
         }
         return keyCombo += String.fromCharCode(event.keyCode);
+      },
+      toggleClass: function(element, className) {
+        var elementClasses;
+        elementClasses = element.className;
+        if (elementClasses.indexOf(className) === -1) {
+          return element.className += ' ' + className;
+        } else {
+          return element.className = elementClasses.replace(className, '');
+        }
       },
       runOnceAfterAnimation: function(element, callback) {
         var prefix, prefixes, _i, _len, _results;
@@ -80,6 +144,7 @@
         change = to - start;
         currentTime = 0;
         increment = 20;
+        App.scrolling = true;
         animateScroll = function() {
           var val;
           currentTime += increment;
@@ -87,10 +152,11 @@
           element.scrollTop = val;
           if (currentTime < duration) {
             return setTimeout(animateScroll, increment);
+          } else {
+            return App.scrolling = false;
           }
         };
-        animateScroll();
-        return App.scrolling = false;
+        return animateScroll();
       },
       openUrl: function(href) {
         return chrome.runtime.sendMessage({
@@ -136,7 +202,7 @@
       },
       splitIntoSetences: function(paragraph) {
         var sentences;
-        sentences = paragraph.match(/["'“]?([A-Z]((?!([A-Za-z]{2,}|\d+)[.?!]+["']?\s+["']?[A-Z]).)*)(((Mr|Ms|Mrs|Dr|Capt|Col)\.\s+((?!\w{2,}[.?!]['"]?\s+["']?[A-Z]).)*)?)*((?![.?!]["']?\s+["']?[A-Z]).)*[.?!]+["'”]?/g) || [paragraph];
+        sentences = paragraph.match(/[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/g) || [paragraph];
         return sentences.map(function(sentence) {
           return sentence.trim();
         });
@@ -147,107 +213,96 @@
     },
     speedr: {
       create: function() {
-        var alpha, box, button, buttons, close, element, elementFunction, options, overlay, player, wordContainer, wpm, _i, _len;
+        var box, countdown, doc, elementFunction, item, menu, menuItem, menuItems, overlay, pointer, settings, theme, wordContainer, wordWrapper, _i, _len;
         App.active = true;
-        overlay = document.createElement('div');
+        doc = document;
+        settings = User.settings;
+        theme = User.themes[settings.primaryTheme];
+        overlay = doc.createElement('div');
         overlay.id = 'js-speedr-container';
         overlay.className = 'speedr-container fade-in';
-        box = document.createElement('div');
+        box = doc.createElement('div');
         box.id = 'js-speedr-box';
         box.className = 'speedr-box flip-in';
-        wordContainer = document.createElement('div');
-        wordContainer.id = 'js-speedr-word';
+        box.style.cssText = 'font-family: ' + settings.fontFamily + '; color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;';
+        wordContainer = doc.createElement('div');
         wordContainer.className = 'speedr-word-container';
-        wordContainer.style.fontSize = User.settings.fontSize + 'px';
+        wordContainer.style.cssText = 'font-size: ' + settings.fontSize + '; border-bottom-color: ' + theme.borderColor + ';';
+        wordWrapper = doc.createElement('div');
+        wordWrapper.id = 'js-speedr-word';
+        wordWrapper.className = 'speedr-word';
+        wordWrapper.style.color = theme.primaryText;
+        wordContainer.appendChild(wordWrapper);
+        pointer = doc.createElement('span');
+        pointer.className = 'speedr-pointer';
+        pointer.style.cssText = 'border-top-color: ' + theme.highlightColor + ';';
+        wordContainer.appendChild(pointer);
         box.appendChild(wordContainer);
-        if (User.settings.controls) {
-          player = document.createElement('div');
-          player.className = 'speedr-player';
-          buttons = ['prev-paragraph', 'prev-sentence', 'prev-word', 'play-pause', 'next-word', 'next-sentence', 'next-paragraph'];
-          for (_i = 0, _len = buttons.length; _i < _len; _i++) {
-            button = buttons[_i];
-            switch (button) {
-              case 'prev-paragraph':
-                elementFunction = App.actions.prevParagraph;
-                break;
-              case 'prev-sentence':
-                elementFunction = App.actions.prevSentence;
-                break;
-              case 'prev-word':
-                elementFunction = App.actions.prevWord;
-                break;
-              case 'play-pause':
-                elementFunction = App.speedr.loop.toggle;
-                break;
-              case 'next-word':
-                elementFunction = App.actions.nextWord;
-                break;
-              case 'next-sentence':
-                elementFunction = App.actions.nextSentence;
-                break;
-              case 'next-paragraph':
-                elementFunction = App.actions.nextParagraph;
-            }
-            element = document.createElement('span');
-            element.className = button + ' speedr-button';
-            element.addEventListener('click', elementFunction, false);
-            if (button === 'play-pause') {
-              element.id = 'js-play-pause';
-            }
-            player.appendChild(element);
-            player.appendChild(document.createTextNode('\x20'));
-            box.appendChild(player);
+        countdown = doc.createElement('div');
+        countdown.className = 'speedr-countdown';
+        menu = doc.createElement('ul');
+        menu.id = 'js-speedr-menu';
+        menu.className = 'speedr-menu speedr-small-text';
+        menuItems = ['Alpha', 'Settings', 'Close'];
+        for (_i = 0, _len = menuItems.length; _i < _len; _i++) {
+          menuItem = menuItems[_i];
+          switch (menuItem) {
+            case 'Alpha':
+              elementFunction = function() {
+                return App.utility.openUrl('alpha.html');
+              };
+              break;
+            case 'Settings':
+              elementFunction = function() {
+                return App.utility.openUrl('options.html');
+              };
+              break;
+            case 'Close':
+              elementFunction = App.speedr.destroy;
           }
+          item = doc.createElement('li');
+          item.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';';
+          item.appendChild(doc.createTextNode(menuItem));
+          item.addEventListener('click', elementFunction);
+          menu.appendChild(item);
         }
-        wpm = document.createElement('div');
-        wpm.id = 'js-speedr-wpm';
-        wpm.className = 'speedr-wpm';
-        box.appendChild(wpm);
-        close = document.createElement('div');
-        close.className = 'speedr-close';
-        close.addEventListener('click', function() {
-          return App.speedr.destroy();
-        });
-        box.appendChild(close);
-        options = document.createElement('a');
-        options.className = 'speedr-options';
-        options.href = 'options.html';
-        options.addEventListener('click', function(event) {
-          var href;
-          href = this.getAttribute('href');
-          App.utility.openUrl(href);
-          return event.preventDefault();
-        });
-        box.appendChild(options);
-        alpha = document.createElement('a');
-        alpha.className = 'speedr-alpha';
-        alpha.href = 'alpha.html';
-        alpha.addEventListener('click', function(event) {
-          var href;
-          href = this.getAttribute('href');
-          App.utility.openUrl(href);
-          return event.preventDefault();
-        });
-        box.appendChild(alpha);
+        box.appendChild(menu);
+        if (settings.showControls) {
+          box.appendChild(App.speedrExtras.controls());
+        }
+        if (settings.showMenuButton) {
+          box.appendChild(App.speedrExtras.menuButton());
+        }
         overlay.appendChild(box);
         document.body.appendChild(overlay);
-        App.utility.runOnceAfterAnimation(box, function() {
-          if (User.settings.minimap) {
-            App.minimap.create();
-            App.minimap.update();
-          }
-          overlay.className = overlay.className.replace('fade-in', '');
-          return box.className = box.className.replace('flip-in', '');
+        if (settings.showMinimap) {
+          App.minimap.create(settings, theme, box);
+        }
+        if (settings.showCountdown) {
+          box.appendChild(App.speedrExtras.countdown(settings, theme));
+          App.actions.updateCountdownBar();
+        }
+        if (settings.showStatus) {
+          box.appendChild(App.speedrExtras.status());
+          App.actions.updateStatus();
+        }
+        if (settings.showWPM) {
+          box.appendChild(App.speedrExtras.wpm(theme));
+          App.actions.updateWPM();
+        }
+        return App.utility.runOnceAfterAnimation(box, function() {
+          overlay.className = overlay.className.replace(' fade-in', '');
+          return box.className = box.className.replace(' flip-in', '');
         });
-        return App.actions.updateWPM();
       },
       destroy: function() {
-        var newBox, oldBox, overlay;
-        oldBox = document.getElementById('js-speedr-box');
+        var doc, newBox, oldBox, overlay;
+        doc = document;
+        oldBox = doc.getElementById('js-speedr-box');
         newBox = oldBox.cloneNode(true);
-        newBox.className += 'flip-out';
+        newBox.className += ' flip-out';
         oldBox.parentNode.replaceChild(newBox, oldBox);
-        overlay = document.getElementById('js-speedr-container');
+        overlay = doc.getElementById('js-speedr-container');
         overlay.className += ' fade-out';
         App.utility.runOnceAfterAnimation(newBox, function() {
           newBox.remove();
@@ -256,11 +311,12 @@
         return App.speedr.reset();
       },
       showWord: function(marker) {
-        var html, orp, word, wordBox;
+        var html, orp, theme, word, wordBox;
+        theme = User.themes[User.settings.primaryTheme];
         marker = marker || App.i;
         word = App.text[marker].text;
         orp = Math.round((word.length + 1) * 0.4) - 1;
-        html = '<div>' + word.slice(0, orp) + '</div><div class="orp">' + word[orp] + '</div><div>' + word.slice(orp + 1) + '</div>';
+        html = '<div>' + word.slice(0, orp) + '</div><div style="color: ' + theme.highlightColor + ';">' + word[orp] + '</div><div>' + word.slice(orp + 1) + '</div>';
         wordBox = document.getElementById('js-speedr-word');
         return wordBox.innerHTML = html;
       },
@@ -276,42 +332,83 @@
       loop: {
         toggle: function() {
           if (App.pause) {
-            return App.speedr.loop.start();
+            return App.speedr.loop.startPrepare();
           } else {
             return App.speedr.loop.stop();
           }
         },
         stop: function() {
+          var bar, doc, newSpeed, oldSpeed, settings, toggleClass;
+          doc = document;
+          settings = User.settings;
+          toggleClass = App.utility.toggleClass;
           App.pause = true;
           clearTimeout(App.loop);
           App.i--;
           App.actions.getWordCount();
-          if (User.settings.controls) {
-            document.getElementById('js-play-pause').className = 'play-pause speedr-button';
+          if (settings.showStatus) {
+            App.actions.updateStatus();
+            toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden');
+          }
+          if (settings.showCountdown) {
+            clearTimeout(App.countdownTimeout);
+            bar = doc.getElementById('js-speedr-countdown-bar');
+            oldSpeed = bar.style['transition-duration'];
+            newSpeed = 150;
+            bar.style['transition-duration'] = newSpeed + 'ms';
+            toggleClass(bar, 'speedr-countdown-bar-zero');
+            setTimeout(function() {
+              return bar.style['transition-duration'] = oldSpeed;
+            }, newSpeed);
+          }
+          if (settings.showControls) {
+            doc.getElementById('js-play-pause').innerText = App.i === App.text.length - 1 ? 'Restart' : 'Play';
           }
           if (App.scrollWatcher) {
             return clearTimeout(App.scrollWatcher);
           }
         },
-        start: function() {
-          if (App.i === App.text.length) {
+        startPrepare: function() {
+          var doc, settings, toggleClass;
+          doc = document;
+          settings = User.settings;
+          toggleClass = App.utility.toggleClass;
+          if (settings.showControls) {
+            doc.getElementById('js-play-pause').innerText = 'Pause';
+          }
+          if (App.i === App.text.length - 1) {
             App.speedr.loop.reset();
           }
           App.i++;
           App.pause = false;
-          App.loop = this.create();
-          if (User.settings.controls) {
-            document.getElementById('js-play-pause').className = 'play-pause pause speedr-button';
+          if (settings.showStatus) {
+            toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden');
           }
+          if (settings.showCountdown) {
+            toggleClass(doc.getElementById('js-speedr-countdown-bar'), 'speedr-countdown-bar-zero');
+            return App.countdownTimeout = setTimeout(this.start, settings.countdownSpeed);
+          } else {
+            return this.start();
+          }
+        },
+        start: function() {
+          App.loop = App.speedr.loop.create();
           if (App.scrollWatcher) {
             return App.minimap.scrollWatcher();
           }
         },
         reset: function() {
-          App.speedr.loop.stop();
+          var settings;
+          settings = User.settings;
+          if (App.pause === false) {
+            App.speedr.loop.stop();
+          }
           App.wordCount = 0;
           App.speedr.showWord(App.i = 0);
-          if (User.settings.minimap) {
+          if (settings.showStatus) {
+            App.actions.updateStatus();
+          }
+          if (settings.showMinimap) {
             App.minimap.update();
             if (App.scrollWatcher) {
               return App.minimap.updateScroll();
@@ -319,31 +416,33 @@
           }
         },
         create: function() {
-          var delay, i, nextWord, word;
+          var delay, i, nextWord, prevWord, settings, word;
+          settings = User.settings;
           delay = 0;
           i = App.i;
           word = App.text[i];
+          prevWord = App.text[i - 1];
           nextWord = App.text[i + 1];
           App.speedr.showWord(i);
           App.i++;
-          if (User.settings.minimap) {
-            App.minimapElements[i].className = 'active';
+          if (settings.showMinimap) {
+            App.minimapElements[i].className = 'speedr-read';
           }
           if (nextWord) {
-            if (User.settings.delayOnPunctuation && word.hasPunctuation) {
-              delay = User.settings.punctuationDelayTime;
+            if (settings.delayOnPunctuation && word.hasPunctuation) {
+              delay = settings.punctuationDelayTime;
             }
-            if (User.settings.delayOnSentence && nextWord.sentenceStart === i + 1) {
-              delay = User.settings.sentenceDelayTime;
+            if (settings.delayOnSentence && nextWord.sentenceStart === i + 1) {
+              delay = settings.sentenceDelayTime;
             }
-            if (User.settings.delayOnLongWords && word.text.length > User.settings.longWordLength) {
-              delay += User.settings.longWordDelayTime;
+            if (settings.delayOnLongWords && word.text.length > settings.longWordLength) {
+              delay += settings.longWordDelayTime;
             }
             if (word.paragraphEnd) {
-              if (User.settings.delayOnParagraph) {
-                delay = User.settings.paragraphDelayTime;
+              if (settings.delayOnParagraph) {
+                delay = settings.paragraphDelayTime;
               }
-              if (User.settings.pauseOnParagraph) {
+              if (settings.pauseOnParagraph) {
                 return App.speedr.loop.stop();
               }
             }
@@ -357,35 +456,149 @@
         }
       }
     },
+    speedrExtras: {
+      controls: function() {
+        var button, buttons, controls, controlsLeft, controlsRight, doc, element, elementFunction, i, playPause, text, _i, _len;
+        doc = document;
+        controls = doc.createElement('div');
+        controls.className = 'speedr-controls speedr-small-text';
+        controlsLeft = doc.createElement('div');
+        controlsLeft.className = 'speedr-controls-side';
+        controlsRight = doc.createElement('div');
+        controlsRight.className = 'speedr-controls-side';
+        buttons = ['prev-Para', 'prev-Sent', 'prev-Word', 'play-Pause', 'next-Word', 'next-Sent', 'next-Para'];
+        for (i = _i = 0, _len = buttons.length; _i < _len; i = ++_i) {
+          button = buttons[i];
+          switch (button) {
+            case 'prev-Para':
+              elementFunction = function() {
+                return App.actions.navigateText('prev', 'paragraph');
+              };
+              break;
+            case 'prev-Sent':
+              elementFunction = function() {
+                return App.actions.navigateText('prev', 'sentence');
+              };
+              break;
+            case 'prev-Word':
+              elementFunction = function() {
+                return App.actions.navigateText('prev', 'word');
+              };
+              break;
+            case 'play-Pause':
+              elementFunction = App.speedr.loop.toggle;
+              break;
+            case 'next-Word':
+              elementFunction = function() {
+                return App.actions.navigateText('next', 'word');
+              };
+              break;
+            case 'next-Sent':
+              elementFunction = function() {
+                return App.actions.navigateText('next', 'sentence');
+              };
+              break;
+            case 'next-Para':
+              elementFunction = function() {
+                return App.actions.navigateText('next', 'paragraph');
+              };
+          }
+          text = button.split('-').pop();
+          element = doc.createElement('div');
+          element.className = 'speedr-button';
+          element.appendChild(doc.createTextNode(text));
+          element.addEventListener('click', elementFunction, false);
+          if (i < 3) {
+            controlsLeft.appendChild(element);
+          } else if (i > 3) {
+            controlsRight.appendChild(element);
+          } else {
+            element.id = 'js-play-pause';
+            element.className += ' play-pause';
+            element.innerText = 'Play';
+            playPause = element;
+          }
+        }
+        controls.appendChild(controlsLeft);
+        controls.appendChild(playPause);
+        controls.appendChild(controlsRight);
+        return controls;
+      },
+      countdown: function(settings, theme) {
+        var bar, countdown, doc;
+        doc = document;
+        countdown = doc.createElement('div');
+        countdown.className = 'speedr-countdown';
+        bar = doc.createElement('div');
+        bar.id = 'js-speedr-countdown-bar';
+        bar.className = 'speedr-countdown-bar';
+        bar.style.cssText = 'background-color: ' + theme.highlightColor + '; transition-duration: ' + settings.countdownSpeed + 'ms;';
+        countdown.appendChild(bar);
+        return countdown;
+      },
+      menuButton: function() {
+        var doc, menu;
+        doc = document;
+        menu = doc.createElement('div');
+        menu.id = 'js-speedr-menu-button';
+        menu.className = 'speedr-menu-button speedr-small-text speedr-button-fade';
+        menu.appendChild(doc.createTextNode('Menu'));
+        menu.addEventListener('click', App.actions.toggleMenu);
+        return menu;
+      },
+      status: function() {
+        var doc, status, timeLeft, wordsLeft;
+        doc = document;
+        status = doc.createElement('div');
+        status.id = 'js-speedr-status';
+        status.className = 'speedr-status speedr-small-text';
+        wordsLeft = doc.createElement('span');
+        wordsLeft.id = 'js-speedr-words-left';
+        wordsLeft.className = 'speedr-status-item';
+        status.appendChild(wordsLeft);
+        timeLeft = doc.createElement('span');
+        timeLeft.id = 'js-speedr-time-left';
+        timeLeft.className = 'speedr-status-item';
+        status.appendChild(timeLeft);
+        return status;
+      },
+      wpm: function(theme) {
+        var wpm;
+        wpm = document.createElement('div');
+        wpm.id = 'js-speedr-wpm';
+        wpm.className = 'speedr-wpm speedr-small-text';
+        wpm.style.backgroundColor = theme.boxColor;
+        return wpm;
+      }
+    },
     minimap: {
-      create: function() {
-        var contents, i, minimap, paragraphElement, speedrBox, word, wordElement, wordText, _i, _len, _ref;
-        minimap = document.createElement('div');
+      create: function(settings, theme, box) {
+        var contents, doc, i, minimap, paragraphElement, word, wordElement, wordText, _i, _len, _ref;
+        doc = document;
+        minimap = doc.createElement('div');
         minimap.id = 'js-speedr-minimap';
-        minimap.className = 'speedr-minimap flip-in-left';
-        contents = document.createElement('div');
+        minimap.className = 'speedr-minimap';
+        minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + '; height: ' + settings.boxHeight + '; border-left-color: ' + theme.borderColor + ';';
+        contents = doc.createElement('div');
         contents.className = 'contents';
-        paragraphElement = document.createElement('p');
+        paragraphElement = doc.createElement('p');
         _ref = App.text;
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
           word = _ref[i];
-          wordElement = document.createElement('span');
-          wordText = document.createTextNode(word.text);
+          wordElement = doc.createElement('span');
+          wordText = doc.createTextNode(word.text.replace(/./g, '.'));
           wordElement.appendChild(wordText);
           paragraphElement.appendChild(wordElement);
-          paragraphElement.appendChild(document.createTextNode(' '));
+          paragraphElement.appendChild(doc.createTextNode(' '));
           if (word.paragraphEnd) {
             contents.appendChild(paragraphElement);
-            paragraphElement = document.createElement('p');
+            paragraphElement = doc.createElement('p');
           }
           App.minimapElements[i] = wordElement;
         }
+        App.minimapElements[0].className = 'speedr-read';
         minimap.appendChild(contents);
-        speedrBox = document.getElementById('js-speedr-word');
-        speedrBox.insertAdjacentElement('afterEnd', minimap);
-        App.utility.runOnceAfterAnimation(minimap, function() {
-          return minimap.className = minimap.className.replace('flip-in-left', '');
-        });
+        box.appendChild(minimap);
         if (contents.offsetHeight > minimap.offsetHeight) {
           return App.scrollWatcher = true;
         }
@@ -395,7 +608,7 @@
         i = App.i;
         _results = [];
         for (num = _i = 0, _ref = App.text.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; num = 0 <= _ref ? ++_i : --_i) {
-          _results.push(App.minimapElements[num].className = num <= i ? 'active' : '');
+          _results.push(App.minimapElements[num].className = num <= i ? 'speedr-read' : '');
         }
         return _results;
       },
@@ -404,13 +617,13 @@
         i = App.i;
         minimap = document.getElementById('js-speedr-minimap');
         activeOffset = App.minimapElements[i].offsetTop;
-        if (activeOffset - 10 < minimap.scrollTop) {
-          App.scrolling = true;
-          App.utility.scrollTo(minimap, activeOffset - minimap.offsetHeight + 20, 1000);
-        }
-        if (activeOffset + 10 > minimap.scrollTop + minimap.offsetHeight) {
-          App.scrolling = true;
-          return App.utility.scrollTo(minimap, activeOffset - 20, 1000);
+        if (App.scrolling === false || App.scrolling === void 0) {
+          if (User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50) {
+            App.utility.scrollTo(minimap, activeOffset, 1000);
+          }
+          if (App.pause === true && activeOffset < minimap.scrollTop) {
+            return App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000);
+          }
         }
       },
       scrollWatcher: function() {
@@ -424,133 +637,81 @@
       calculateInterval: function() {
         return App.interval = 60000 / User.settings.wpm;
       },
+      updateStatus: function() {
+        var doc, wordsLeft, wpm;
+        doc = document;
+        wordsLeft = App.text.length - App.i - 1;
+        wpm = User.settings.wpm;
+        doc.getElementById('js-speedr-time-left').innerText = '~' + (wordsLeft / wpm * 60).toFixed(2) + ' s @ ' + wpm + 'WPM';
+        return doc.getElementById('js-speedr-words-left').innerText = App.utility.formatNumber(wordsLeft) + ' words left';
+      },
       updateWPM: function() {
         var wpm;
         wpm = document.getElementById('js-speedr-wpm');
         return wpm.innerHTML = User.settings.wpm + ' wpm';
       },
+      updateCountdownBar: function() {
+        var countdown, settings;
+        settings = User.settings;
+        countdown = document.getElementById('js-speedr-countdown-bar').offsetParent;
+        return countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.25 + 12) / 2);
+      },
       changeWPM: function(wpm) {
+        var settings;
+        settings = User.settings;
+        if (settings.wpm === 0 && wpm < 0) {
+          return;
+        }
         User.settings.wpm = User.settings.wpm + wpm;
         this.calculateInterval();
-        this.updateWPM();
+        if (settings.showWPM) {
+          this.updateWPM();
+        }
+        if (settings.showStatus) {
+          this.updateStatus();
+        }
         return App.chrome.settings.save();
       },
       changeFontSize: function(px) {
-        var wordContainer;
-        User.settings.fontSize = User.settings.fontSize + px;
+        var settings, wordContainer;
+        settings = User.settings;
+        User.settings.fontSize = settings.fontSize + px;
         wordContainer = document.getElementById('js-speedr-word');
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
+        if (settings.showCountdown) {
+          App.actions.updateCountdownBar();
+        }
         return App.chrome.settings.save();
       },
-      prevWord: function() {
-        var i;
+      navigateText: function(direction, type) {
+        var i, settings;
         i = App.i;
-        if (i === 0) {
+        settings = User.settings;
+        if (App.pause === false) {
+          App.speedr.loop.stop();
+        }
+        if (i === 0 && direction === 'prev') {
           return;
         }
-        App.speedr.showWord(App.i = i - 1);
-        if (User.settings.minimap) {
-          App.minimap.update();
-          if (App.scrollWatcher) {
-            return App.minimap.updateScroll();
-          }
-        }
-      },
-      prevSentence: function() {
-        var i;
-        i = App.i;
-        if (i === 0) {
+        if (i === App.text.length - 1 && direction === 'next') {
           return;
         }
-        App.i = i === App.text[i].sentenceStart ? App.text[i - 1].sentenceStart : App.text[i].sentenceStart;
+        switch (type) {
+          case 'word':
+            App.i = direction === 'prev' ? i - 1 : i + 1;
+            break;
+          case 'sentence':
+            App.i = direction === 'prev' ? App.utility.findPrevOfType('sentenceStart') : App.utility.findNextOfType('sentenceStart');
+            break;
+          case 'paragraph':
+            App.i = direction === 'prev' ? App.utility.findPrevOfType('paragraphStart') : App.utility.findNextOfType('paragraphStart');
+        }
         App.speedr.showWord();
         App.wordCount = App.i;
-        if (User.settings.minimap) {
-          App.minimap.update();
-          if (App.scrollWatcher) {
-            return App.minimap.updateScroll();
-          }
+        if (settings.showStatus) {
+          App.actions.updateStatus();
         }
-      },
-      prevParagraph: function() {
-        var i;
-        i = App.i;
-        if (i === 0) {
-          return;
-        }
-        App.i = i === App.text[i].paragraphStart ? App.text[i - 1].paragraphStart : App.text[i].paragraphStart;
-        App.speedr.showWord();
-        App.wordCount = App.i;
-        if (User.settings.minimap) {
-          App.minimap.update();
-          if (App.scrollWatcher) {
-            return App.minimap.updateScroll();
-          }
-        }
-      },
-      nextWord: function() {
-        var i;
-        i = App.i;
-        if (i === App.text.length - 1) {
-          return;
-        }
-        App.speedr.showWord(App.i = i + 1);
-        App.wordCount = App.i;
-        if (User.settings.minimap) {
-          App.minimap.update();
-          if (App.scrollWatcher) {
-            return App.minimap.updateScroll();
-          }
-        }
-      },
-      nextSentence: function() {
-        var currentSentenceStart, i;
-        i = App.i;
-        currentSentenceStart = App.text[i].sentenceStart;
-        if (i === App.text.length - 1) {
-          return;
-        }
-        while (true) {
-          i++;
-          if (App.text[i].sentenceStart !== currentSentenceStart) {
-            break;
-          }
-          if (App.text[i + 1] === void 0) {
-            i = App.text.length - 1;
-            break;
-          }
-        }
-        App.i = i;
-        App.speedr.showWord();
-        App.wordCount = App.i;
-        if (User.settings.minimap) {
-          App.minimap.update();
-          if (App.scrollWatcher) {
-            return App.minimap.updateScroll();
-          }
-        }
-      },
-      nextParagraph: function() {
-        var currentParagraphStart, i;
-        i = App.i;
-        currentParagraphStart = App.text[i].paragraphStart;
-        if (i === App.text.length - 1) {
-          return;
-        }
-        while (true) {
-          i++;
-          if (App.text[i].paragraphStart !== currentParagraphStart) {
-            break;
-          }
-          if (App.text[i + 1] === void 0) {
-            i = App.text.length - 1;
-            break;
-          }
-        }
-        App.i = i;
-        App.speedr.showWord();
-        App.wordCount = App.i;
-        if (User.settings.minimap) {
+        if (settings.showMinimap) {
           App.minimap.update();
           if (App.scrollWatcher) {
             return App.minimap.updateScroll();
@@ -562,6 +723,15 @@
         count = App.i - App.wordCount;
         App.wordCount = App.i;
         return App.chrome.wordCount.save(count);
+      },
+      toggleMenu: function() {
+        var doc, toggleClass;
+        doc = document;
+        toggleClass = App.utility.toggleClass;
+        if (User.settings.showMenuButton) {
+          toggleClass(doc.getElementById('js-speedr-menu-button'), 'speedr-menu-button-active');
+        }
+        return toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active');
       }
     },
     chrome: {
@@ -653,37 +823,42 @@
         break;
       case 'prev word':
         if (App.active) {
-          App.actions.prevWord();
+          App.actions.navigateText('prev', 'word');
           return false;
         }
         break;
       case 'prev sentence':
         if (App.active) {
-          App.actions.prevSentence();
+          App.actions.navigateText('prev', 'sentence');
           return false;
         }
         break;
       case 'prev paragraph':
         if (App.active) {
-          App.actions.prevParagraph();
+          App.actions.navigateText('prev', 'paragraph');
           return false;
         }
         break;
       case 'next word':
         if (App.active) {
-          App.actions.nextWord();
+          App.actions.navigateText('next', 'word');
           return false;
         }
         break;
       case 'next sentence':
         if (App.active) {
-          App.actions.nextSentence();
+          App.actions.navigateText('next', 'sentence');
           return false;
         }
         break;
       case 'next paragraph':
         if (App.active) {
-          return App.actions.nextParagraph();
+          return App.actions.navigateText('next', 'paragraph');
+        }
+        break;
+      case 'toggle menu':
+        if (App.active) {
+          return App.actions.toggleMenu();
         }
     }
   };

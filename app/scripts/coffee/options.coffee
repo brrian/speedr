@@ -136,15 +136,22 @@ generateKeyCombo = (event) ->
 saveSettings = ->
     newSettings = {}
 
-    $('.settings-section').find('input').each(
+    $('.settings-section').find('input, select').each(
         ->
+            tag =  $(@).prop('tagName')
             setting = $(@).attr('id').replace('js-', '')
             type = $(@).attr('type')
 
-            if type is 'text'
+            console.log $(@).find(':selected').val()
+
+            if tag is 'SELECT'
+                newSettings[setting] = $(@).val()
+            else if type is 'text'
                 newSettings[setting] = parseInt($(@).val(), 10)
             else if type is 'checkbox'
                 newSettings[setting] = $(@).prop('checked')
+            else
+                newSettings[setting] = $(@).val()                
 
             return
     )

@@ -1,177 +1,145 @@
 @-webkit-keyframes fade-in {
-  /* line 2, sass/speedr/_animations.scss */
+  /* line 4, sass/speedr/_animations.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 5, sass/speedr/_animations.scss */
+  /* line 7, sass/speedr/_animations.scss */
   100% {
     opacity: 1;
   }
 }
 @keyframes fade-in {
-  /* line 2, sass/speedr/_animations.scss */
+  /* line 4, sass/speedr/_animations.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 5, sass/speedr/_animations.scss */
+  /* line 7, sass/speedr/_animations.scss */
   100% {
     opacity: 1;
   }
 }
 @-webkit-keyframes fade-out {
-  /* line 11, sass/speedr/_animations.scss */
+  /* line 13, sass/speedr/_animations.scss */
   100% {
     opacity: 0;
   }
 }
 @keyframes fade-out {
-  /* line 11, sass/speedr/_animations.scss */
+  /* line 13, sass/speedr/_animations.scss */
   100% {
     opacity: 0;
   }
 }
 @-webkit-keyframes flip-in {
-  /* line 17, sass/speedr/_animations.scss */
+  /* line 19, sass/speedr/_animations.scss */
   0% {
-    -webkit-transform: perspective(400) rotateX(90deg);
-    transform: perspective(400) rotateX(90deg);
     opacity: 0;
+    -webkit-transform: perspective(400) rotateX(40deg) scale(0.8);
+    transform: perspective(400) rotateX(40deg) scale(0.8);
   }
 
-  /* line 21, sass/speedr/_animations.scss */
-  60% {
-    -webkit-transform: perspective(400) rotateX(-5deg);
-    transform: perspective(400) rotateX(-5deg);
+  /* line 23, sass/speedr/_animations.scss */
+  50% {
     opacity: 1;
   }
 
-  /* line 25, sass/speedr/_animations.scss */
-  80% {
-    -webkit-transform: perspective(400) rotateX(5deg);
-    transform: perspective(400) rotateX(5deg);
-  }
-
-  /* line 28, sass/speedr/_animations.scss */
+  /* line 26, sass/speedr/_animations.scss */
   100% {
-    -webkit-transform: perspective(400) rotateX(0);
-    transform: perspective(400) rotateX(0);
+    -webkit-transform: perspective(400) rotateX(0) scale(1);
+    transform: perspective(400) rotateX(0) scale(1);
   }
 }
 @keyframes flip-in {
-  /* line 17, sass/speedr/_animations.scss */
+  /* line 19, sass/speedr/_animations.scss */
   0% {
-    -webkit-transform: perspective(400) rotateX(90deg);
-    transform: perspective(400) rotateX(90deg);
     opacity: 0;
+    -webkit-transform: perspective(400) rotateX(40deg) scale(0.8);
+    transform: perspective(400) rotateX(40deg) scale(0.8);
   }
 
-  /* line 21, sass/speedr/_animations.scss */
-  60% {
-    -webkit-transform: perspective(400) rotateX(-5deg);
-    transform: perspective(400) rotateX(-5deg);
+  /* line 23, sass/speedr/_animations.scss */
+  50% {
     opacity: 1;
   }
 
-  /* line 25, sass/speedr/_animations.scss */
-  80% {
-    -webkit-transform: perspective(400) rotateX(5deg);
-    transform: perspective(400) rotateX(5deg);
-  }
-
-  /* line 28, sass/speedr/_animations.scss */
+  /* line 26, sass/speedr/_animations.scss */
   100% {
-    -webkit-transform: perspective(400) rotateX(0);
-    transform: perspective(400) rotateX(0);
+    -webkit-transform: perspective(400) rotateX(0) scale(1);
+    transform: perspective(400) rotateX(0) scale(1);
   }
 }
 @-webkit-keyframes flip-out {
-  /* line 34, sass/speedr/_animations.scss */
+  /* line 32, sass/speedr/_animations.scss */
   0% {
     -webkit-transform: perspective(400) rotateX(0);
     transform: perspective(400) rotateX(0);
   }
 
-  /* line 37, sass/speedr/_animations.scss */
+  /* line 35, sass/speedr/_animations.scss */
   100% {
-    -webkit-transform: perspective(400) rotateX(90deg);
-    transform: perspective(400) rotateX(90deg);
+    -webkit-transform: perspective(400) rotateX(30deg) scale(0.9);
+    transform: perspective(400) rotateX(30deg) scale(0.9);
     opacity: 0;
   }
 }
 @keyframes flip-out {
-  /* line 34, sass/speedr/_animations.scss */
+  /* line 32, sass/speedr/_animations.scss */
   0% {
     -webkit-transform: perspective(400) rotateX(0);
     transform: perspective(400) rotateX(0);
   }
 
-  /* line 37, sass/speedr/_animations.scss */
+  /* line 35, sass/speedr/_animations.scss */
   100% {
-    -webkit-transform: perspective(400) rotateX(90deg);
-    transform: perspective(400) rotateX(90deg);
+    -webkit-transform: perspective(400) rotateX(30deg) scale(0.9);
+    transform: perspective(400) rotateX(30deg) scale(0.9);
     opacity: 0;
   }
 }
 @-webkit-keyframes flip-in-left {
-  /* line 44, sass/speedr/_animations.scss */
+  /* line 42, sass/speedr/_animations.scss */
   0% {
+    -webkit-transform-origin: left;
+    transform-origin: left;
     -webkit-transform: perspective(400) rotateY(90deg);
     transform: perspective(400) rotateY(90deg);
   }
 
-  /* line 47, sass/speedr/_animations.scss */
-  50% {
-    -webkit-transform: perspective(400) rotateY(-5deg);
-    transform: perspective(400) rotateY(-5deg);
-  }
-
-  /* line 50, sass/speedr/_animations.scss */
-  80% {
-    -webkit-transform: perspective(400) rotateY(5deg);
-    transform: perspective(400) rotateY(5deg);
-  }
-
-  /* line 53, sass/speedr/_animations.scss */
+  /* line 46, sass/speedr/_animations.scss */
   100% {
+    -webkit-transform-origin: left;
+    transform-origin: left;
     -webkit-transform: perspective(400) rotateY(0deg);
     transform: perspective(400) rotateY(0deg);
   }
 }
 @keyframes flip-in-left {
-  /* line 44, sass/speedr/_animations.scss */
+  /* line 42, sass/speedr/_animations.scss */
   0% {
+    -webkit-transform-origin: left;
+    transform-origin: left;
     -webkit-transform: perspective(400) rotateY(90deg);
     transform: perspective(400) rotateY(90deg);
   }
 
-  /* line 47, sass/speedr/_animations.scss */
-  50% {
-    -webkit-transform: perspective(400) rotateY(-5deg);
-    transform: perspective(400) rotateY(-5deg);
-  }
-
-  /* line 50, sass/speedr/_animations.scss */
-  80% {
-    -webkit-transform: perspective(400) rotateY(5deg);
-    transform: perspective(400) rotateY(5deg);
-  }
-
-  /* line 53, sass/speedr/_animations.scss */
+  /* line 46, sass/speedr/_animations.scss */
   100% {
+    -webkit-transform-origin: left;
+    transform-origin: left;
     -webkit-transform: perspective(400) rotateY(0deg);
     transform: perspective(400) rotateY(0deg);
   }
 }
 @-webkit-keyframes flip-out-right {
-  /* line 59, sass/speedr/_animations.scss */
+  /* line 53, sass/speedr/_animations.scss */
   from {
     -webkit-transform-origin: right;
     transform-origin: right;
   }
 
-  /* line 62, sass/speedr/_animations.scss */
+  /* line 56, sass/speedr/_animations.scss */
   to {
     -webkit-transform-origin: right;
     transform-origin: right;
@@ -180,13 +148,13 @@
   }
 }
 @keyframes flip-out-right {
-  /* line 59, sass/speedr/_animations.scss */
+  /* line 53, sass/speedr/_animations.scss */
   from {
     -webkit-transform-origin: right;
     transform-origin: right;
   }
 
-  /* line 62, sass/speedr/_animations.scss */
+  /* line 56, sass/speedr/_animations.scss */
   to {
     -webkit-transform-origin: right;
     transform-origin: right;
@@ -195,56 +163,56 @@
   }
 }
 @-webkit-keyframes reset-rotation {
-  /* line 69, sass/speedr/_animations.scss */
+  /* line 63, sass/speedr/_animations.scss */
   to {
     -webkit-transform: perspective(400) rotate3d(0, 0, 0, 0);
     transform: perspective(400) rotate3d(0, 0, 0, 0);
   }
 }
 @keyframes reset-rotation {
-  /* line 69, sass/speedr/_animations.scss */
+  /* line 63, sass/speedr/_animations.scss */
   to {
     -webkit-transform: perspective(400) rotate3d(0, 0, 0, 0);
     transform: perspective(400) rotate3d(0, 0, 0, 0);
   }
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000374}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000368}}
 .fade-in {
   -webkit-animation: fade-in 400ms ease-in;
   animation: fade-in 400ms ease-in;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000375}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000369}}
 .fade-out {
   -webkit-animation: fade-out 400ms ease-out;
   animation: fade-out 400ms ease-out;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000376}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000370}}
 .flip-in {
-  -webkit-animation: flip-in 400ms ease-in;
-  animation: flip-in 400ms ease-in;
+  -webkit-animation: flip-in 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: flip-in 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000377}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000371}}
 .flip-out {
   -webkit-animation: flip-out 300ms ease-out;
   animation: flip-out 300ms ease-out;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000378}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000372}}
 .flip-in-left {
-  -webkit-animation: flip-in-left 400ms ease-in;
-  animation: flip-in-left 400ms ease-in;
+  -webkit-animation: flip-in-left 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: flip-in-left 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000380}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000374}}
 .speedr-reset-rotation {
   -webkit-animation: reset-rotation 200ms ease-in;
   animation: reset-rotation 200ms ease-in;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000384}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\/_animations\.scss}line{font-family:\0000378}}
 .speedr-flipped-up-top {
   -webkit-transform-origin: top;
   transform-origin: top;
@@ -419,11 +387,14 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003119}}
 .speedr-container .speedr-countdown {
   position: absolute;
+  top: 0;
+  left: -webkit-calc(45% + 2px);
+  left: calc(45% + 2px);
   display: inline-block;
   width: 2px;
   overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003125}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003127}}
 .speedr-container .speedr-countdown .speedr-countdown-bar {
   position: relative;
   top: 0;
@@ -434,31 +405,32 @@
   -webkit-transition-timing-function: linear;
   transition-timing-function: linear;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003133}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003135}}
 .speedr-container .speedr-countdown .speedr-countdown-bar.speedr-countdown-bar-zero {
   top: 100%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003141}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003143}}
 .speedr-container .speedr-status.speedr-status-hidden .speedr-status-item {
   top: 18px;
   opacity: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003147}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003149}}
 .speedr-container .speedr-status .speedr-status-item {
   position: absolute;
   top: 8px;
+  left: 45%;
   display: inline-block;
-  margin-left: 8px;
+  margin-left: 10px;
   -webkit-transition: top 200ms 150ms ease-in, opacity 200ms 150ms ease-in;
   transition: top 200ms 150ms ease-in, opacity 200ms 150ms ease-in;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003154}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003157}}
 .speedr-container .speedr-status .speedr-status-item:first-child {
   margin-left: -5px;
   -webkit-transform: translateX(-100%);
   transform: translateX(-100%);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003161}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003164}}
 .speedr-container .speedr-word-container {
   position: absolute;
   top: 50%;
@@ -468,7 +440,7 @@
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003169}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003172}}
 .speedr-container .speedr-word-container .speedr-pointer {
   position: absolute;
   top: 0;
@@ -481,137 +453,129 @@
   border-style: solid;
   border-width: 6px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003181}}
-.speedr-container .speedr-word-container div {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003185}}
+.speedr-container .speedr-word-container .speedr-word div {
   display: table-cell;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003184}}
-.speedr-container .speedr-word-container div:first-of-type {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003188}}
+.speedr-container .speedr-word-container .speedr-word div:first-child {
   width: 45%;
   text-align: right;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003189}}
-.speedr-container .speedr-word-container div:last-of-type {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003193}}
+.speedr-container .speedr-word-container .speedr-word div:last-child {
   width: 55%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003195}}
-.speedr-container .speedr-player {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003200}}
+.speedr-container .speedr-controls {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
   margin: auto;
-  width: 480px;
+  width: 380px;
   text-align: center;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003204}}
-.speedr-container .speedr-player .speedr-button {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003209}}
+.speedr-container .speedr-controls .speedr-button {
   display: inline-block;
   padding: 10px 0;
-  margin-right: 6px;
+  margin-right: 15px;
   opacity: .8;
   cursor: default;
   -webkit-transition: opacity 200ms ease-in-out;
   transition: opacity 200ms ease-in-out;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003212}}
-.speedr-container .speedr-player .speedr-button:last-child {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003217}}
+.speedr-container .speedr-controls .speedr-button:last-child {
   margin-right: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003216}}
-.speedr-container .speedr-player .speedr-button:hover {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003221}}
+.speedr-container .speedr-controls .speedr-button:hover {
   opacity: 1;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003221}}
-.speedr-container .speedr-player .play-pause {
-  position: relative;
-  top: -1px;
-  font-size: .75em;
-  letter-spacing: 2px;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003226}}
+.speedr-container .speedr-controls .play-pause {
+  display: table-cell;
+  font-size: 1.09em;
   margin: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003228}}
-.speedr-container .speedr-player .play-pause:before, .speedr-container .speedr-player .play-pause:after {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003231}}
+.speedr-container .speedr-controls .play-pause:before, .speedr-container .speedr-controls .play-pause:after {
   position: relative;
   top: -1px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003233}}
-.speedr-container .speedr-player .play-pause:before {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003236}}
+.speedr-container .speedr-controls .play-pause:before {
   content: '\2039';
   margin-right: 5px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003238}}
-.speedr-container .speedr-player .play-pause:after {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003241}}
+.speedr-container .speedr-controls .play-pause:after {
   content: '\203A';
   margin-left: 5px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003246}}
-.speedr-container .speedr-player .speedr-player-left .speedr-button, .speedr-container .speedr-player .speedr-player-right .speedr-button {
-  opacity: 0;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003247}}
+.speedr-container .speedr-controls .speedr-controls-side {
+  display: table-cell;
+  width: 50%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003251}}
-.speedr-container .speedr-player .speedr-player-left:hover .speedr-button, .speedr-container .speedr-player .speedr-player-right:hover .speedr-button {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003252}}
+.speedr-container .speedr-controls .speedr-controls-side:hover .speedr-button {
   opacity: .5;
   -webkit-transition: opacity 500ms ease-in-out;
   transition: opacity 500ms ease-in-out;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003255}}
-.speedr-container .speedr-player .speedr-player-left:hover .speedr-button:hover, .speedr-container .speedr-player .speedr-player-right:hover .speedr-button:hover {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003256}}
+.speedr-container .speedr-controls .speedr-controls-side:hover .speedr-button:hover {
   opacity: 1;
   -webkit-transition: opacity 200ms ease-in-out;
   transition: opacity 200ms ease-in-out;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003263}}
-.speedr-container .speedr-player .speedr-player-left {
-  float: left;
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003267}}
-.speedr-container .speedr-player .speedr-player-right {
-  float: right;
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003272}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003265}}
 .speedr-container .speedr-minimap {
   position: absolute;
   top: 0;
   left: 100%;
   padding: 8px;
+  font-size: 1.125em;
+  line-height: 5px;
   border-left-style: solid;
   border-left-width: 1px;
   overflow-y: auto;
   overflow-x: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003282}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003277}}
 .speedr-container .speedr-minimap::-webkit-scrollbar {
   width: 5px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003286}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003281}}
 .speedr-container .speedr-minimap::-webkit-scrollbar-track {
   background-color: #e8e8e8;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003290}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003285}}
 .speedr-container .speedr-minimap::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003294}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003289}}
 .speedr-container .speedr-minimap p {
-  margin: 0 0 6px 0 !important;
+  margin: 0 0 5px 0 !important;
   padding: 0 !important;
-  line-height: 4px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003299}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003293}}
 .speedr-container .speedr-minimap p span {
   margin-right: -1px;
   opacity: .4;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003303}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003297}}
 .speedr-container .speedr-minimap p span:first-child {
   margin-left: 8px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003307}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003301}}
 .speedr-container .speedr-minimap p span.speedr-read {
   opacity: 1;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003314}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/speedr\.scss}line{font-family:\00003308}}
 .speedr-container .speedr-wpm {
   position: absolute;
   top: 100%;

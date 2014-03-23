@@ -118,6 +118,8 @@
 
     .speedr-countdown {
         position: absolute;
+        top: 0;
+        left: calc(45% + 2px);
         display: inline-block;
         width: 2px;
         overflow: hidden;
@@ -147,8 +149,9 @@
         .speedr-status-item {
             position: absolute;
             top: 8px;
+            left: 45%;
             display: inline-block;
-            margin-left: 8px;
+            margin-left: 10px;
             transition: top 200ms 150ms ease-in, opacity 200ms 150ms ease-in;
 
             &:first-child {
@@ -178,33 +181,35 @@
             border-width: 6px;
         }
 
-        div {
-            display: table-cell;
+        .speedr-word {
+            div {
+                display: table-cell;
 
-            &:first-of-type {
-                width: 45%;
-                text-align: right;
-            }
+                &:first-child {
+                    width: 45%;
+                    text-align: right;
+                }
 
-            &:last-of-type {
-                width: 55%;
+                &:last-child {
+                    width: 55%;
+                }
             }
         }
     }
 
-    .speedr-player {
+    .speedr-controls {
         position: absolute;
         right: 0;
         bottom: 0;
         left: 0;
         margin: auto;
-        width: 480px;
+        width: 380px;
         text-align: center;
 
         .speedr-button {
             display: inline-block;
             padding: 10px 0;
-            margin-right: 6px;
+            margin-right: 15px;
             opacity: .8;
             cursor: default;
             transition: opacity 200ms ease-in-out;
@@ -219,10 +224,8 @@
         }
 
         .play-pause {
-            position: relative;
-            top: -1px;
-            font-size: .75em;
-            letter-spacing: 2px;
+            display: table-cell;
+            font-size: 1.09em;
             margin: 0;
 
             &:before, &:after {
@@ -241,11 +244,9 @@
             }
         }
 
-        .speedr-player-left, .speedr-player-right {
-
-            .speedr-button {
-                opacity: 0;
-            }
+        .speedr-controls-side {
+            display: table-cell;
+            width: 50%;
 
             &:hover {
                 .speedr-button {
@@ -259,14 +260,6 @@
                 }
             }
         }
-
-        .speedr-player-left {
-            float: left;
-        }
-
-        .speedr-player-right {
-            float: right;
-        }
     }
 
     .speedr-minimap {
@@ -274,6 +267,8 @@
         top: 0;
         left: 100%;
         padding: 8px;
+        font-size: 1.125em;
+        line-height: 5px;
         border-left-style: solid;
         border-left-width: 1px;
         overflow-y: auto;
@@ -292,9 +287,8 @@
         }
 
         p {
-            margin: 0 0 6px 0 !important;
+            margin: 0 0 5px 0 !important;
             padding: 0 !important;
-            line-height: 4px;
 
             span {
                 margin-right: -1px;
