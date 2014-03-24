@@ -739,16 +739,26 @@
         get: function() {
           return chrome.storage.sync.get(['settings', 'bindings'], function(data) {
             if (data.settings) {
-              User.settings = data.settings;
+              App.chrome.settings.store(data.settings, 'settings');
               App.actions.calculateInterval();
             }
             if (data.bindings) {
-              return User.bindings = data.bindings;
+              return App.chrome.settings.store(data.bindings, 'bindings');
             }
           });
         },
         save: function() {
           return chrome.storage.sync.set(User);
+        },
+        store: function(object, area) {
+          var setting, value, _results;
+          area = User[area];
+          _results = [];
+          for (setting in object) {
+            value = object[setting];
+            _results.push(area[setting] = value);
+          }
+          return _results;
         }
       },
       wordCount: {

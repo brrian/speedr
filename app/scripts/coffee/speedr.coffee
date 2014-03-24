@@ -5,8 +5,8 @@ Math.easeInOutQuad = (time, begin, change, duration) ->
         return -change/2 * ((time -= 1)*(time-2)-1) + begin
 
 # Set some settings
-User = {
-    settings: {
+User = 
+    settings: 
         fontFamily: 'Source Sans Pro'
 
         primaryTheme: 'Solarized (Light)'
@@ -41,24 +41,23 @@ User = {
         delayOnLongWords: false
         longWordLength: 8
         longWordDelayTime: 100
-    }
-    themes: {
-        'Solarized (Light)': {
+
+    themes: 
+        'Solarized (Light)': 
             primaryText: '#444'
             secondaryText: '#657b83'
             boxColor: '#fdf6e3'
             borderColor: 'rgba(175, 150, 190, .2)'
             highlightColor: '#dc322f;'
-        }
-        'Solarized (Dark)': {
+
+        'Solarized (Dark)': 
             primaryText: '#93a1a1'
             secondaryText: '#657b83'
             boxColor: '#073642'
             borderColor: 'rgba(175, 150, 190, .2)'
             highlightColor: '#cb4b16;'
-        }
-    }
-    bindings: {
+
+    bindings:
         ' ': 'toggle'
         '%': 'prev word'
         '&': 'bigger'
@@ -74,8 +73,6 @@ User = {
         'Û': 'slower'
         'Ý': 'faster'
         'M': 'toggle menu'
-    }
-}
 
 window.App = {
     utility: {
@@ -744,13 +741,20 @@ window.App = {
                     (data) ->
                         # If we have some stored settings, replace over the defaults
                         if data.settings
-                            User.settings = data.settings
+                            App.chrome.settings.store(data.settings, 'settings')
+                            # User.settings = data.settings
                             App.actions.calculateInterval()
 
-                        if data.bindings then User.bindings = data.bindings
+                        if data.bindings then App.chrome.settings.store(data.bindings, 'bindings')
                 )
             save: ->
                 chrome.storage.sync.set(User)
+
+            store: (object, area) ->
+                area = User[area]
+
+                for setting, value of object
+                    area[setting] = value
         }
         wordCount: {
             save: (count) ->
