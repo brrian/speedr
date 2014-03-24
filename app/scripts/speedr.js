@@ -227,7 +227,7 @@
         box.style.cssText = 'font-family: ' + settings.fontFamily + '; color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;';
         wordContainer = doc.createElement('div');
         wordContainer.className = 'speedr-word-container';
-        wordContainer.style.cssText = 'font-size: ' + settings.fontSize + '; border-bottom-color: ' + theme.borderColor + ';';
+        wordContainer.style.cssText = 'font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';';
         wordWrapper = doc.createElement('div');
         wordWrapper.id = 'js-speedr-word';
         wordWrapper.className = 'speedr-word';
@@ -578,7 +578,7 @@
         minimap = doc.createElement('div');
         minimap.id = 'js-speedr-minimap';
         minimap.className = 'speedr-minimap';
-        minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + '; height: ' + settings.boxHeight + '; border-left-color: ' + theme.borderColor + ';';
+        minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';';
         contents = doc.createElement('div');
         contents.className = 'contents';
         paragraphElement = doc.createElement('p');
@@ -654,7 +654,7 @@
         var countdown, settings;
         settings = User.settings;
         countdown = document.getElementById('js-speedr-countdown-bar').offsetParent;
-        return countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.25 + 12) / 2);
+        return countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.25 + 12) / 2) + 'px';
       },
       changeWPM: function(wpm) {
         var settings;

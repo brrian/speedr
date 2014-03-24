@@ -227,7 +227,7 @@ window.App = {
             # Create the word container
             wordContainer = doc.createElement('div')
             wordContainer.className = 'speedr-word-container'
-            wordContainer.style.cssText = 'font-size: ' + settings.fontSize + '; border-bottom-color: ' + theme.borderColor + ';'
+            wordContainer.style.cssText = 'font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';'
 
             wordWrapper = doc.createElement('div')
             wordWrapper.id = 'js-speedr-word'
@@ -587,7 +587,7 @@ window.App = {
             minimap = doc.createElement('div')
             minimap.id = 'js-speedr-minimap'
             minimap.className = 'speedr-minimap'
-            minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + '; height: ' + settings.boxHeight + '; border-left-color: ' + theme.borderColor + ';'
+            minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';'
 
             contents = doc.createElement('div')
             contents.className = 'contents'
@@ -667,7 +667,7 @@ window.App = {
             countdown = document.getElementById('js-speedr-countdown-bar').offsetParent
 
             # Calculate the position of the bar (1.25 is the line-height, 12 is for the padding)
-            countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.25 + 12) / 2)
+            countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.25 + 12) / 2) + 'px'
 
         changeWPM: (wpm) ->
             settings = User.settings
