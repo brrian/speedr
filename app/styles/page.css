@@ -1,52 +1,222 @@
 @font-face {
-  font-family: 'Source Sans';
+  font-family: 'Source Sans Pro';
   src: url("chrome-extension://__MSG_@@extension_id__/fonts/SourceSansPro-Regular.ttf");
-  font-weight: 400;
+  font-weight: normal;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\000037}}
-a {
-  color: #ff2f04;
+@font-face {
+  font-family: 'EB Garamond';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/EBGaramond-Regular.ttf");
+  font-weight: normal;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000310}}
-a:hover {
-  text-decoration: none;
+@font-face {
+  font-family: 'Nunito';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Nunito-Light.ttf");
+  font-weight: lighter;
+}
+@font-face {
+  font-family: 'Kameron';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Kameron-Regular.ttf");
+  font-weight: normal;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_fonts\.scss}line{font-family:\0000325}}
+.font-garamond {
+  font-family: 'EB Garamond';
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000315}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_fonts\.scss}line{font-family:\0000329}}
+.font-nunito {
+  font-family: 'Nunito';
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_fonts\.scss}line{font-family:\0000333}}
+.font-kameron {
+  font-family: 'Kameron';
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\000037}}
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000311}}
 body {
-  font-family: 'Source Sans', sans-serif;
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000318}}
-body.popup {
-  width: 300px;
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: #fdf6e3;
+  color: #444;
+  font-size: .875em;
+  margin: 0;
+  padding-bottom: 77px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000323}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000320}}
 section {
+  overflow: hidden;
+  *zoom: 1;
   width: 800px;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 20px auto;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000325}}
+section h1 {
+  font-size: 1.29em;
+  color: #dc322f;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000329}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000334}}
 input[type=text] {
+  font-family: 'Source Sans Pro';
+  font-size: 1.14em;
+  color: #444;
+  background-color: transparent;
+  width: 40px;
   text-align: center;
+  border: none;
+  border-bottom: dotted 1px #444;
+  outline: none;
+  transition: border-bottom-color 200ms ease-in-out;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000333}}
-input.short {
-  width: 30px;
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000337}}
-input.long {
-  width: 155px;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000346}}
+input[type=text]:focus {
+  border-bottom-color: #dc322f;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000342}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000351}}
+input[type=radio], input[type=checkbox] {
+  display: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000354}}
+input[type=radio] + label:before, input[type=checkbox] + label:before {
+  content: '';
+  position: relative;
+  top: 6px;
+  display: inline-block;
+  background-image: url("../images/button.png");
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000367}}
+input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:before {
+  background-position: 20px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000373}}
 .form-group {
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
+  margin: 0 0 35px 30px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000376}}
+.form-group .form-details {
+  font-size: .857em;
+  color: #999;
+  margin-top: 3px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000381}}
+.form-group .form-details.form-details-button {
+  margin-left: 30px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000386}}
+.form-group .form-group-half {
+  width: 50%;
+  float: left;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000391}}
+.form-group .form-group-thirds {
+  width: 33%;
+  float: left;
+  margin-bottom: 15px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000397}}
+.form-group .form-font-family {
+  font-size: 2.14em;
+  margin: 10px 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003101}}
+.form-group .form-font-family input[type=radio] + label:before {
+  top: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Projects\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000347}}
-.disabled {
-  opacity: .3;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003107}}
+.binding-group {
+  margin: 0 0 15px 30px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003111}}
+.binding-group:hover .controls {
+  opacity: 1;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003116}}
+.binding-group .binding-container {
+  position: relative;
+  display: inline-block;
+  width: 220px;
+  height: 40px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003122}}
+.binding-group .binding-container:before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: calc(50% - 5px);
+  width: 100%;
+  border-top: dotted 1px #444;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003133}}
+.binding-group .binding {
+  display: inline-block;
+  background-color: #fdf6e3;
+  padding-right: 3px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003138}}
+.binding-group .binding.no-binding:before {
+  content: 'No binding set';
+  font-size: .86em;
+  color: #999;
+  height: 30px;
+  line-height: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003149}}
+.binding-group .controls {
+  display: inline-block;
+  margin-left: 20px;
+  font-size: .86em;
+  color: #999;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003158}}
+.binding-group .controls span {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003165}}
+.keyboard-key {
+  background: linear-gradient(to bottom, #f2f2f2 0%, #e6e6e6 100%);
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+  padding: 5px 8px;
+  margin-right: 3px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003177}}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #fdf6e3;
+  padding: 25px 0;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\00003186}}
+footer section {
+  margin-bottom: 0;
 }

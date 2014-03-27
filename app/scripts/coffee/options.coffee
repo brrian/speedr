@@ -1,11 +1,30 @@
+'use strict'
+
 $ = jQuery
 
-# Set some settings
-User = {
-    settings: {
+User = {}
+
+Defaults =
+    settings: 
+        fontFamily: 'EB Garamond'
+
+        primaryTheme: 'Solarized (Light)'
+
+        boxWidth: 500
+        boxHeight: 245
+        minimapWidth: 175
+
+        countdownSpeed: 1000
+
+        showControls: true
+        showCountdown: true
+        showMenuButton: true
+        showMinimap: true
+        showStatus: true
+        showWPM: true
+
         wpm: 350
         minimap: true
-        controls: true
         fontSize: 33
 
         delayOnPunctuation: false
@@ -14,15 +33,15 @@ User = {
         delayOnSentence: false
         sentenceDelayTime: 150
 
-        pauseOnParagraph: false
+        pauseOnParagraph: true
         delayOnParagraph: false
         paragraphDelayTime: 300
 
         delayOnLongWords: false
         longWordLength: 8
         longWordDelayTime: 100
-    }
-    bindings: {
+
+    bindings:
         ' ': 'toggle'
         '%': 'prev word'
         '&': 'bigger'
@@ -37,24 +56,23 @@ User = {
         'shift+\'': 'next sentence'
         'Û': 'slower'
         'Ý': 'faster'
-    }
-}
+        'M': 'toggle menu'
 
-Bindings = {
-    ' ': 'space'
-    '\t': 'tab'
-    'p': 'f1'
-    'q': 'f2'
-    'r': 'f3'
-    's': 'f4'
-    't': 'f5'
-    'u': 'f6'
-    'v': 'f7'
-    'w': 'f8'
-    'x': 'f9'
-    'y': 'f10'
-    'z': 'f11'
-    '{': 'f12'
+KeyCodes = 
+    ' ': 'Spacebar'
+    '\t': 'Tab'
+    'p': 'F1'
+    'q': 'F2'
+    'r': 'F3'
+    's': 'F4'
+    't': 'F5'
+    'u': 'F6'
+    'v': 'F7'
+    'w': 'F8'
+    'x': 'F9'
+    'y': 'F10'
+    'z': 'F11'
+    '{': 'F12'
     '\u00C0': '`',
     '\u00BD': '-',
     '\u00BB': '=',
@@ -66,141 +84,88 @@ Bindings = {
     '\u00BC': ',',
     '\u00BE': '.',
     '\u00BF': '/',
-    '$': 'home'
-    '#': 'end'
-    '!': 'page up'
-    '"': 'page down'
-    '.': 'delete'
-    '&': 'up'
-    '(': 'down'
-    '%': 'left'
-    '\'': 'right'
-    'o': 'num /'
-    'j': 'num *'
-    'm': 'num -'
-    'k': 'num +'
-    'n': 'num .'
-    '`': 'num 0'
-    'a': 'num 1'
-    'b': 'num 2'
-    'c': 'num 3'
-    'd': 'num 4'
-    'e': 'num 5'
-    'f': 'num 6'
-    'g': 'num 7'
-    'h': 'num 8'
-    'i': 'num 9'
-}
+    '$': 'Home'
+    '#': 'End'
+    '!': 'PgUp'
+    '"': 'PgDn'
+    '.': 'Del'
+    '&': '\u2191'
+    '(': '\u2193'
+    '%': '\u2190'
+    '\'': '\u2192'
+    'o': 'Num /'
+    'j': 'Num *'
+    'm': 'Num -'
+    'k': 'Num +'
+    'n': 'Num .'
+    '`': 'Num 0'
+    'a': 'Num 1'
+    'b': 'Num 2'
+    'c': 'Num 3'
+    'd': 'Num 4'
+    'e': 'Num 5'
+    'f': 'Num 6'
+    'g': 'Num 7'
+    'h': 'Num 8'
+    'i': 'Num 9'
 
-appendUserSettings = ->
-    # If it's a boolean, we check it or uncheck it
-    # If it's a number we change the value
-    for setting, value of User.settings
-        if typeof value is 'boolean'
-            $('#js-' + setting).prop('checked', value)
-        else if typeof value is 'number'
-            $('#js-' + setting).val(value)
+populateDefaults = ->
+    for setting, value of Defaults.settings
+        type = typeof value
 
-replaceWhiteSpace = (word) ->
-    word = word.split(' ')
-    word.join('-')
+        switch type
+            when 'number'
+                $('input[name=' + setting + ']').val value
+            when 'boolean'
+                $('input[name=' + setting + ']').prop 'checked', value
+            when 'string'
+                $('input[name=' + setting + '][value="' + value + '"]').prop 'checked', true
 
-parseKeyBinding = (binding) ->
-    # Split the binding into an array and get the last item
-    # If there is an entry in the key bindings object, replace it
-    # Return the joined binding
-    bindingArray = binding.split('+')
-    lastKey = bindingArray[bindingArray.length - 1]
-    if Bindings.hasOwnProperty(lastKey)
-        bindingArray[bindingArray.length - 1] = Bindings[lastKey]
+    for binding, action of Defaults.bindings
+        element = $('.js-binding-' + action.replace ' ', '-')
+        bindingContainer = element.find '.binding'
+        keys = binding.split '+'
 
-    bindingArray.join('+')
+        element.attr 'data-binding', binding
 
-appendKeyBindings = ->
-    for binding, action of User.bindings
-        action = replaceWhiteSpace(action)
-        humanBinding = parseKeyBinding(binding).toLowerCase()
+        for key in keys
+            $('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo bindingContainer
 
-        $('#js-' + action).attr('data-binding', binding).val(humanBinding)
+parseKeyCode = (key, keyCodes) ->
+    keyCodes = keyCodes or KeyCodes
 
-generateKeyCombo = (event) ->
-    # Create key binding
-    keyCombo = ''
+    keyChar = if keyCodes.hasOwnProperty key then keyCodes[key] else key
 
-    if event.ctrlKey then keyCombo += 'ctrl+'
-    if event.altKey then keyCombo += 'alt+'
-    if event.shiftKey then keyCombo += 'shift+'
+    keyChar.charAt(0).toUpperCase() + keyChar.slice(1);
 
-    keyCombo += String.fromCharCode(event.keyCode)
+parseSettings = ->
+    # Go through all the inputs
+    settings = {}
 
-saveSettings = ->
-    newSettings = {}
+    $('.settings-section').find('input').each ->
+        type = $(@).attr('type')
+        setting = $(@).attr('name')
 
-    $('.settings-section').find('input, select').each(
-        ->
-            tag =  $(@).prop('tagName')
-            setting = $(@).attr('id').replace('js-', '')
-            type = $(@).attr('type')
+        switch type
+            when 'text'
+                if $(@).val() then value = parseInt $(@).val(), 10
+            when 'radio'
+                if $(@).prop 'checked' then value = $(@).val()
+            when 'checkbox'
+                value = $(@).prop 'checked'
 
-            console.log $(@).find(':selected').val()
+        if value isnt undefined then settings[setting] = value
 
-            if tag is 'SELECT'
-                newSettings[setting] = $(@).val()
-            else if type is 'text'
-                newSettings[setting] = parseInt($(@).val(), 10)
-            else if type is 'checkbox'
-                newSettings[setting] = $(@).prop('checked')
-            else
-                newSettings[setting] = $(@).val()                
+        return
+    
+    User.settings = settings
 
-            return
-    )
 
-    newSettings
+$('#js-save-settings').click ->
+    # We need to create an object to save to chrome storage
+    
+    parseSettings()
 
-saveBindings = ->
-    newBindings = {}
+    console.log User.settings
 
-    $('.bindings-section').find('input').each(
-        ->
-            setting = $(@).attr('id').replace('js-', '').replace('-', ' ')
-            binding = $(@).attr('data-binding')
-
-            newBindings[binding] = setting
-            return
-    )
-
-    newBindings
-
-chrome.storage.sync.get(
-    ['settings', 'bindings']
-    (data) ->
-        if data.settings then User.settings = data.settings
-        if data.bindings then User.bindings = data.bindings
-        
-        appendUserSettings()
-        appendKeyBindings()
-)
-
-$('input.binding').keydown(
-    (event) ->
-        keyCombo = generateKeyCombo(event)
-        humanKeyCombo = parseKeyBinding(keyCombo).toLowerCase();
-
-        $(@).attr('data-binding', keyCombo).val(humanKeyCombo)
-        false
-)
-
-$('#js-save-settings').click(
-    ->
-        newSettings = {
-            settings: saveSettings()
-            bindings: saveBindings()
-        }
-
-        chrome.storage.sync.set(
-            newSettings
-            ->
-                alert 'Settings successfully saved!'
-        )
-)
+populateDefaults()

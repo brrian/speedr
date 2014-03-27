@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Speedr settings</title>
+        <link href="styles/page.css" rel="stylesheet">
+    </head>
+    <body>
+        <section class="settings-section">
+            <h1>Speed Reading</h1>
+            <div class="form-group">
+                <label>
+                    Speed reading speed: <input type="text" id="js-wpm" class="short"> wpm</label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Countdown time: <input type="text" id="js-countdownSpeed" class="short"> ms</label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-delayOnPunctuation"> Delay <input type="text" id="js-punctuationDelayTime" class="short"> ms on punctuation</label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-delayOnLongWords"> Delay <input type="text" id="js-longWordDelayTime" class="short"> ms on words longer than <input type="text" id="js-longWordLength" class="short"> letters</label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-delayOnSentence"> Delay <input type="text" id="js-sentenceDelayTime" class="short"> ms at the end of every sentence</label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-delayOnParagraph"> Delay <input type="text" id="js-paragraphDelayTime" class="short"> ms at the end of every paragraph</label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-pauseOnParagraph"> Pause at the end of every paragraph</label>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h1>Visual</h1>
+            <div class="form-group">
+                <label>
+                    Theme: 
+                    <select id="js-primaryTheme">
+                        <option value="Solarized (Light)">Solarized (Light)</option>
+                        <option value="Solarized (Dark)">Solarized (Dark)</option>
+                    </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    Speedr width: <input type="text" id="js-boxWidth" class="short"> px
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Speedr height: <input type="text" id="js-boxHeight" class="short"> px
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Font size: <input type="text" id="js-fontSize" class="short"> px
+                </label>
+            </div>
+            <input type="hidden" id="js-fontFamily" value="Source Sans Pro">
+        </section>
+
+        <section class="settings-section">
+            <h1>Add ons</h1>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showCountdown"> Show countdown
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showStatus"> Show status bar
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showMinimap"> Show minimap
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showControls"> Show player controls
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showWPM"> Show WPM
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="js-showMenuButton"> Show menu button
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Minimap width: <input type="text" id="js-minimapWidth" class="short"> px
+                </label>
+            </div>
+        </section>
+
+        <section class="bindings-section">
+            <h1>Key Bindings</h1>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-open" class="binding long"> Open Speedr
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-toggle" class="binding long"> Play/pause
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-reset" class="binding long"> Restart
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-toggle-menu" class="binding long"> Toggle menu
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-close" class="binding long"> Close window
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-faster" class="binding long"> Increase WPM by 25
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-slower" class="binding long"> Decrease WPM by 25
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-bigger" class="binding long"> Increase font size by 2px
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-smaller" class="binding long"> Decrease font size by 2px
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-next-word" class="binding long"> Next word
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-next-sentence" class="binding long"> Next sentence
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-next-paragraph" class="binding long"> Next paragraph
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-prev-word" class="binding long"> Previous word
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-prev-sentence" class="binding long"> Previous sentence
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="text" id="js-prev-paragraph" class="binding long"> Previous paragraph
+                </label>
+            </div>
+        </section>
+        
+        <section>
+            <button id="js-save-settings">Save settings</button>
+        </section>
+        <!-- build:js scripts/vendor.js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <!-- endbuild -->
+        <!-- build:js scripts/options.js -->
+        <script src="scripts/options.js"></script>
+        <!-- endbuild -->
+    </body>
+</html>
