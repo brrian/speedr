@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var $, Defaults, KeyCodes, User, parseKeyCode, parseSettings, populateDefaults;
+  var $, App, Defaults, KeyCodes, User, generateKeyCombo, parseKeyCode, parseSettings, populateDefaults;
 
   $ = jQuery;
 
@@ -105,6 +105,8 @@
     'i': 'Num 9'
   };
 
+  App = {};
+
   populateDefaults = function() {
     var action, binding, bindingContainer, element, key, keys, setting, type, value, _ref, _ref1, _results;
     _ref = Defaults.settings;
@@ -135,12 +137,28 @@
         _results1 = [];
         for (_i = 0, _len = keys.length; _i < _len; _i++) {
           key = keys[_i];
+          bindingContainer.removeClass('binding-text binding-text-empty');
           _results1.push($('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo(bindingContainer));
         }
         return _results1;
       })());
     }
     return _results;
+  };
+
+  generateKeyCombo = function(event) {
+    var keyCombo;
+    keyCombo = '';
+    if (event.ctrlKey) {
+      keyCombo += 'ctrl+';
+    }
+    if (event.altKey) {
+      keyCombo += 'alt+';
+    }
+    if (event.shiftKey) {
+      keyCombo += 'shift+';
+    }
+    return keyCombo += String.fromCharCode(event.keyCode);
   };
 
   parseKeyCode = function(key, keyCodes) {
@@ -177,6 +195,34 @@
     });
     return User.settings = settings;
   };
+
+  $('.js-edit').click(function() {
+    var binding, bindingGroup;
+    bindingGroup = $(this).parents('.binding-group');
+    binding = bindingGroup.find('.binding');
+    binding.removeClass('binding-text-empty').addClass('binding-text binding-text-waiting').empty();
+    return $(window).on('keyup', function(event) {
+      var key, keyBinding, keys, _i, _len, _results;
+      keyBinding = generateKeyCombo(event);
+      keys = keyBinding.split('+');
+      bindingGroup.attr('data-binding', keyBinding);
+      binding.removeClass('binding-text binding-text-empty');
+      _results = [];
+      for (_i = 0, _len = keys.length; _i < _len; _i++) {
+        key = keys[_i];
+        _results.push($('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo(binding));
+      }
+      return _results;
+    });
+  });
+
+  $('.js-clear').click(function() {
+    var binding, bindingGroup;
+    bindingGroup = $(this).parents('.binding-group');
+    binding = bindingGroup.find('.binding');
+    bindingGroup.attr('data-binding', null);
+    return binding.removeClass('binding-text-waiting').addClass('binding-text binding-text-empty').empty();
+  });
 
   $('#js-save-settings').click(function() {
     parseSettings();

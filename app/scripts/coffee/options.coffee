@@ -109,6 +109,8 @@ KeyCodes =
     'h': 'Num 8'
     'i': 'Num 9'
 
+App = {}
+
 populateDefaults = ->
     for setting, value of Defaults.settings
         type = typeof value
@@ -129,7 +131,18 @@ populateDefaults = ->
         element.attr 'data-binding', binding
 
         for key in keys
+            bindingContainer.removeClass 'binding-text binding-text-empty'
             $('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo bindingContainer
+
+generateKeyCombo = (event) ->
+    # Create key binding
+    keyCombo = ''
+
+    if event.ctrlKey then keyCombo += 'ctrl+'
+    if event.altKey then keyCombo += 'alt+'
+    if event.shiftKey then keyCombo += 'shift+'
+
+    keyCombo += String.fromCharCode(event.keyCode)
 
 parseKeyCode = (key, keyCodes) ->
     keyCodes = keyCodes or KeyCodes
@@ -160,6 +173,29 @@ parseSettings = ->
     
     User.settings = settings
 
+$('.js-edit').click ->
+    # Empty the binding
+    bindingGroup = $(@).parents '.binding-group'
+    binding = bindingGroup.find '.binding'
+
+    binding.removeClass('binding-text-empty').addClass('binding-text binding-text-waiting').empty()
+
+    $(window).on 'keyup', (event) ->
+        keyBinding = generateKeyCombo(event)
+        keys = keyBinding.split('+')
+
+        bindingGroup.attr 'data-binding', keyBinding
+        binding.removeClass 'binding-text binding-text-empty'
+
+        for key in keys
+            $('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo binding
+
+$('.js-clear').click ->
+    bindingGroup = $(@).parents '.binding-group'
+    binding = bindingGroup.find '.binding'
+
+    bindingGroup.attr 'data-binding', null
+    binding.removeClass('binding-text-waiting').addClass('binding-text binding-text-empty').empty()
 
 $('#js-save-settings').click ->
     # We need to create an object to save to chrome storage
