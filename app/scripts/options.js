@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var $, App, Defaults, KeyCodes, User, generateKeyCombo, parseKeyCode, parseSettings, populateDefaults;
+  var $, App, Defaults, KeyCodes, User, generateKeyCombo, generateKeyElements, keyBindingListener, keyDownNullifier, parseBindings, parseKeyCode, parseSettings, populateDefaults, removeKeyBindingListeners, showDuplicateBindings, validateBindings, validateSettings;
 
   $ = jQuery;
 
@@ -158,7 +158,21 @@
     if (event.shiftKey) {
       keyCombo += 'shift+';
     }
+    if (event.metaKey) {
+      keyCombo += 'meta+';
+    }
     return keyCombo += String.fromCharCode(event.keyCode);
+  };
+
+  generateKeyElements = function(keyBinding) {
+    var key, keys, keysContainer, _i, _len;
+    keys = keyBinding.split('+');
+    keysContainer = '';
+    for (_i = 0, _len = keys.length; _i < _len; _i++) {
+      key = keys[_i];
+      keysContainer += '<span class="keyboard-key">' + parseKeyCode(key) + '</span>';
+    }
+    return keysContainer;
   };
 
   parseKeyCode = function(key, keyCodes) {
@@ -168,52 +182,147 @@
     return keyChar.charAt(0).toUpperCase() + keyChar.slice(1);
   };
 
-  parseSettings = function() {
-    var settings;
-    settings = {};
-    $('.settings-section').find('input').each(function() {
-      var setting, type, value;
-      type = $(this).attr('type');
-      setting = $(this).attr('name');
-      switch (type) {
-        case 'text':
-          if ($(this).val()) {
-            value = parseInt($(this).val(), 10);
+  keyBindingListener = function(event) {
+    var binding, bindingGroup, keyBinding;
+    if (!(event.keyCode === 18 || event.keyCode === 17 || event.keyCode === 16 || event.keyCode === 13 || event.keyCode === 8 || event.keyCode === 91 || event.keyCode === 93)) {
+      binding = $('.binding-text-waiting');
+      bindingGroup = binding.parents('.binding-group');
+      keyBinding = generateKeyCombo(event);
+      bindingGroup.attr('data-binding', keyBinding);
+      binding.removeClass('binding-text binding-text-empty binding-text-waiting');
+      binding.html(generateKeyElements(keyBinding));
+      removeKeyBindingListeners();
+      return validateBindings();
+    }
+  };
+
+  keyDownNullifier = function() {
+    return false;
+  };
+
+  removeKeyBindingListeners = function() {
+    $(window).unbind('keyup', keyBindingListener);
+    $(window).unbind('keydown', keyDownNullifier);
+    return App.setBinding = false;
+  };
+
+  showDuplicateBindings = function(bindingGroups) {
+    var binding, element, elements, _results;
+    _results = [];
+    for (binding in bindingGroups) {
+      elements = bindingGroups[binding];
+      if (elements.length > 1) {
+        _results.push((function() {
+          var _i, _len, _results1;
+          _results1 = [];
+          for (_i = 0, _len = elements.length; _i < _len; _i++) {
+            element = elements[_i];
+            _results1.push($(element).find('.error').text('Duplicate binding detected!'));
           }
-          break;
-        case 'radio':
-          if ($(this).prop('checked')) {
-            value = $(this).val();
-          }
-          break;
-        case 'checkbox':
-          value = $(this).prop('checked');
+          return _results1;
+        })());
+      } else {
+        _results.push(void 0);
       }
-      if (value !== void 0) {
-        settings[setting] = value;
+    }
+    return _results;
+  };
+
+  validateSettings = function() {
+    var passes;
+    passes = true;
+    $('input[type=text]').each(function() {
+      var error, value;
+      value = $(this).val();
+      error = $(this).parents('.form-group').find('.error');
+      error.empty();
+      if (value.length > 0 && /^[0-9]+$/.test(value) === false) {
+        error.text('Please enter a numeric value');
+        return passes = false;
       }
     });
-    return User.settings = settings;
+    return passes;
+  };
+
+  validateBindings = function() {
+    var bindingGroups, bindings, passes;
+    bindingGroups = {};
+    bindings = {};
+    passes = true;
+    $('.binding-group').each(function() {
+      var action, binding;
+      binding = $(this).attr('data-binding');
+      $(this).find('.error').empty();
+      if (!bindingGroups.hasOwnProperty(binding)) {
+        if (binding !== void 0) {
+          bindingGroups[binding] = [this];
+          $(this).attr('class').match(/js-binding-(\S+)/);
+          action = RegExp.$1.replace('-', ' ');
+          return bindings[binding] = action;
+        }
+      } else {
+        bindingGroups[binding].push(this);
+        passes = false;
+      }
+    });
+    showDuplicateBindings(bindingGroups);
+    if (passes === true) {
+      return bindings;
+    } else {
+      return false;
+    }
+  };
+
+  parseBindings = function() {
+    var bindings;
+    bindings = validateBindings();
+    if (bindings !== false) {
+      return User.bindings = bindings;
+    }
+  };
+
+  parseSettings = function() {
+    var settings;
+    if (validateSettings() === true) {
+      settings = {};
+      $('.settings-section').find('input').each(function() {
+        var setting, type, value;
+        type = $(this).attr('type');
+        setting = $(this).attr('name');
+        switch (type) {
+          case 'text':
+            if ($(this).val()) {
+              value = parseInt($(this).val(), 10);
+            }
+            break;
+          case 'radio':
+            if ($(this).prop('checked')) {
+              value = $(this).val();
+            }
+            break;
+          case 'checkbox':
+            value = $(this).prop('checked');
+        }
+        if (value !== void 0) {
+          settings[setting] = value;
+        }
+      });
+      return User.settings = settings;
+    }
   };
 
   $('.js-edit').click(function() {
     var binding, bindingGroup;
+    if (App.setBinding === true) {
+      removeKeyBindingListeners();
+      $('.binding-text-waiting').parents('.binding-group').find('.js-clear').trigger('click');
+    }
+    App.setBinding = true;
     bindingGroup = $(this).parents('.binding-group');
     binding = bindingGroup.find('.binding');
     binding.removeClass('binding-text-empty').addClass('binding-text binding-text-waiting').empty();
-    return $(window).on('keyup', function(event) {
-      var key, keyBinding, keys, _i, _len, _results;
-      keyBinding = generateKeyCombo(event);
-      keys = keyBinding.split('+');
-      bindingGroup.attr('data-binding', keyBinding);
-      binding.removeClass('binding-text binding-text-empty');
-      _results = [];
-      for (_i = 0, _len = keys.length; _i < _len; _i++) {
-        key = keys[_i];
-        _results.push($('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo(binding));
-      }
-      return _results;
-    });
+    $(window).on('keyup', keyBindingListener);
+    return $(window).on('keydown', keyDownNullifier);
   });
 
   $('.js-clear').click(function() {
@@ -221,12 +330,33 @@
     bindingGroup = $(this).parents('.binding-group');
     binding = bindingGroup.find('.binding');
     bindingGroup.attr('data-binding', null);
-    return binding.removeClass('binding-text-waiting').addClass('binding-text binding-text-empty').empty();
+    binding.removeClass('binding-text-waiting').addClass('binding-text binding-text-empty').empty();
+    validateBindings();
+    return $(window).unbind('keyup', keyBindingListener);
+  });
+
+  $('.js-default').click(function() {
+    var action, binding, bindingAction, bindingGroup, bindings, keyBinding;
+    bindings = Defaults.bindings;
+    bindingGroup = $(this).parents('.binding-group');
+    binding = bindingGroup.find('.binding');
+    bindingGroup.attr('class').match(/js-binding-(\S+)/);
+    action = RegExp.$1.replace('-', ' ');
+    for (keyBinding in bindings) {
+      bindingAction = bindings[keyBinding];
+      if (bindingAction === action) {
+        bindingGroup.attr('data-binding', keyBinding);
+        binding.removeClass('binding-text binding-text-empty');
+        binding.html(generateKeyElements(keyBinding));
+      }
+    }
+    return validateBindings();
   });
 
   $('#js-save-settings').click(function() {
     parseSettings();
-    return console.log(User.settings);
+    parseBindings();
+    return console.log(User);
   });
 
   populateDefaults();

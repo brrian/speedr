@@ -141,8 +141,18 @@ generateKeyCombo = (event) ->
     if event.ctrlKey then keyCombo += 'ctrl+'
     if event.altKey then keyCombo += 'alt+'
     if event.shiftKey then keyCombo += 'shift+'
+    if event.metaKey then keyCombo += 'meta+'
 
     keyCombo += String.fromCharCode(event.keyCode)
+
+generateKeyElements = (keyBinding) ->
+    keys = keyBinding.split('+')
+    keysContainer = ''
+
+    for key in keys
+        keysContainer += '<span class="keyboard-key">' + parseKeyCode(key) + '</span>'
+
+    keysContainer
 
 parseKeyCode = (key, keyCodes) ->
     keyCodes = keyCodes or KeyCodes
@@ -151,44 +161,125 @@ parseKeyCode = (key, keyCodes) ->
 
     keyChar.charAt(0).toUpperCase() + keyChar.slice(1);
 
+keyBindingListener = (event) ->
+    unless event.keyCode is 18 or event.keyCode is 17 or event.keyCode is 16 or event.keyCode is 13 or event.keyCode is 8 or event.keyCode is 91 or event.keyCode is 93
+        binding = $('.binding-text-waiting')
+        bindingGroup = binding.parents '.binding-group'
+        keyBinding = generateKeyCombo(event)
+
+        bindingGroup.attr 'data-binding', keyBinding
+        binding.removeClass 'binding-text binding-text-empty binding-text-waiting'
+
+        binding.html generateKeyElements keyBinding
+
+        removeKeyBindingListeners()
+        validateBindings()    
+
+keyDownNullifier = ->
+    false
+
+removeKeyBindingListeners = ->
+    $(window).unbind 'keyup', keyBindingListener
+    $(window).unbind 'keydown', keyDownNullifier
+
+    App.setBinding = false
+
+showDuplicateBindings = (bindingGroups) ->
+    for binding, elements of bindingGroups
+        if elements.length > 1
+            for element in elements
+                $(element).find('.error').text 'Duplicate binding detected!'
+
+validateSettings = ->
+    passes = true
+
+    $('input[type=text]').each ->
+        value = $(@).val()
+        error = $(@).parents('.form-group').find('.error')
+
+        error.empty()
+
+        if value.length > 0 and /^[0-9]+$/.test(value) is false
+            error.text('Please enter a numeric value')
+            passes = false
+
+    passes
+
+validateBindings = ->
+    bindingGroups = {}
+    bindings = {}
+    passes = true
+
+    # Loop through all the binding-groups and push it's binding into an object
+    $('.binding-group').each ->
+        binding = $(@).attr('data-binding')
+
+        $(@).find('.error').empty()
+
+        if !bindingGroups.hasOwnProperty binding
+            if binding isnt undefined
+                bindingGroups[binding] = [@]
+
+                $(@).attr('class').match /js-binding-(\S+)/
+                action = RegExp.$1.replace '-', ' '
+
+                bindings[binding] = action
+        else
+            bindingGroups[binding].push @
+
+            passes = false
+
+            return
+
+    showDuplicateBindings(bindingGroups)
+
+    return if passes is true then bindings else false
+
+parseBindings = ->
+    bindings = validateBindings()
+
+    if bindings isnt false then User.bindings = bindings
+
+
 parseSettings = ->
-    # Go through all the inputs
-    settings = {}
+    if validateSettings() is true
+        # Go through all the inputs
+        settings = {}
 
-    $('.settings-section').find('input').each ->
-        type = $(@).attr('type')
-        setting = $(@).attr('name')
+        $('.settings-section').find('input').each ->
+            type = $(@).attr('type')
+            setting = $(@).attr('name')
 
-        switch type
-            when 'text'
-                if $(@).val() then value = parseInt $(@).val(), 10
-            when 'radio'
-                if $(@).prop 'checked' then value = $(@).val()
-            when 'checkbox'
-                value = $(@).prop 'checked'
+            switch type
+                when 'text'
+                    if $(@).val() then value = parseInt $(@).val(), 10
+                when 'radio'
+                    if $(@).prop 'checked' then value = $(@).val()
+                when 'checkbox'
+                    value = $(@).prop 'checked'
 
-        if value isnt undefined then settings[setting] = value
+            if value isnt undefined then settings[setting] = value
 
-        return
-    
-    User.settings = settings
+            return
+        
+        User.settings = settings
 
 $('.js-edit').click ->
+    # Let the app know that we are setting a binding
+    if App.setBinding is true
+        removeKeyBindingListeners()
+        $('.binding-text-waiting').parents('.binding-group').find('.js-clear').trigger('click')
+    
+    App.setBinding = true
+
     # Empty the binding
     bindingGroup = $(@).parents '.binding-group'
     binding = bindingGroup.find '.binding'
 
     binding.removeClass('binding-text-empty').addClass('binding-text binding-text-waiting').empty()
 
-    $(window).on 'keyup', (event) ->
-        keyBinding = generateKeyCombo(event)
-        keys = keyBinding.split('+')
-
-        bindingGroup.attr 'data-binding', keyBinding
-        binding.removeClass 'binding-text binding-text-empty'
-
-        for key in keys
-            $('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo binding
+    $(window).on 'keyup', keyBindingListener
+    $(window).on 'keydown', keyDownNullifier
 
 $('.js-clear').click ->
     bindingGroup = $(@).parents '.binding-group'
@@ -197,11 +288,35 @@ $('.js-clear').click ->
     bindingGroup.attr 'data-binding', null
     binding.removeClass('binding-text-waiting').addClass('binding-text binding-text-empty').empty()
 
+    validateBindings()
+
+    $(window).unbind 'keyup', keyBindingListener
+
+$('.js-default').click ->
+    bindings = Defaults.bindings
+    bindingGroup = $(@).parents '.binding-group'
+    binding = bindingGroup.find '.binding'
+    
+    bindingGroup.attr('class').match /js-binding-(\S+)/
+    action = RegExp.$1.replace '-', ' '
+
+    # Loop through all of the bindings until we have a match
+    # This isn't the best way, but the object isn't that big so I think performance will be negligble
+    for keyBinding, bindingAction of bindings
+        if bindingAction is action
+            bindingGroup.attr 'data-binding', keyBinding
+            binding.removeClass 'binding-text binding-text-empty'
+
+            binding.html generateKeyElements keyBinding
+
+    validateBindings()
+
 $('#js-save-settings').click ->
     # We need to create an object to save to chrome storage
     
     parseSettings()
+    parseBindings()
 
-    console.log User.settings
+    console.log User
 
 populateDefaults()

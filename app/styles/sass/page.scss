@@ -70,6 +70,12 @@ input[type=radio], input[type=checkbox] {
 	}
 }
 
+.error {
+	position: absolute;
+	color: $red;
+	font-size: .857em;
+}
+
 .form-group {
 	margin: 0 0 35px 30px;
 
@@ -129,6 +135,10 @@ input[type=radio], input[type=checkbox] {
 			border-top: dotted 1px #444;
 
 		}
+	}
+
+	.binding-details {
+		display: inline-block;
 	}
 
 	.binding {
