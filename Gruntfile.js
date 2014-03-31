@@ -42,7 +42,7 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['<%= config.app %>/styles/sass/{,*/}*.{scss,sass}'],
-                tasks: ['compass:chrome']
+                tasks: ['compass:chrome', 'autoprefixer']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -188,6 +188,20 @@ module.exports = function (grunt) {
             dist: {
             },
             test: {
+            }
+        },
+
+        autoprefixer: {
+            options: {
+                browsers: ['last 2 versions']
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.app %>/styles',
+                    src: '{,*/}*.css',
+                    dest: '<%= config.app %>/styles'
+                }]
             }
         },
 
@@ -384,6 +398,7 @@ module.exports = function (grunt) {
         'chromeManifest:dist',
         'useminPrepare',
         'concurrent:dist',
+        'autoprefixer',
         'cssmin',
         'concat',
         'uglify',

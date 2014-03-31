@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var $, App, Defaults, KeyCodes, User, generateKeyCombo, generateKeyElements, keyBindingListener, keyDownNullifier, parseBindings, parseKeyCode, parseSettings, populateDefaults, removeKeyBindingListeners, showDuplicateBindings, validateBindings, validateSettings;
+  var $, App, Defaults, KeyCodes, User, generateKeyCombo, generateKeyElements, keyBindingListener, keyDownNullifier, parseBindings, parseKeyCode, parseSettings, populateBindings, populateDefaults, populateSettings, removeKeyBindingListeners, showDuplicateBindings, validateBindings, validateSettings;
 
   $ = jQuery;
 
@@ -108,26 +108,38 @@
   App = {};
 
   populateDefaults = function() {
-    var action, binding, bindingContainer, element, key, keys, setting, type, value, _ref, _ref1, _results;
-    _ref = Defaults.settings;
-    for (setting in _ref) {
-      value = _ref[setting];
+    populateSettings(Defaults.settings);
+    return populateBindings(Defaults.bindings);
+  };
+
+  populateSettings = function(object) {
+    var setting, type, value, _results;
+    _results = [];
+    for (setting in object) {
+      value = object[setting];
       type = typeof value;
       switch (type) {
         case 'number':
-          $('input[name=' + setting + ']').val(value);
+          _results.push($('input[name=' + setting + ']').val(value));
           break;
         case 'boolean':
-          $('input[name=' + setting + ']').prop('checked', value);
+          _results.push($('input[name=' + setting + ']').prop('checked', value));
           break;
         case 'string':
-          $('input[name=' + setting + '][value="' + value + '"]').prop('checked', true);
+          _results.push($('input[name=' + setting + '][value="' + value + '"]').prop('checked', true));
+          break;
+        default:
+          _results.push(void 0);
       }
     }
-    _ref1 = Defaults.bindings;
+    return _results;
+  };
+
+  populateBindings = function(object) {
+    var action, binding, bindingContainer, element, key, keys, _results;
     _results = [];
-    for (binding in _ref1) {
-      action = _ref1[binding];
+    for (binding in object) {
+      action = object[binding];
       element = $('.js-binding-' + action.replace(' ', '-'));
       bindingContainer = element.find('.binding');
       keys = binding.split('+');
@@ -372,6 +384,15 @@
     populateDefaults();
     validateSettings();
     return validateBindings();
+  });
+
+  chrome.storage.sync.get(['settings', 'bindings'], function(data) {
+    if (data.settings) {
+      populateSettings(data.settings);
+    }
+    if (data.bindings) {
+      return populateBindings(data.bindings);
+    }
   });
 
   populateDefaults();

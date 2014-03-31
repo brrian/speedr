@@ -224,10 +224,10 @@
         box = doc.createElement('div');
         box.id = 'js-speedr-box';
         box.className = 'speedr-box flip-in';
-        box.style.cssText = 'font-family: ' + settings.fontFamily + '; color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;';
+        box.style.cssText = 'color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;';
         wordContainer = doc.createElement('div');
         wordContainer.className = 'speedr-word-container';
-        wordContainer.style.cssText = 'font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';';
+        wordContainer.style.cssText = 'font-family: ' + settings.fontFamily + '; font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';';
         wordWrapper = doc.createElement('div');
         wordWrapper.id = 'js-speedr-word';
         wordWrapper.className = 'speedr-word';

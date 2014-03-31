@@ -112,7 +112,11 @@ KeyCodes =
 App = {}
 
 populateDefaults = ->
-    for setting, value of Defaults.settings
+    populateSettings(Defaults.settings)
+    populateBindings(Defaults.bindings)
+
+populateSettings = (object) ->
+    for setting, value of object
         type = typeof value
 
         switch type
@@ -123,7 +127,8 @@ populateDefaults = ->
             when 'string'
                 $('input[name=' + setting + '][value="' + value + '"]').prop 'checked', true
 
-    for binding, action of Defaults.bindings
+populateBindings = (object) ->
+    for binding, action of object
         element = $('.js-binding-' + action.replace ' ', '-')
         bindingContainer = element.find '.binding'
         keys = binding.split '+'
@@ -333,5 +338,9 @@ $('#js-restore-defaults').click ->
     populateDefaults()
     validateSettings()
     validateBindings()
+
+chrome.storage.sync.get ['settings', 'bindings'], (data) ->
+    if data.settings then populateSettings(data.settings)
+    if data.bindings then populateBindings(data.bindings)
 
 populateDefaults()
