@@ -361,6 +361,7 @@
 
   $('#js-save-settings').click(function() {
     if (parseSettings() !== false && parseBindings() !== false) {
+      chrome.storage.sync.set(User);
       return alert('saving settings!');
     } else {
       return alert('we have some errors!');

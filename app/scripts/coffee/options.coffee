@@ -324,6 +324,7 @@ $('#js-save-settings').click ->
     # We need to create an object to save to chrome storage
     
     if parseSettings() isnt false and parseBindings() isnt false
+        chrome.storage.sync.set(User)
         alert 'saving settings!'
     else
         alert 'we have some errors!'
