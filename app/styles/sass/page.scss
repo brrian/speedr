@@ -74,6 +74,10 @@ input[type=radio], input[type=checkbox] {
 	position: absolute;
 	color: $red;
 	font-size: .857em;
+
+	&.error-with-checkbox {
+		margin-left: 30px;
+	}
 }
 
 .form-group {
@@ -210,5 +214,35 @@ footer {
 
 	section {
 		margin-bottom: 0;
+	}
+
+	button {
+		background-color: transparent;
+		border: none;
+		outline: none;
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		transition: color 200ms ease-in-out;
+	}
+
+	.save-settings {
+		font-size: 1.286em;
+		color: $red;
+
+		&:hover {
+			color: darken($red, 10%);
+		}
+	}
+
+	.restore-defaults {
+		position: relative;
+		top: -2px;
+		font-size: .857em;
+		letter-spacing: 1px;
+		color: #aaa;
+
+		&:hover {
+			color: darken(#aaa, 10%);
+		}
 	}
 }

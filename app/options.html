@@ -53,26 +53,22 @@
 
                 <div class="form-group">
                     <input type="checkbox" id="delay-punctuation" name="delayOnPunctuation">
-                    <label for="delay-punctuation">Delay <input type="text" name="punctuationDelayTime"> ms on punctuation</label>
-                    <div class="error"></div>
+                    <label for="delay-punctuation">Delay <input type="text" name="punctuationDelayTime"> ms on punctuation <div class="error error-with-checkbox"></div></label>
                 </div>
 
                 <div class="form-group">
                     <input type="checkbox" id="delay-long-words" name="delayOnLongWords">
-                    <label for="delay-long-words">Delay <input type="text" name="longWordDelayTime"> ms on words longer than <input type="text" name="longWordLength"> letters</label>
-                    <div class="error"></div>
+                    <label for="delay-long-words">Delay <input type="text" name="longWordDelayTime"> ms on words longer than <input type="text" name="longWordLength"> letters <div class="error error-with-checkbox"></div></label>
                 </div>
 
                 <div class="form-group">
                     <input type="checkbox" id="delay-sentence" name="delayOnSetence">
-                    <label for="delay-sentence">Delay <input type="text" name="punctuationDelayTime"> ms at the end of every sentence</label>
-                    <div class="error"></div>
+                    <label for="delay-sentence">Delay <input type="text" name="punctuationDelayTime"> ms at the end of every sentence <div class="error error-with-checkbox"></div></label>
                 </div>
 
                 <div class="form-group">
                     <input type="checkbox" id="delay-paragraph" name="delayOnParagraph">
-                    <label for="delay-paragraph">Delay <input type="text" name="punctuationDelayTime"> ms at the end of every paragraph</label>
-                    <div class="error"></div>
+                    <label for="delay-paragraph">Delay <input type="text" name="punctuationDelayTime"> ms at the end of every paragraph <div class="error error-with-checkbox"></div></label>
                 </div>
 
                 <div class="form-group">
@@ -104,13 +100,11 @@
                     </div>
                     <div class="form-group-thirds">
                         <input type="checkbox" id="minimap" name="showMinimap">
-                        <label for="minimap">Minimap (width: <input type="text" name="minimapWidth"> px)</label>
-                        <div class="error"></div>
+                        <label for="minimap">Minimap (width: <input type="text" name="minimapWidth"> px) <div class="error error-with-checkbox"></div></label>
                     </div>
                     <div class="form-group-thirds">
                         <input type="checkbox" id="countdown-bar" name="showCountdown">
-                        <label for="countdown-bar">Countdown bar (speed: <input type="text" name="countdownSpeed"> ms)</label>
-                        <div class="error"></div>
+                        <label for="countdown-bar">Countdown bar (speed: <input type="text" name="countdownSpeed"> ms) <div class="error error-with-checkbox"></div></label>
                     </div>
                 </div>
             </section>
@@ -332,7 +326,8 @@
 
         <footer>
             <section>
-                <button id="js-save-settings">Save Settings</button>
+                <button id="js-save-settings" class="save-settings">Save Settings</button>
+                <button id="js-restore-defaults" class="restore-defaults">Restore defaults</button>
             </section>
         </footer>
 

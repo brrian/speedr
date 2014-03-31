@@ -8,7 +8,7 @@
 
   Defaults = {
     settings: {
-      fontFamily: 'EB Garamond',
+      fontFamily: 'Source Sans Pro',
       primaryTheme: 'Solarized (Light)',
       boxWidth: 500,
       boxHeight: 245,
@@ -131,6 +131,7 @@
       element = $('.js-binding-' + action.replace(' ', '-'));
       bindingContainer = element.find('.binding');
       keys = binding.split('+');
+      bindingContainer.empty();
       element.attr('data-binding', binding);
       _results.push((function() {
         var _i, _len, _results1;
@@ -231,14 +232,15 @@
   validateSettings = function() {
     var passes;
     passes = true;
+    $('.settings-section').find('.error').empty();
     $('input[type=text]').each(function() {
       var error, value;
       value = $(this).val();
-      error = $(this).parents('.form-group').find('.error');
-      error.empty();
+      error = $(this).siblings('.error');
       if (value.length > 0 && /^[0-9]+$/.test(value) === false) {
+        console.log(error);
         error.text('Please enter a numeric value');
-        return passes = false;
+        passes = false;
       }
     });
     return passes;
@@ -278,6 +280,8 @@
     bindings = validateBindings();
     if (bindings !== false) {
       return User.bindings = bindings;
+    } else {
+      return false;
     }
   };
 
@@ -308,6 +312,8 @@
         }
       });
       return User.settings = settings;
+    } else {
+      return false;
     }
   };
 
@@ -354,9 +360,17 @@
   });
 
   $('#js-save-settings').click(function() {
-    parseSettings();
-    parseBindings();
-    return console.log(User);
+    if (parseSettings() !== false && parseBindings() !== false) {
+      return alert('saving settings!');
+    } else {
+      return alert('we have some errors!');
+    }
+  });
+
+  $('#js-restore-defaults').click(function() {
+    populateDefaults();
+    validateSettings();
+    return validateBindings();
   });
 
   populateDefaults();

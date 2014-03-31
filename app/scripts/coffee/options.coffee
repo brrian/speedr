@@ -6,7 +6,7 @@ User = {}
 
 Defaults =
     settings: 
-        fontFamily: 'EB Garamond'
+        fontFamily: 'Source Sans Pro'
 
         primaryTheme: 'Solarized (Light)'
 
@@ -128,6 +128,9 @@ populateDefaults = ->
         bindingContainer = element.find '.binding'
         keys = binding.split '+'
 
+        # We need this for when we click 'Restore defaults'
+        bindingContainer.empty()
+
         element.attr 'data-binding', binding
 
         for key in keys
@@ -193,15 +196,19 @@ showDuplicateBindings = (bindingGroups) ->
 validateSettings = ->
     passes = true
 
+    # Clear any existing errors
+    $('.settings-section').find('.error').empty()
+
     $('input[type=text]').each ->
         value = $(@).val()
-        error = $(@).parents('.form-group').find('.error')
-
-        error.empty()
+        error = $(@).siblings('.error')
 
         if value.length > 0 and /^[0-9]+$/.test(value) is false
+            console.log error
             error.text('Please enter a numeric value')
             passes = false
+
+        return
 
     passes
 
@@ -238,7 +245,7 @@ validateBindings = ->
 parseBindings = ->
     bindings = validateBindings()
 
-    if bindings isnt false then User.bindings = bindings
+    if bindings isnt false then User.bindings = bindings else return false
 
 
 parseSettings = ->
@@ -263,6 +270,8 @@ parseSettings = ->
             return
         
         User.settings = settings
+    else
+        return false
 
 $('.js-edit').click ->
     # Let the app know that we are setting a binding
@@ -314,9 +323,14 @@ $('.js-default').click ->
 $('#js-save-settings').click ->
     # We need to create an object to save to chrome storage
     
-    parseSettings()
-    parseBindings()
+    if parseSettings() isnt false and parseBindings() isnt false
+        alert 'saving settings!'
+    else
+        alert 'we have some errors!'
 
-    console.log User
+$('#js-restore-defaults').click ->
+    populateDefaults()
+    validateSettings()
+    validateBindings()
 
 populateDefaults()
