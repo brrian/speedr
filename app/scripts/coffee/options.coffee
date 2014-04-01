@@ -27,19 +27,19 @@ Defaults =
         minimap: true
         fontSize: 33
 
-        delayOnPunctuation: false
-        punctuationDelayTime: 1000
+        delayOnPunctuation: true
+        punctuationDelayTime: 30
 
-        delayOnSentence: false
-        sentenceDelayTime: 150
+        delayOnSentence: true
+        sentenceDelayTime: 50
 
-        pauseOnParagraph: true
-        delayOnParagraph: false
+        pauseOnParagraph: false
+        delayOnParagraph: true
         paragraphDelayTime: 300
 
-        delayOnLongWords: false
+        delayOnLongWords: true
         longWordLength: 8
-        longWordDelayTime: 100
+        longWordDelayTime: 50
 
     bindings:
         ' ': 'toggle'
@@ -57,6 +57,7 @@ Defaults =
         'Û': 'slower'
         'Ý': 'faster'
         'M': 'toggle menu'
+        'I': 'toggle theme'
 
 KeyCodes = 
     ' ': 'Spacebar'
@@ -327,12 +328,23 @@ $('.js-default').click ->
 
 $('#js-save-settings').click ->
     # We need to create an object to save to chrome storage
+    flashMessage = $('#js-flash-message')
+    submit = $(@)
     
     if parseSettings() isnt false and parseBindings() isnt false
-        chrome.storage.sync.set(User)
-        alert 'saving settings!'
+        chrome.storage.sync.set User, ->
+            flashMessage.addClass 'fade-in-out'
+            flashMessage.text 'Nice! Your preferences have been saved!'
     else
-        alert 'we have some errors!'
+        flashMessage.addClass 'fade-in-out'
+        flashMessage.text 'You have some errors! Try checking your settings again.'
+
+        submit.addClass 'shake'
+        submit.one 'webkitAnimationEnd animationend', ->
+            submit.removeClass 'shake'
+
+    flashMessage.one 'webkitAnimationEnd animationend', ->
+        flashMessage.removeClass('fade-in-out').empty()
 
 $('#js-restore-defaults').click ->
     populateDefaults()

@@ -10,6 +10,7 @@ User =
         fontFamily: 'Source Sans Pro'
 
         primaryTheme: 'Solarized (Light)'
+        secondaryTheme: 'Solarized (Dark)'
 
         boxWidth: 500
         boxHeight: 245
@@ -48,14 +49,14 @@ User =
             secondaryText: '#657b83'
             boxColor: '#fdf6e3'
             borderColor: 'rgba(175, 150, 190, .2)'
-            highlightColor: '#dc322f;'
+            highlightColor: '#dc322f'
 
         'Solarized (Dark)': 
             primaryText: '#93a1a1'
             secondaryText: '#657b83'
             boxColor: '#073642'
             borderColor: 'rgba(175, 150, 190, .2)'
-            highlightColor: '#cb4b16;'
+            highlightColor: '#cb4b16'
 
     bindings:
         ' ': 'toggle'
@@ -73,6 +74,7 @@ User =
         'Û': 'slower'
         'Ý': 'faster'
         'M': 'toggle menu'
+        'I': 'toggle theme'
 
 window.App = {
     utility: {
@@ -373,15 +375,15 @@ window.App = {
                     clearTimeout(App.countdownTimeout)
 
                     bar = doc.getElementById('js-speedr-countdown-bar')
-                    oldSpeed = bar.style['transition-duration']
+                    oldSpeed = bar.style.transitionDuration
                     newSpeed = 150
                     
-                    bar.style['transition-duration'] = newSpeed + 'ms'
+                    bar.style.transitionDuration = newSpeed + 'ms, 200ms'
                     toggleClass(bar, 'speedr-countdown-bar-zero')
 
                     setTimeout(
                         ->
-                            bar.style['transition-duration'] = oldSpeed
+                            bar.style.transitionDuration = oldSpeed
                         newSpeed
                     )
 
@@ -533,7 +535,7 @@ window.App = {
             bar = doc.createElement('div')
             bar.id = 'js-speedr-countdown-bar'
             bar.className = 'speedr-countdown-bar'
-            bar.style.cssText = 'background-color: ' + theme.highlightColor + '; transition-duration: ' + settings.countdownSpeed + 'ms;'
+            bar.style.cssText = 'background-color: ' + theme.highlightColor + '; transition-duration: ' + settings.countdownSpeed + 'ms, 200ms;'
             countdown.appendChild(bar)
 
             countdown
@@ -732,6 +734,53 @@ window.App = {
             
             toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active')
 
+        toggleTheme: ->
+            doc = document
+            settings = User.settings
+            currentTheme = settings.primaryTheme
+            newTheme = settings.secondaryTheme
+            theme = User.themes[newTheme]
+
+            # Now we gotta change variables
+            box = doc.getElementById 'js-speedr-box'
+            box.style.color = theme.primaryText
+            box.style.backgroundColor = theme.boxColor
+
+            wordContainer = box.getElementsByClassName('speedr-word-container')[0]
+            wordContainer.style.borderBottomColor = theme.borderColor
+
+            word = doc.getElementById 'js-speedr-word'
+            word.style.color = theme.primaryText
+
+            highlighted = word.getElementsByTagName('div')[1]
+            highlighted.style.color = theme.highlightColor
+
+            pointer = wordContainer.getElementsByClassName('speedr-pointer')[0]
+            pointer.style.borderTopColor = theme.highlightColor
+
+            menu = doc.getElementById 'js-speedr-menu'
+            menuItems = menu.getElementsByTagName 'li'
+            for menuItem in menuItems
+                menuItem.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';'
+
+            if settings.showWPM is true
+                wpm = doc.getElementById 'js-speedr-wpm'
+                wpm.style.backgroundColor = theme.boxColor
+
+            if settings.showMinimap is true
+                minimap = doc.getElementById 'js-speedr-minimap'
+                minimap.style.backgroundColor = theme.boxColor
+                minimap.style.borderLeftColor = theme.borderColor
+
+            if settings.showCountdown is true
+                countdownBar = doc.getElementById 'js-speedr-countdown-bar'
+                countdownBar.style.backgroundColor = theme.highlightColor
+
+            User.settings.primaryTheme = newTheme
+            User.settings.secondaryTheme = currentTheme
+
+            App.chrome.settings.save()
+
     }
     chrome: {
         settings: {
@@ -745,7 +794,7 @@ window.App = {
                             # User.settings = data.settings
                             App.actions.calculateInterval()
 
-                        if data.bindings then App.chrome.settings.store(data.bindings, 'bindings')
+                        if data.bindings then User.bindings = data.bindings
                 )
             save: ->
                 chrome.storage.sync.set(User)
@@ -834,5 +883,8 @@ window.onkeydown = (event) ->
         when 'toggle menu'
             if App.active
                 App.actions.toggleMenu()
+        when 'toggle theme'
+            if App.active
+                App.actions.toggleTheme()
 
 App.init()

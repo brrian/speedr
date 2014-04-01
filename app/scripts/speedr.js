@@ -13,6 +13,7 @@
     settings: {
       fontFamily: 'Source Sans Pro',
       primaryTheme: 'Solarized (Light)',
+      secondaryTheme: 'Solarized (Dark)',
       boxWidth: 500,
       boxHeight: 245,
       minimapWidth: 175,
@@ -43,14 +44,14 @@
         secondaryText: '#657b83',
         boxColor: '#fdf6e3',
         borderColor: 'rgba(175, 150, 190, .2)',
-        highlightColor: '#dc322f;'
+        highlightColor: '#dc322f'
       },
       'Solarized (Dark)': {
         primaryText: '#93a1a1',
         secondaryText: '#657b83',
         boxColor: '#073642',
         borderColor: 'rgba(175, 150, 190, .2)',
-        highlightColor: '#cb4b16;'
+        highlightColor: '#cb4b16'
       }
     },
     bindings: {
@@ -68,7 +69,8 @@
       'shift+\'': 'next sentence',
       'Û': 'slower',
       'Ý': 'faster',
-      'M': 'toggle menu'
+      'M': 'toggle menu',
+      'I': 'toggle theme'
     }
   };
 
@@ -353,12 +355,12 @@
           if (settings.showCountdown) {
             clearTimeout(App.countdownTimeout);
             bar = doc.getElementById('js-speedr-countdown-bar');
-            oldSpeed = bar.style['transition-duration'];
+            oldSpeed = bar.style.transitionDuration;
             newSpeed = 150;
-            bar.style['transition-duration'] = newSpeed + 'ms';
+            bar.style.transitionDuration = newSpeed + 'ms, 200ms';
             toggleClass(bar, 'speedr-countdown-bar-zero');
             setTimeout(function() {
-              return bar.style['transition-duration'] = oldSpeed;
+              return bar.style.transitionDuration = oldSpeed;
             }, newSpeed);
           }
           if (settings.showControls) {
@@ -532,7 +534,7 @@
         bar = doc.createElement('div');
         bar.id = 'js-speedr-countdown-bar';
         bar.className = 'speedr-countdown-bar';
-        bar.style.cssText = 'background-color: ' + theme.highlightColor + '; transition-duration: ' + settings.countdownSpeed + 'ms;';
+        bar.style.cssText = 'background-color: ' + theme.highlightColor + '; transition-duration: ' + settings.countdownSpeed + 'ms, 200ms;';
         countdown.appendChild(bar);
         return countdown;
       },
@@ -732,6 +734,47 @@
           toggleClass(doc.getElementById('js-speedr-menu-button'), 'speedr-menu-button-active');
         }
         return toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active');
+      },
+      toggleTheme: function() {
+        var box, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
+        doc = document;
+        settings = User.settings;
+        currentTheme = settings.primaryTheme;
+        newTheme = settings.secondaryTheme;
+        theme = User.themes[newTheme];
+        box = doc.getElementById('js-speedr-box');
+        box.style.color = theme.primaryText;
+        box.style.backgroundColor = theme.boxColor;
+        wordContainer = box.getElementsByClassName('speedr-word-container')[0];
+        wordContainer.style.borderBottomColor = theme.borderColor;
+        word = doc.getElementById('js-speedr-word');
+        word.style.color = theme.primaryText;
+        highlighted = word.getElementsByTagName('div')[1];
+        highlighted.style.color = theme.highlightColor;
+        pointer = wordContainer.getElementsByClassName('speedr-pointer')[0];
+        pointer.style.borderTopColor = theme.highlightColor;
+        menu = doc.getElementById('js-speedr-menu');
+        menuItems = menu.getElementsByTagName('li');
+        for (_i = 0, _len = menuItems.length; _i < _len; _i++) {
+          menuItem = menuItems[_i];
+          menuItem.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';';
+        }
+        if (settings.showWPM === true) {
+          wpm = doc.getElementById('js-speedr-wpm');
+          wpm.style.backgroundColor = theme.boxColor;
+        }
+        if (settings.showMinimap === true) {
+          minimap = doc.getElementById('js-speedr-minimap');
+          minimap.style.backgroundColor = theme.boxColor;
+          minimap.style.borderLeftColor = theme.borderColor;
+        }
+        if (settings.showCountdown === true) {
+          countdownBar = doc.getElementById('js-speedr-countdown-bar');
+          countdownBar.style.backgroundColor = theme.highlightColor;
+        }
+        User.settings.primaryTheme = newTheme;
+        User.settings.secondaryTheme = currentTheme;
+        return App.chrome.settings.save();
       }
     },
     chrome: {
@@ -743,7 +786,7 @@
               App.actions.calculateInterval();
             }
             if (data.bindings) {
-              return App.chrome.settings.store(data.bindings, 'bindings');
+              return User.bindings = data.bindings;
             }
           });
         },
@@ -869,6 +912,11 @@
       case 'toggle menu':
         if (App.active) {
           return App.actions.toggleMenu();
+        }
+        break;
+      case 'toggle theme':
+        if (App.active) {
+          return App.actions.toggleTheme();
         }
     }
   };

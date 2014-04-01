@@ -1,6 +1,37 @@
 @import 'compass/utilities/general/clearfix';
 @import 'page/fonts';
 
+@keyframes fade-in-out {
+	0%, 100% {
+		opacity: 0;
+	}
+	20%, 80% {
+		opacity: 1;
+	}
+}
+
+.fade-in-out {
+	animation: fade-in-out 5s 1;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-6px);
+  }
+
+  20%, 40%, 60%, 80% {
+    transform: translateX(6px);
+  }
+}
+
+.shake {
+	animation: shake 300ms;
+}
+
 $red: #dc322f;
 $beige: #fdf6e3;
 
@@ -244,5 +275,12 @@ footer {
 		&:hover {
 			color: darken(#aaa, 10%);
 		}
+	}
+
+	.flash-message {
+		position: relative;
+		top: 3px;
+		float: right;
+		opacity: 0;
 	}
 }

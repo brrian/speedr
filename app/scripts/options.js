@@ -23,16 +23,16 @@
       wpm: 350,
       minimap: true,
       fontSize: 33,
-      delayOnPunctuation: false,
-      punctuationDelayTime: 1000,
-      delayOnSentence: false,
-      sentenceDelayTime: 150,
-      pauseOnParagraph: true,
-      delayOnParagraph: false,
+      delayOnPunctuation: true,
+      punctuationDelayTime: 30,
+      delayOnSentence: true,
+      sentenceDelayTime: 50,
+      pauseOnParagraph: false,
+      delayOnParagraph: true,
       paragraphDelayTime: 300,
-      delayOnLongWords: false,
+      delayOnLongWords: true,
       longWordLength: 8,
-      longWordDelayTime: 100
+      longWordDelayTime: 50
     },
     bindings: {
       ' ': 'toggle',
@@ -49,7 +49,8 @@
       'shift+\'': 'next sentence',
       'Û': 'slower',
       'Ý': 'faster',
-      'M': 'toggle menu'
+      'M': 'toggle menu',
+      'I': 'toggle theme'
     }
   };
 
@@ -372,12 +373,25 @@
   });
 
   $('#js-save-settings').click(function() {
+    var flashMessage, submit;
+    flashMessage = $('#js-flash-message');
+    submit = $(this);
     if (parseSettings() !== false && parseBindings() !== false) {
-      chrome.storage.sync.set(User);
-      return alert('saving settings!');
+      chrome.storage.sync.set(User, function() {
+        flashMessage.addClass('fade-in-out');
+        return flashMessage.text('Nice! Your preferences have been saved!');
+      });
     } else {
-      return alert('we have some errors!');
+      flashMessage.addClass('fade-in-out');
+      flashMessage.text('You have some errors! Try checking your settings again.');
+      submit.addClass('shake');
+      submit.one('webkitAnimationEnd animationend', function() {
+        return submit.removeClass('shake');
+      });
     }
+    return flashMessage.one('webkitAnimationEnd animationend', function() {
+      return flashMessage.removeClass('fade-in-out').empty();
+    });
   });
 
   $('#js-restore-defaults').click(function() {
