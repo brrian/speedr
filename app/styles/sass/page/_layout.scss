@@ -1,0 +1,26 @@
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Source Sans Pro', sans-serif;
+	background-color: $beige;
+	color: #444;
+	font-size: .875em;
+	margin: 0;
+	padding-bottom: 77px;
+}
+
+section {
+	@include clearfix;
+	width: 800px;
+	margin: 0 auto 20px auto;
+
+	h1 {
+		font-size: 1.29em;
+		color: $red;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-bottom: 20px;
+	}
+}

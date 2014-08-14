@@ -34,14 +34,14 @@ module.exports = function (grunt) {
                 tasks: ['bowerInstall']
             },
             coffee: {
-                files: ['<%= config.app %>/scripts/coffee/{,*/}*.{coffee,litcoffee,coffee.md}'],
+                files: ['<%= config.app %>/scripts/coffee/**/*.{coffee,litcoffee,coffee.md}'],
                 tasks: ['coffee:chrome'],
                 options: {
                     livereload: true
                 }
             },
             compass: {
-                files: ['<%= config.app %>/styles/sass/{,*/}*.{scss,sass}'],
+                files: ['<%= config.app %>/styles/sass/**/*.{scss,sass}'],
                 tasks: ['compass:chrome', 'autoprefixer']
             },
             gruntfile: {
@@ -137,7 +137,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= config.app %>/scripts/coffee',
-                    src: '{,*/}*.{coffee,litcoffee,coffee.md}',
+                    src: '**/*.{coffee,litcoffee,coffee.md}',
                     dest: '<%= config.app %>/scripts',
                     ext: '.js'
                 }]

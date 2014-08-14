@@ -1,0 +1,64 @@
+.speedr-controls {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	width: 380px;
+	text-align: center;
+
+	.speedr-button {
+	    display: inline-block;
+	    padding: 10px 0;
+	    margin-right: 15px;
+	    opacity: .8;
+	    cursor: default;
+	    transition: opacity 200ms ease-in-out;
+
+	    &:last-child {
+	        margin-right: 0;
+	    }
+
+	    &:hover {
+	        opacity: 1;
+	    }
+	}
+
+	.play-pause {
+	    display: table-cell;
+	    font-size: 1.09em;
+	    margin: 0;
+
+	    &:before, &:after {
+	        position: relative;
+	        top: -1px;
+	    }
+
+	    &:before {
+	        content: '\2039';
+	        margin-right: 5px;
+	    }
+
+	    &:after {
+	        content: '\203A';
+	        margin-left: 5px;
+	    }
+	}
+
+	&-side {
+	    display: table-cell;
+	    width: 50%;
+
+	    &:hover {
+	        .speedr-button {
+	            opacity: .5;
+	            transition: opacity 500ms ease-in-out;
+
+	            &:hover {
+	                opacity: 1;
+	                transition: opacity 200ms ease-in-out;
+	            }
+	        }
+	    }
+	}
+}

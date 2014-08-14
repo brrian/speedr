@@ -1,0 +1,22 @@
+.speedr-status {
+    &-hidden {
+        .speedr-status-item {
+            top: 18px;
+            opacity: 0;
+        }
+    }
+
+    &-item {
+        position: absolute;
+        top: 8px;
+        left: 45%;
+        display: inline-block;
+        margin-left: 10px;
+        transition: top 200ms 150ms ease-in, opacity 200ms 150ms ease-in;
+
+        &:first-child {
+            margin-left: -5px;
+            transform: translateX(-100%);
+        }
+    }
+}
