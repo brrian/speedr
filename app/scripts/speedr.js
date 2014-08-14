@@ -314,11 +314,13 @@
       },
       showWord: function(marker) {
         var html, orp, theme, word, wordBox;
+        if (marker == null) {
+          marker = App.i;
+        }
         theme = User.themes[User.settings.primaryTheme];
-        marker = marker || App.i;
         word = App.text[marker].text;
         orp = Math.round((word.length + 1) * 0.4) - 1;
-        html = '<div>' + word.slice(0, orp) + '</div><div style="color: ' + theme.highlightColor + ';">' + word[orp] + '</div><div>' + word.slice(orp + 1) + '</div>';
+        html = "<div data-before=\"" + (word.slice(0, orp)) + "\" data-after=\"" + (word.slice(orp + 1)) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
         wordBox = document.getElementById('js-speedr-word');
         return wordBox.innerHTML = html;
       },
@@ -749,7 +751,7 @@
         wordContainer.style.borderBottomColor = theme.borderColor;
         word = doc.getElementById('js-speedr-word');
         word.style.color = theme.primaryText;
-        highlighted = word.getElementsByTagName('div')[1];
+        highlighted = word.getElementsByTagName('span')[0];
         highlighted.style.color = theme.highlightColor;
         pointer = wordContainer.getElementsByClassName('speedr-pointer')[0];
         pointer.style.borderTopColor = theme.highlightColor;

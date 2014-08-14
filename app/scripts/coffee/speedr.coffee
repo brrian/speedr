@@ -327,15 +327,14 @@ window.App = {
             App.speedr.reset()
 
         # Split word into different elements along the ORP
-        showWord: (marker) ->
+        showWord: (marker = App.i) ->
             theme = User.themes[User.settings.primaryTheme]
 
-            marker = marker || App.i
             word = App.text[marker].text
             orp = Math.round((word.length + 1) * 0.4) - 1
-            html = '<div>' + word.slice(0, orp) + '</div><div style="color: ' + theme.highlightColor + ';">' + word[orp] + '</div><div>' + word.slice(orp + 1) + '</div>'
+            html = "<div data-before=\"#{word.slice(0, orp)}\" data-after=\"#{word.slice(orp + 1)}\"><span style=\"color: #{theme.highlightColor};\">#{word[orp]}</span></div>"
 
-            wordBox = document.getElementById('js-speedr-word')
+            wordBox = document.getElementById 'js-speedr-word'
             wordBox.innerHTML = html
 
         reset: ->
@@ -416,7 +415,7 @@ window.App = {
 
                     App.countdownTimeout = setTimeout(@.start, settings.countdownSpeed)
                 else
-                    @.start()
+                    @start()
 
             start: ->
                 App.loop = App.speedr.loop.create()
@@ -432,8 +431,7 @@ window.App = {
                 App.wordCount = 0
                 App.speedr.showWord(App.i = 0)
 
-                if settings.showStatus
-                    App.actions.updateStatus()
+                if settings.showStatus then App.actions.updateStatus()
 
                 if settings.showMinimap
                     App.minimap.update()
@@ -752,7 +750,7 @@ window.App = {
             word = doc.getElementById 'js-speedr-word'
             word.style.color = theme.primaryText
 
-            highlighted = word.getElementsByTagName('div')[1]
+            highlighted = word.getElementsByTagName('span')[0]
             highlighted.style.color = theme.highlightColor
 
             pointer = wordContainer.getElementsByClassName('speedr-pointer')[0]
