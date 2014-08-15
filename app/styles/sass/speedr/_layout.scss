@@ -66,15 +66,18 @@
 		    	left: 45%;
 		    	transform: translateX(-50%);
 
+		    	&:before, &:after {
+		    		position: absolute;
+		    		white-space: nowrap;
+		    	}
+
 		    	&:before {
 		    		content: attr(data-before);
-		    		position: absolute;
 		    		right: 100%;
 		    	}
 
 		    	&:after {
 		    		content: attr(data-after);
-		    		position: absolute;
 		    		left: 100%;
 		    	}
 		    }
