@@ -25,7 +25,7 @@
       showStatus: true,
       showWPM: true,
       wpm: 350,
-      displayedWords: 3,
+      minimap: true,
       fontSize: 33,
       delayOnPunctuation: false,
       punctuationDelayTime: 1000,
@@ -312,29 +312,15 @@
         });
         return App.speedr.reset();
       },
-      showWord: function(marker, finalMarker) {
-        var html, orp, settings, theme, word, wordBox, words;
+      showWord: function(marker) {
+        var html, orp, theme, word, wordBox;
         if (marker == null) {
           marker = App.i;
         }
-        settings = User.settings;
         theme = User.themes[User.settings.primaryTheme];
-        if (finalMarker == null) {
-          finalMarker = marker + settings.displayedWords;
-        }
-        if (settings.displayedWords === 1) {
-          word = App.text[marker].text;
-          orp = Math.round((word.length + 1) * 0.4) - 1;
-          html = "<div data-before=\"" + (word.slice(0, orp)) + "\" data-after=\"" + (word.slice(orp + 1)) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
-        } else {
-          words = '';
-          while (marker !== finalMarker) {
-            words += " " + App.text[marker].text;
-            marker++;
-            console.log(marker);
-          }
-          html = "<div>" + words + "</div>";
-        }
+        word = App.text[marker].text;
+        orp = Math.round((word.length + 1) * 0.4) - 1;
+        html = "<div data-before=\"" + (word.slice(0, orp)) + "\" data-after=\"" + (word.slice(orp + 1)) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
         wordBox = document.getElementById('js-speedr-word');
         return wordBox.innerHTML = html;
       },
@@ -434,30 +420,15 @@
           }
         },
         create: function() {
-          var counter, delay, finalMarker, i, nextWord, settings, word;
+          var delay, i, nextWord, prevWord, settings, word;
           settings = User.settings;
-          counter = 0;
           delay = 0;
-          i = App.i + settings.displayedWords - 1;
-          finalMarker = i + settings.displayedWords;
+          i = App.i;
           word = App.text[i];
+          prevWord = App.text[i - 1];
           nextWord = App.text[i + 1];
-          while (counter !== settings.displayedWords) {
-            word = App.text[i + counter];
-            nextWord = App.text[i + counter + 1];
-            if (nextWord) {
-              if (settings.delayOnPunctuation && word.hasPunctuation) {
-                delay = settings.punctuationDelayTime;
-              }
-              if (settings.delayOnSentence && nextWord.sentenceStart === i + 1) {
-                delay = settings.sentenceDelayTime;
-                finalMarker = i + counter - 1;
-              }
-            }
-            counter++;
-          }
-          App.speedr.showWord(i, finalMarker);
-          App.i = finalMarker;
+          App.speedr.showWord(i);
+          App.i++;
           if (settings.showMinimap) {
             App.minimapElements[i].className = 'speedr-read';
           }

@@ -235,19 +235,18 @@
   left: 45%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  text-align: center;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/_layout\.scss}line{font-family:\0000370}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/_layout\.scss}line{font-family:\0000369}}
 .speedr-word-container .speedr-word div:before, .speedr-word-container .speedr-word div:after {
   position: absolute;
   white-space: nowrap;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/_layout\.scss}line{font-family:\0000375}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/_layout\.scss}line{font-family:\0000374}}
 .speedr-word-container .speedr-word div:before {
   content: attr(data-before);
   right: 100%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/_layout\.scss}line{font-family:\0000380}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/_layout\.scss}line{font-family:\0000379}}
 .speedr-word-container .speedr-word div:after {
   content: attr(data-after);
   left: 100%;
