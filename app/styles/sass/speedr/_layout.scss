@@ -46,7 +46,7 @@
 		.speedr-pointer {
 		    position: absolute;
 		    top: 0;
-		    left: calc(45% - 6px);
+		    left: calc(50% - 6px);
 		    display: inline-block;
 		    height: 0;
 		    width: 0;
@@ -60,10 +60,11 @@
 			position: relative;
 			height: 1.25em;
 		    line-height: 1.25em;
+		    white-space: nowrap;
 
 		    div {
 		    	position: absolute;
-		    	left: 45%;
+		    	left: 50%;
 		    	transform: translateX(-50%);
 
 		    	&:before, &:after {

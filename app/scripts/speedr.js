@@ -1,6 +1,4 @@
 (function() {
-  var User;
-
   Math.easeInOutQuad = function(time, begin, change, duration) {
     if ((time = time / (duration / 2)) < 1) {
       return change / 2 * time * time + begin;
@@ -9,7 +7,7 @@
     }
   };
 
-  User = {
+  window.User = {
     settings: {
       fontFamily: 'Source Sans Pro',
       primaryTheme: 'Solarized (Light)',
@@ -25,7 +23,7 @@
       showStatus: true,
       showWPM: true,
       wpm: 350,
-      minimap: true,
+      wordsDisplayed: 8,
       fontSize: 33,
       delayOnPunctuation: false,
       punctuationDelayTime: 1000,
@@ -57,9 +55,11 @@
     bindings: {
       ' ': 'toggle',
       '%': 'prev word',
-      '&': 'bigger',
       '\'': 'next word',
+      '&': 'bigger',
       '(': 'smaller',
+      'shift+&': 'more words',
+      'shift+(': 'less words',
       'Q': 'close',
       'R': 'reset',
       'alt+V': 'open',
@@ -75,6 +75,9 @@
   };
 
   window.App = {
+    text: {
+      sentences: []
+    },
     utility: {
       formatNumber: function(number) {
         return Number(number).toLocaleString('en');
@@ -82,14 +85,14 @@
       findNextOfType: function(type) {
         var currentTypeStart, i;
         i = App.i;
-        currentTypeStart = App.text[i][type];
+        currentTypeStart = App.text.parsed[i][type];
         while (true) {
           i++;
-          if (App.text[i][type] !== currentTypeStart) {
+          if (App.text.parsed[i][type] !== currentTypeStart) {
             break;
           }
-          if (App.text[i + 1] === void 0) {
-            i = App.text.length - 1;
+          if (App.text.parsed[i + 1] === void 0) {
+            i = App.text.parsed.length - 1;
             break;
           }
         }
@@ -98,10 +101,10 @@
       findPrevOfType: function(type) {
         var i;
         i = App.i;
-        if (i === App.text[i][type]) {
-          return App.text[i - 1][type];
+        if (i === App.text.parsed[i][type]) {
+          return App.text.parsed[i - 1][type];
         } else {
-          return App.text[i][type];
+          return App.text.parsed[i][type];
         }
       },
       generateKeyCombo: function(event) {
@@ -168,34 +171,41 @@
     },
     parse: {
       selection: function() {
-        var counter, paragraph, paragraphStart, paragraphs, selection, sentence, sentenceStart, sentences, word, wordObj, words, _i, _j, _k, _len, _len1, _len2;
-        selection = window.getSelection().toString();
+        App.text.original = window.getSelection().toString();
+        return this.text();
+      },
+      text: function() {
+        var counter, paragraph, paragraphStart, paragraphs, sentence, sentenceCounter, sentenceStart, sentences, word, wordObj, words, _i, _j, _k, _len, _len1, _len2, _results;
         counter = 0;
-        paragraphs = this.splitIntoParagraphs(selection);
+        sentenceCounter = 0;
+        paragraphs = this.splitIntoParagraphs(App.text.original);
+        _results = [];
         for (_i = 0, _len = paragraphs.length; _i < _len; _i++) {
           paragraph = paragraphs[_i];
           sentences = this.splitIntoSetences(paragraph);
           paragraphStart = counter;
+          App.text.sentences.push.apply(App.text.sentences, sentences);
           for (_j = 0, _len1 = sentences.length; _j < _len1; _j++) {
             sentence = sentences[_j];
             words = this.splitIntoWords(sentence);
             sentenceStart = counter;
             for (_k = 0, _len2 = words.length; _k < _len2; _k++) {
               word = words[_k];
-              counter++;
               wordObj = {
                 text: word,
                 hasPunctuation: /[\.,!\?]/.test(word) ? true : false,
                 paragraphStart: paragraphStart,
-                sentenceStart: sentenceStart
+                sentenceStart: sentenceStart,
+                sentenceArrayMarker: sentenceCounter
               };
-              App.text.push(wordObj);
+              App.text.parsed.push(wordObj);
+              counter++;
             }
+            sentenceCounter++;
           }
-          App.text[counter - 1].paragraphEnd = true;
+          _results.push(App.text.parsed[counter - 1].paragraphEnd = true);
         }
-        App.speedr.create();
-        return App.speedr.showWord();
+        return _results;
       },
       splitIntoParagraphs: function(text) {
         return text.split(/[\r\n]/g).filter(function(paragraph) {
@@ -210,7 +220,9 @@
         });
       },
       splitIntoWords: function(sentence) {
-        return sentence.split(' ');
+        var regex;
+        regex = new RegExp("((?:(?:\\S+\\s){" + User.settings.wordsDisplayed + "})|(?:.+)(?=\\n|$))", "g");
+        return sentence.match(regex);
       }
     },
     speedr: {
@@ -278,7 +290,7 @@
         overlay.appendChild(box);
         document.body.appendChild(overlay);
         if (settings.showMinimap) {
-          App.minimap.create(settings, theme, box);
+          App.speedrExtras.minimap.create(settings, theme, box);
         }
         if (settings.showCountdown) {
           box.appendChild(App.speedrExtras.countdown(settings, theme));
@@ -318,16 +330,21 @@
           marker = App.i;
         }
         theme = User.themes[User.settings.primaryTheme];
-        word = App.text[marker].text;
-        orp = Math.round((word.length + 1) * 0.4) - 1;
-        html = "<div data-before=\"" + (word.slice(0, orp)) + "\" data-after=\"" + (word.slice(orp + 1)) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
+        word = App.text.parsed[marker].text;
+        if (User.settings.wordsDisplayed === 1) {
+          orp = Math.round((word.length + 1) * 0.4) - 1;
+          html = "<div data-before=\"" + (word.slice(0, orp)) + "\" data-after=\"" + (word.slice(orp + 1)) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
+        } else {
+          html = "<div>" + word + "</div>";
+        }
         wordBox = document.getElementById('js-speedr-word');
         return wordBox.innerHTML = html;
       },
       reset: function() {
         App.active = false;
         App.pause = true;
-        App.text = [];
+        App.text.sentences = [];
+        App.text.parsed = [];
         App.interval = App.actions.calculateInterval();
         App.i = 0;
         App.wordCount = 0;
@@ -366,7 +383,7 @@
             }, newSpeed);
           }
           if (settings.showControls) {
-            doc.getElementById('js-play-pause').innerText = App.i === App.text.length - 1 ? 'Restart' : 'Play';
+            doc.getElementById('js-play-pause').innerText = App.i === App.text.parsed.length - 1 ? 'Restart' : 'Play';
           }
           if (App.scrollWatcher) {
             return clearTimeout(App.scrollWatcher);
@@ -380,7 +397,7 @@
           if (settings.showControls) {
             doc.getElementById('js-play-pause').innerText = 'Pause';
           }
-          if (App.i === App.text.length - 1) {
+          if (App.i === App.text.parsed.length - 1) {
             App.speedr.loop.reset();
           }
           App.i++;
@@ -398,7 +415,7 @@
         start: function() {
           App.loop = App.speedr.loop.create();
           if (App.scrollWatcher) {
-            return App.minimap.scrollWatcher();
+            return App.speedrExtras.minimap.scrollWatcher();
           }
         },
         reset: function() {
@@ -413,20 +430,19 @@
             App.actions.updateStatus();
           }
           if (settings.showMinimap) {
-            App.minimap.update();
+            App.speedrExtras.minimap.update();
             if (App.scrollWatcher) {
-              return App.minimap.updateScroll();
+              return App.speedrExtras.minimap.updateScroll();
             }
           }
         },
         create: function() {
-          var delay, i, nextWord, prevWord, settings, word;
+          var delay, i, matches, multiplier, nextWord, regex, settings, word;
           settings = User.settings;
           delay = 0;
           i = App.i;
-          word = App.text[i];
-          prevWord = App.text[i - 1];
-          nextWord = App.text[i + 1];
+          word = App.text.parsed[i];
+          nextWord = App.text.parsed[i + 1];
           App.speedr.showWord(i);
           App.i++;
           if (settings.showMinimap) {
@@ -439,15 +455,22 @@
             if (settings.delayOnSentence && nextWord.sentenceStart === i + 1) {
               delay = settings.sentenceDelayTime;
             }
-            if (settings.delayOnLongWords && word.text.length > settings.longWordLength) {
-              delay += settings.longWordDelayTime;
+            if (settings.delayOnLongWords) {
+              if (settings.wordsDisplayed === 1 && word.text.length > settings.longWordLength) {
+                multiplier = 1;
+              } else {
+                regex = new RegExp("\\w{" + settings.longWordLength + ",}", "g");
+                matches = word.text.match(regex);
+                multiplier = matches ? matches.length : 0;
+              }
+              delay += settings.longWordDelayTime * multiplier;
             }
             if (word.paragraphEnd) {
-              if (settings.delayOnParagraph) {
-                delay = settings.paragraphDelayTime;
-              }
               if (settings.pauseOnParagraph) {
                 return App.speedr.loop.stop();
+              }
+              if (settings.delayOnParagraph) {
+                delay = settings.paragraphDelayTime;
               }
             }
             return App.loop = setTimeout(App.speedr.loop.create, App.interval + delay);
@@ -550,6 +573,81 @@
         menu.addEventListener('click', App.actions.toggleMenu);
         return menu;
       },
+      minimap: {
+        create: function(settings, theme, box) {
+          var contents, doc, minimap;
+          doc = document;
+          minimap = doc.createElement('div');
+          minimap.id = 'js-speedr-minimap';
+          minimap.className = 'speedr-minimap';
+          minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';';
+          contents = this.createContents();
+          minimap.appendChild(contents);
+          box.appendChild(minimap);
+          if (contents.offsetHeight > minimap.offsetHeight) {
+            return App.scrollWatcher = true;
+          }
+        },
+        createContents: function() {
+          var contents, doc, i, paragraphElement, word, wordElement, wordText, _i, _len, _ref;
+          doc = document;
+          contents = doc.createElement('div');
+          contents.className = 'contents';
+          paragraphElement = doc.createElement('p');
+          _ref = App.text.parsed;
+          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            word = _ref[i];
+            wordElement = doc.createElement('span');
+            wordText = doc.createTextNode(word.text.replace(/\S/g, '.'));
+            wordElement.appendChild(wordText);
+            paragraphElement.appendChild(wordElement);
+            paragraphElement.appendChild(doc.createTextNode(' '));
+            if (word.paragraphEnd) {
+              contents.appendChild(paragraphElement);
+              paragraphElement = doc.createElement('p');
+            }
+            App.minimapElements[i] = wordElement;
+          }
+          App.minimapElements[0].className = 'speedr-read';
+          return contents;
+        },
+        updateContents: function() {
+          var contents, minimap, oldContents;
+          minimap = document.getElementById('js-speedr-minimap');
+          oldContents = minimap.getElementsByClassName('contents')[0];
+          contents = this.createContents();
+          return minimap.replaceChild(contents, oldContents);
+        },
+        update: function() {
+          var i, num, _i, _ref, _results;
+          i = App.i;
+          _results = [];
+          for (num = _i = 0, _ref = App.text.parsed.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; num = 0 <= _ref ? ++_i : --_i) {
+            _results.push(App.minimapElements[num].className = num <= i ? 'speedr-read' : '');
+          }
+          return _results;
+        },
+        updateScroll: function() {
+          var activeOffset, i, minimap;
+          i = App.i;
+          minimap = document.getElementById('js-speedr-minimap');
+          activeOffset = App.minimapElements[i].offsetTop;
+          if (App.scrolling === false || App.scrolling === void 0) {
+            if (User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50) {
+              App.utility.scrollTo(minimap, activeOffset, 1000);
+            }
+            if (App.pause === true && activeOffset < minimap.scrollTop) {
+              return App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000);
+            }
+          }
+        },
+        scrollWatcher: function() {
+          if (!App.scrolling) {
+            App.speedrExtras.minimap.updateScroll();
+          }
+          return App.scrollWatcher = setTimeout(App.speedrExtras.minimap.scrollWatcher, App.interval * 5);
+        }
+      },
       status: function() {
         var doc, status, timeLeft, wordsLeft;
         doc = document;
@@ -575,84 +673,37 @@
         return wpm;
       }
     },
-    minimap: {
-      create: function(settings, theme, box) {
-        var contents, doc, i, minimap, paragraphElement, word, wordElement, wordText, _i, _len, _ref;
-        doc = document;
-        minimap = doc.createElement('div');
-        minimap.id = 'js-speedr-minimap';
-        minimap.className = 'speedr-minimap';
-        minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';';
-        contents = doc.createElement('div');
-        contents.className = 'contents';
-        paragraphElement = doc.createElement('p');
-        _ref = App.text;
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-          word = _ref[i];
-          wordElement = doc.createElement('span');
-          wordText = doc.createTextNode(word.text.replace(/./g, '.'));
-          wordElement.appendChild(wordText);
-          paragraphElement.appendChild(wordElement);
-          paragraphElement.appendChild(doc.createTextNode(' '));
-          if (word.paragraphEnd) {
-            contents.appendChild(paragraphElement);
-            paragraphElement = doc.createElement('p');
-          }
-          App.minimapElements[i] = wordElement;
-        }
-        App.minimapElements[0].className = 'speedr-read';
-        minimap.appendChild(contents);
-        box.appendChild(minimap);
-        if (contents.offsetHeight > minimap.offsetHeight) {
-          return App.scrollWatcher = true;
-        }
-      },
-      update: function() {
-        var i, num, _i, _ref, _results;
-        i = App.i;
-        _results = [];
-        for (num = _i = 0, _ref = App.text.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; num = 0 <= _ref ? ++_i : --_i) {
-          _results.push(App.minimapElements[num].className = num <= i ? 'speedr-read' : '');
-        }
-        return _results;
-      },
-      updateScroll: function() {
-        var activeOffset, i, minimap;
-        i = App.i;
-        minimap = document.getElementById('js-speedr-minimap');
-        activeOffset = App.minimapElements[i].offsetTop;
-        if (App.scrolling === false || App.scrolling === void 0) {
-          if (User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50) {
-            App.utility.scrollTo(minimap, activeOffset, 1000);
-          }
-          if (App.pause === true && activeOffset < minimap.scrollTop) {
-            return App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000);
-          }
-        }
-      },
-      scrollWatcher: function() {
-        if (!App.scrolling) {
-          App.minimap.updateScroll();
-        }
-        return App.scrollWatcher = setTimeout(App.minimap.scrollWatcher, App.interval * 5);
-      }
-    },
     actions: {
       calculateInterval: function() {
         return App.interval = 60000 / User.settings.wpm;
       },
       updateStatus: function() {
-        var doc, wordsLeft, wpm;
+        var doc, timeLeft, totalWords, totalWpm, wordPlurality, wordsDisplayed, wordsLeft, wpm;
         doc = document;
-        wordsLeft = App.text.length - App.i - 1;
         wpm = User.settings.wpm;
-        doc.getElementById('js-speedr-time-left').innerText = '~' + (wordsLeft / wpm * 60).toFixed(2) + ' s @ ' + wpm + 'WPM';
-        return doc.getElementById('js-speedr-words-left').innerText = App.utility.formatNumber(wordsLeft) + ' words left';
+        wordsDisplayed = User.settings.wordsDisplayed;
+        wordsLeft = App.text.parsed.length - App.i - 1;
+        timeLeft = (wordsLeft / wpm * 60).toFixed(2);
+        if (wordsDisplayed === 1) {
+          totalWpm = "" + wpm + " WPM";
+          totalWords = App.utility.formatNumber(wordsLeft);
+        } else {
+          totalWpm = "" + (wpm * wordsDisplayed) + " WPM (" + wpm + "&times;" + wordsDisplayed + ")";
+          totalWords = wordsLeft !== 0 ? "~" + (App.utility.formatNumber(wordsLeft * wordsDisplayed)) : "0";
+        }
+        timeLeft = timeLeft === '0.00' ? '0' : "~" + timeLeft;
+        wordPlurality = totalWords === '1' ? 'word' : 'words';
+        doc.getElementById('js-speedr-time-left').innerHTML = timeLeft + ' s @ ' + totalWpm;
+        return doc.getElementById('js-speedr-words-left').innerHTML = "" + totalWords + " " + wordPlurality + " left";
       },
       updateWPM: function() {
         var wpm;
         wpm = document.getElementById('js-speedr-wpm');
-        return wpm.innerHTML = User.settings.wpm + ' wpm';
+        if (User.settings.wordsDisplayed === 1) {
+          return wpm.innerHTML = User.settings.wpm + ' wpm';
+        } else {
+          return wpm.innerHTML = "" + (User.settings.wpm * User.settings.wordsDisplayed) + " wpm (" + User.settings.wpm + "&times;" + User.settings.wordsDisplayed + ")";
+        }
       },
       updateCountdownBar: function() {
         var countdown, settings;
@@ -679,6 +730,9 @@
       changeFontSize: function(px) {
         var settings, wordContainer;
         settings = User.settings;
+        if ((settings.fontSize + px) < 8) {
+          return;
+        }
         User.settings.fontSize = settings.fontSize + px;
         wordContainer = document.getElementById('js-speedr-word');
         wordContainer.style.fontSize = User.settings.fontSize + 'px';
@@ -686,6 +740,30 @@
           App.actions.updateCountdownBar();
         }
         return App.chrome.settings.save();
+      },
+      changeWordsDisplayed: function(words) {
+        var settings;
+        settings = User.settings;
+        if ((settings.wordsDisplayed + words) < 1) {
+          return;
+        }
+        User.settings.wordsDisplayed = settings.wordsDisplayed + words;
+        App.i = 0;
+        App.text.parsed = [];
+        App.parse.text();
+        App.speedr.showWord();
+        if (settings.showWPM) {
+          this.updateWPM();
+        }
+        if (settings.showStatus) {
+          this.updateStatus();
+        }
+        if (settings.showMinimap) {
+          if (App.scrollWatcher) {
+            App.speedrExtras.minimap.updateScroll();
+          }
+          return App.speedrExtras.minimap.updateContents();
+        }
       },
       navigateText: function(direction, type) {
         var i, settings;
@@ -697,7 +775,7 @@
         if (i === 0 && direction === 'prev') {
           return;
         }
-        if (i === App.text.length - 1 && direction === 'next') {
+        if (i === App.text.parsed.length - 1 && direction === 'next') {
           return;
         }
         switch (type) {
@@ -716,9 +794,9 @@
           App.actions.updateStatus();
         }
         if (settings.showMinimap) {
-          App.minimap.update();
+          App.speedrExtras.minimap.update();
           if (App.scrollWatcher) {
-            return App.minimap.updateScroll();
+            return App.speedrExtras.minimap.updateScroll();
           }
         }
       },
@@ -776,7 +854,7 @@
         }
         User.settings.primaryTheme = newTheme;
         User.settings.secondaryTheme = currentTheme;
-        return App.chrome.settings.save();
+        return App.chrome.settings.save().speedrExtras;
       }
     },
     chrome: {
@@ -831,6 +909,8 @@
       case 'open':
         if (!App.active && window.getSelection().toString().length) {
           App.parse.selection();
+          App.speedr.create();
+          App.speedr.showWord();
           return false;
         }
         break;
@@ -861,6 +941,18 @@
       case 'smaller':
         if (App.active) {
           App.actions.changeFontSize(-2);
+          return false;
+        }
+        break;
+      case 'more words':
+        if (App.active) {
+          App.actions.changeWordsDisplayed(+1);
+          return false;
+        }
+        break;
+      case 'less words':
+        if (App.active) {
+          App.actions.changeWordsDisplayed(-1);
           return false;
         }
         break;

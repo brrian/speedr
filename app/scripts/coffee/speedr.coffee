@@ -5,7 +5,7 @@ Math.easeInOutQuad = (time, begin, change, duration) ->
         return -change/2 * ((time -= 1)*(time-2)-1) + begin
 
 # Set some settings
-User = 
+window.User = 
     settings: 
         fontFamily: 'Source Sans Pro'
 
@@ -26,7 +26,7 @@ User =
         showWPM: true
 
         wpm: 350
-        minimap: true
+        wordsDisplayed: 8
         fontSize: 33
 
         delayOnPunctuation: false
@@ -61,9 +61,11 @@ User =
     bindings:
         ' ': 'toggle'
         '%': 'prev word'
-        '&': 'bigger'
         '\'': 'next word'
+        '&': 'bigger'
         '(': 'smaller'
+        'shift+&': 'more words'
+        'shift+(': 'less words'
         'Q': 'close'
         'R': 'reset'
         'alt+V': 'open'
@@ -77,21 +79,25 @@ User =
         'I': 'toggle theme'
 
 window.App = {
-    utility: {
+
+    text:
+        sentences: []
+
+    utility:
         formatNumber: (number) ->
             Number(number).toLocaleString('en')
 
         findNextOfType: (type) ->
             i = App.i
-            currentTypeStart = App.text[i][type]
+            currentTypeStart = App.text.parsed[i][type]
 
             while true
                 i++
 
-                break unless App.text[i][type] is currentTypeStart
+                break unless App.text.parsed[i][type] is currentTypeStart
 
-                if App.text[i + 1] is undefined
-                    i = App.text.length - 1
+                if App.text.parsed[i + 1] is undefined
+                    i = App.text.parsed.length - 1
                     break
 
             i
@@ -99,7 +105,7 @@ window.App = {
         findPrevOfType: (type) ->
             i = App.i
 
-            if i is App.text[i][type] then App.text[i - 1][type] else App.text[i][type]
+            if i is App.text.parsed[i][type] then App.text.parsed[i - 1][type] else App.text.parsed[i][type]
 
         generateKeyCombo: (event) ->
             # Create key binding
@@ -152,38 +158,46 @@ window.App = {
             chrome.runtime.sendMessage(
                 {url: href}
             )
-    }
-    parse: {
+
+    parse:
         selection: ->
-            selection = window.getSelection().toString()
+            App.text.original = window.getSelection().toString()
+
+            @text()
+
+        text: ->
             counter = 0
+            sentenceCounter = 0
 
             # Split the selection into paragraphs
-            paragraphs = @.splitIntoParagraphs(selection)
+            paragraphs = @splitIntoParagraphs App.text.original
 
             for paragraph in paragraphs
-                sentences = @.splitIntoSetences(paragraph)
+                sentences = @splitIntoSetences paragraph
                 paragraphStart = counter
 
+                # Add the sentence into the App.text.sentences array
+                App.text.sentences.push.apply App.text.sentences, sentences
+
                 for sentence in sentences
-                    words = @.splitIntoWords(sentence)
+                    words = @splitIntoWords sentence
                     sentenceStart = counter
 
                     for word in words
-                        counter++
-                        wordObj = {
+                        wordObj =
                             text: word
                             hasPunctuation: if /[\.,!\?]/.test(word) then true else false
                             paragraphStart: paragraphStart
                             sentenceStart: sentenceStart
-                        }
+                            sentenceArrayMarker: sentenceCounter
 
-                        App.text.push(wordObj)
+                        App.text.parsed.push wordObj
 
-                App.text[counter - 1].paragraphEnd = true
+                        counter++
 
-            App.speedr.create()
-            App.speedr.showWord()
+                    sentenceCounter++
+
+                App.text.parsed[counter - 1].paragraphEnd = true
 
         # Return an array of paragraphs
         splitIntoParagraphs: (text) ->
@@ -195,15 +209,17 @@ window.App = {
         splitIntoSetences: (paragraph) ->
             # sentences = paragraph.match(/["'“]?([A-Z]((?!([A-Za-z]{2,}|\d+)[.?!]+["']?\s+["']?[A-Z]).)*)(((Mr|Ms|Mrs|Dr|Capt|Col)\.\s+((?!\w{2,}[.?!]['"]?\s+["']?[A-Z]).)*)?)*((?![.?!]["']?\s+["']?[A-Z]).)*[.?!]+["'”]?/g) || [paragraph]
             sentences = paragraph.match(/[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/g) || [paragraph]
-            sentences.map( (sentence) ->
-                    sentence.trim()
-                )
+            sentences.map (sentence) ->
+                sentence.trim()
 
         # Return an array of words
         splitIntoWords: (sentence) ->
-            sentence.split(' ')
-    }
-    speedr: {
+            regex = new RegExp "((?:(?:\\S+\\s){#{User.settings.wordsDisplayed}})|(?:.+)(?=\\n|$))", "g"
+
+            sentence.match regex
+            # sentence.split(' ')
+
+    speedr:
         create: ->
             App.active = true
 
@@ -281,7 +297,7 @@ window.App = {
             document.body.appendChild(overlay)
 
             # These must be run after the document has been appended
-            if settings.showMinimap then App.minimap.create(settings, theme, box)
+            if settings.showMinimap then App.speedrExtras.minimap.create(settings, theme, box)
 
             if settings.showCountdown
                 box.appendChild(App.speedrExtras.countdown(settings, theme))
@@ -330,9 +346,13 @@ window.App = {
         showWord: (marker = App.i) ->
             theme = User.themes[User.settings.primaryTheme]
 
-            word = App.text[marker].text
-            orp = Math.round((word.length + 1) * 0.4) - 1
-            html = "<div data-before=\"#{word.slice(0, orp)}\" data-after=\"#{word.slice(orp + 1)}\"><span style=\"color: #{theme.highlightColor};\">#{word[orp]}</span></div>"
+            word = App.text.parsed[marker].text
+
+            if User.settings.wordsDisplayed is 1
+                orp = Math.round((word.length + 1) * 0.4) - 1
+                html = "<div data-before=\"#{word.slice(0, orp)}\" data-after=\"#{word.slice(orp + 1)}\"><span style=\"color: #{theme.highlightColor};\">#{word[orp]}</span></div>"
+            else
+                html = "<div>#{word}</div>"
 
             wordBox = document.getElementById 'js-speedr-word'
             wordBox.innerHTML = html
@@ -340,7 +360,8 @@ window.App = {
         reset: ->
             App.active = false
             App.pause = true
-            App.text = []
+            App.text.sentences = []
+            App.text.parsed = []
             App.interval = App.actions.calculateInterval()
             App.i = 0
             App.wordCount = 0
@@ -387,7 +408,7 @@ window.App = {
                     )
 
                 if settings.showControls
-                    doc.getElementById('js-play-pause').innerText = if App.i is App.text.length - 1 then 'Restart' else 'Play'
+                    doc.getElementById('js-play-pause').innerText = if App.i is App.text.parsed.length - 1 then 'Restart' else 'Play'
 
                 if App.scrollWatcher then clearTimeout(App.scrollWatcher)
 
@@ -400,7 +421,7 @@ window.App = {
                 if settings.showControls then doc.getElementById('js-play-pause').innerText = 'Pause'
 
                 # Check to see if we're at the end, if so, then we need to reset it first
-                if App.i is App.text.length - 1 then App.speedr.loop.reset()
+                if App.i is App.text.parsed.length - 1 then App.speedr.loop.reset()
 
                 # Start on the next word
                 App.i++
@@ -413,7 +434,7 @@ window.App = {
                 if settings.showCountdown
                     toggleClass(doc.getElementById('js-speedr-countdown-bar'), 'speedr-countdown-bar-zero')
 
-                    App.countdownTimeout = setTimeout(@.start, settings.countdownSpeed)
+                    App.countdownTimeout = setTimeout(@start, settings.countdownSpeed)
                 else
                     @start()
 
@@ -421,7 +442,7 @@ window.App = {
                 App.loop = App.speedr.loop.create()
                 
                 # Check to see if we need to watch for minimap scroll
-                if App.scrollWatcher then App.minimap.scrollWatcher()
+                if App.scrollWatcher then App.speedrExtras.minimap.scrollWatcher()
 
             reset: ->
                 settings = User.settings
@@ -434,17 +455,16 @@ window.App = {
                 if settings.showStatus then App.actions.updateStatus()
 
                 if settings.showMinimap
-                    App.minimap.update()
-                    if App.scrollWatcher then App.minimap.updateScroll()
+                    App.speedrExtras.minimap.update()
+                    if App.scrollWatcher then App.speedrExtras.minimap.updateScroll()
 
             create: ->
                 settings = User.settings
 
                 delay = 0
                 i = App.i
-                word = App.text[i]
-                prevWord = App.text[i - 1]
-                nextWord = App.text[i + 1]
+                word = App.text.parsed[i]
+                nextWord = App.text.parsed[i + 1]
 
                 App.speedr.showWord(i)
                 App.i++
@@ -458,21 +478,26 @@ window.App = {
                     if settings.delayOnSentence and nextWord.sentenceStart is i + 1
                         delay = settings.sentenceDelayTime
 
-                    if settings.delayOnLongWords and word.text.length > settings.longWordLength
-                        delay += settings.longWordDelayTime
+                    if settings.delayOnLongWords 
+                        if settings.wordsDisplayed is 1 and word.text.length > settings.longWordLength then multiplier = 1
+                        else
+                            regex = new RegExp "\\w{#{settings.longWordLength},}", "g"
+                            matches = word.text.match(regex)
+                            multiplier = if matches then matches.length else 0
+
+                        delay += settings.longWordDelayTime * multiplier
 
                     if word.paragraphEnd
+                        return App.speedr.loop.stop() if settings.pauseOnParagraph
                         if settings.delayOnParagraph then delay = settings.paragraphDelayTime
-                        if settings.pauseOnParagraph
-                            return App.speedr.loop.stop()
 
                     App.loop = setTimeout(App.speedr.loop.create, App.interval + delay)
                 else
                     App.speedr.loop.stop()
                     if App.scrollWatcher then clearTimeout(App.scrollWatcher)
         }
-    }
-    speedrExtras: {
+
+    speedrExtras:
         controls: ->
             doc = document
 
@@ -549,6 +574,89 @@ window.App = {
 
             menu
 
+        minimap:
+            create: (settings, theme, box) ->
+                doc = document
+
+                # Create minimap elements
+                minimap = doc.createElement('div')
+                minimap.id = 'js-speedr-minimap'
+                minimap.className = 'speedr-minimap'
+                minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';'
+
+                contents = @createContents()
+
+                minimap.appendChild(contents)
+
+                box.appendChild(minimap)
+
+                # Finally, check to see if we need to activate the scroll watcher
+                if contents.offsetHeight > minimap.offsetHeight then App.scrollWatcher = true
+
+            createContents: ->
+                doc = document
+
+                contents = doc.createElement('div')
+                contents.className = 'contents'
+
+                paragraphElement = doc.createElement('p')
+
+                # Loop through each word array and create a element
+                for word, i in App.text.parsed
+                    wordElement = doc.createElement('span')
+                    wordText = doc.createTextNode(word.text.replace(/\S/g, '.'))
+
+                    wordElement.appendChild(wordText)
+                    paragraphElement.appendChild(wordElement)
+                    paragraphElement.appendChild(doc.createTextNode(' '))
+
+                    # If this is the end of the paragraph then create a new p element
+                    if word.paragraphEnd
+                        contents.appendChild(paragraphElement)
+                        paragraphElement = doc.createElement('p')
+
+                    App.minimapElements[i] = wordElement
+
+                # Make the first element active
+                App.minimapElements[0].className = 'speedr-read'
+
+                contents
+
+            updateContents: ->
+                minimap = document.getElementById 'js-speedr-minimap'
+
+                oldContents = minimap.getElementsByClassName('contents')[0]
+
+                contents = @createContents()
+
+                minimap.replaceChild contents, oldContents
+
+            update: ->
+                i = App.i
+
+                for num in [0..App.text.parsed.length - 1]
+                    App.minimapElements[num].className = if num <= i then 'speedr-read' else ''
+
+            updateScroll: ->
+                # Get the current active word
+                i = App.i
+
+                minimap = document.getElementById('js-speedr-minimap')
+                activeOffset = App.minimapElements[i].offsetTop
+
+                if App.scrolling is false or App.scrolling is undefined
+                    # Compare the offset position and scroll position
+                    if User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50
+                        App.utility.scrollTo(minimap, activeOffset, 1000)
+
+                    if App.pause is true and activeOffset < minimap.scrollTop
+                        App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000)
+
+            scrollWatcher: ->
+                App.speedrExtras.minimap.updateScroll() unless App.scrolling
+
+                App.scrollWatcher = setTimeout(App.speedrExtras.minimap.scrollWatcher, App.interval * 5)
+
         status: ->
             doc = document
 
@@ -575,89 +683,40 @@ window.App = {
             wpm.style.backgroundColor = theme.boxColor
 
             wpm
-    }
-    minimap: {
-        create: (settings, theme, box) ->
-            doc = document
 
-            # Create minimap elements
-            minimap = doc.createElement('div')
-            minimap.id = 'js-speedr-minimap'
-            minimap.className = 'speedr-minimap'
-            minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';'
-
-            contents = doc.createElement('div')
-            contents.className = 'contents'
-
-            paragraphElement = doc.createElement('p')
-
-            # Loop through each word array and create a element
-            for word, i in App.text
-                wordElement = doc.createElement('span')
-                wordText = doc.createTextNode(word.text.replace(/./g, '.'))
-
-                wordElement.appendChild(wordText)
-                paragraphElement.appendChild(wordElement)
-                paragraphElement.appendChild(doc.createTextNode(' '))
-
-                # If this is the end of the paragraph then create a new p element
-                if word.paragraphEnd
-                    contents.appendChild(paragraphElement)
-                    paragraphElement = doc.createElement('p')
-
-                App.minimapElements[i] = wordElement
-
-            # Make the first element active
-            App.minimapElements[0].className = 'speedr-read'
-
-            minimap.appendChild(contents)
-
-            box.appendChild(minimap)
-
-            # Finally, check to see if we need to activate the scroll watcher
-            if contents.offsetHeight > minimap.offsetHeight then App.scrollWatcher = true
-
-        update: ->
-            i = App.i
-
-            for num in [0..App.text.length - 1]
-                App.minimapElements[num].className = if num <= i then 'speedr-read' else ''
-
-        updateScroll: ->
-            # Get the current active word
-            i = App.i
-
-            minimap = document.getElementById('js-speedr-minimap')
-            activeOffset = App.minimapElements[i].offsetTop
-
-            if App.scrolling is false or App.scrolling is undefined
-                # Compare the offset position and scroll position
-                if User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50
-                    App.utility.scrollTo(minimap, activeOffset, 1000)
-
-                if App.pause is true and activeOffset < minimap.scrollTop
-                    App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000)
-
-        scrollWatcher: ->
-            App.minimap.updateScroll() unless App.scrolling
-
-            App.scrollWatcher = setTimeout(App.minimap.scrollWatcher, App.interval * 5)
-    }
-    actions: {
+    actions:
         calculateInterval: ->
             App.interval = 60000 / User.settings.wpm
 
         updateStatus: ->
             doc = document
-            wordsLeft = App.text.length - App.i - 1
-            wpm = User.settings.wpm
 
-            doc.getElementById('js-speedr-time-left').innerText = '~' + (wordsLeft / wpm * 60).toFixed(2) + ' s @ ' + wpm + 'WPM'
-            doc.getElementById('js-speedr-words-left').innerText = App.utility.formatNumber(wordsLeft) + ' words left'
+            wpm = User.settings.wpm
+            wordsDisplayed = User.settings.wordsDisplayed
+
+            wordsLeft = App.text.parsed.length - App.i - 1
+            timeLeft = (wordsLeft / wpm * 60).toFixed(2)
+
+            if wordsDisplayed is 1
+                totalWpm = "#{wpm} WPM"
+                totalWords = App.utility.formatNumber wordsLeft
+            else
+                totalWpm = "#{wpm * wordsDisplayed} WPM (#{wpm}&times;#{wordsDisplayed})"
+                totalWords = unless wordsLeft is 0 then "~#{App.utility.formatNumber(wordsLeft * wordsDisplayed)}" else "0"
+
+            timeLeft = if timeLeft is '0.00' then '0' else "~#{timeLeft}"
+            wordPlurality = if totalWords is '1' then 'word' else 'words'
+
+            doc.getElementById('js-speedr-time-left').innerHTML = timeLeft + ' s @ ' + totalWpm
+            doc.getElementById('js-speedr-words-left').innerHTML = "#{totalWords} #{wordPlurality} left"
 
         updateWPM: ->
             wpm = document.getElementById('js-speedr-wpm')
-            wpm.innerHTML = User.settings.wpm + ' wpm'
+
+            if User.settings.wordsDisplayed is 1
+                wpm.innerHTML = User.settings.wpm + ' wpm'
+            else
+                wpm.innerHTML = "#{User.settings.wpm * User.settings.wordsDisplayed} wpm (#{User.settings.wpm}&times;#{User.settings.wordsDisplayed})"
 
         updateCountdownBar: ->
             settings = User.settings
@@ -672,15 +731,17 @@ window.App = {
             return if settings.wpm is 0 and wpm < 0
 
             User.settings.wpm = User.settings.wpm + wpm
-            @.calculateInterval()
+            @calculateInterval()
 
-            if settings.showWPM then @.updateWPM()
-            if settings.showStatus then @.updateStatus()
+            if settings.showWPM then @updateWPM()
+            if settings.showStatus then @updateStatus()
 
             App.chrome.settings.save()
 
         changeFontSize: (px) ->
             settings = User.settings
+
+            return if (settings.fontSize + px) < 8
 
             User.settings.fontSize = settings.fontSize + px
 
@@ -691,6 +752,25 @@ window.App = {
 
             App.chrome.settings.save()
 
+        changeWordsDisplayed: (words) ->
+            settings = User.settings
+
+            return if (settings.wordsDisplayed + words) < 1
+
+            User.settings.wordsDisplayed = settings.wordsDisplayed + words
+
+            App.i = 0
+            App.text.parsed = []
+
+            App.parse.text()
+            App.speedr.showWord()
+
+            if settings.showWPM then @updateWPM()
+            if settings.showStatus then @updateStatus()
+            if settings.showMinimap
+                if App.scrollWatcher then App.speedrExtras.minimap.updateScroll()
+                App.speedrExtras.minimap.updateContents()
+
         navigateText: (direction, type) ->
             i = App.i
             settings = User.settings
@@ -699,7 +779,7 @@ window.App = {
             App.speedr.loop.stop() if App.pause is false
 
             return if i is 0 and direction is 'prev'
-            return if i is App.text.length - 1 and direction is 'next'
+            return if i is App.text.parsed.length - 1 and direction is 'next'
 
             switch type
                 when 'word'
@@ -716,8 +796,8 @@ window.App = {
             if settings.showStatus then App.actions.updateStatus()
 
             if settings.showMinimap
-                App.minimap.update()
-                if App.scrollWatcher then App.minimap.updateScroll()
+                App.speedrExtras.minimap.update()
+                if App.scrollWatcher then App.speedrExtras.minimap.updateScroll()
 
         getWordCount: ->
             count = App.i - App.wordCount
@@ -777,11 +857,10 @@ window.App = {
             User.settings.primaryTheme = newTheme
             User.settings.secondaryTheme = currentTheme
 
-            App.chrome.settings.save()
+            App.chrome.settings.save().speedrExtras
 
-    }
-    chrome: {
-        settings: {
+    chrome:
+        settings:
             get: ->
                 chrome.storage.sync.get(
                     ['settings', 'bindings']
@@ -802,8 +881,8 @@ window.App = {
 
                 for setting, value of object
                     area[setting] = value
-        }
-        wordCount: {
+
+        wordCount:
             save: (count) ->
                 chrome.storage.sync.get(
                     'wordCount'
@@ -812,8 +891,7 @@ window.App = {
 
                         chrome.storage.sync.set({wordCount: wordCount + count})
                 )
-        }
-    }
+
     init: ->
         App.speedr.reset()
         App.chrome.settings.get()
@@ -826,6 +904,8 @@ window.onkeydown = (event) ->
         when 'open'
             if !App.active and window.getSelection().toString().length
                 App.parse.selection()
+                App.speedr.create()
+                App.speedr.showWord()
                 false
         when 'close'
             if App.active
@@ -833,19 +913,27 @@ window.onkeydown = (event) ->
                 false
         when 'slower'
             if App.active
-                App.actions.changeWPM(-25)
+                App.actions.changeWPM -25
                 false
         when 'faster'
             if App.active
-                App.actions.changeWPM(25)
+                App.actions.changeWPM 25
                 false
         when 'bigger'
             if App.active
-                App.actions.changeFontSize(2)
+                App.actions.changeFontSize 2
                 false
         when 'smaller'
             if App.active
-                App.actions.changeFontSize(-2)
+                App.actions.changeFontSize -2
+                false
+        when 'more words'
+            if App.active
+                App.actions.changeWordsDisplayed +1
+                false
+        when 'less words'
+            if App.active
+                App.actions.changeWordsDisplayed -1
                 false
         when 'toggle'
             if App.active

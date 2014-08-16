@@ -62,13 +62,13 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="checkbox" id="delay-sentence" name="delayOnSetence">
-                    <label for="delay-sentence">Delay <input type="text" name="punctuationDelayTime"> ms at the end of every sentence <div class="error error-with-checkbox"></div></label>
+                    <input type="checkbox" id="delay-sentence" name="delayOnSentence">
+                    <label for="delay-sentence">Delay <input type="text" name="sentenceDelayTime"> ms at the end of every sentence <div class="error error-with-checkbox"></div></label>
                 </div>
 
                 <div class="form-group">
                     <input type="checkbox" id="delay-paragraph" name="delayOnParagraph">
-                    <label for="delay-paragraph">Delay <input type="text" name="punctuationDelayTime"> ms at the end of every paragraph <div class="error error-with-checkbox"></div></label>
+                    <label for="delay-paragraph">Delay <input type="text" name="paragraphDelayTime"> ms at the end of every paragraph <div class="error error-with-checkbox"></div></label>
                 </div>
 
                 <div class="form-group">
@@ -208,6 +208,36 @@
                     </div>
                     <div class="binding-details">
                         <span>Decrease font size by 2px</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-more-words">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Increase number of words displayed</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-less-words">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Decrease number of words displayed</span>
                         <span class="controls">
                             <span class="js-edit">Edit</span>
                             <span class="js-clear">Clear</span>
