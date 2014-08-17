@@ -40,5 +40,6 @@
 
 .fade-in { animation: fade-in 400ms ease-in; }
 .fade-out { animation: fade-out 400ms ease-out; }
+.fade-out-quick { animation: fade-out 250ms ease-out; }
 .flip-in { animation: flip-in 400ms $ease-out-back; }
 .flip-out { animation: flip-out 300ms ease-out; }

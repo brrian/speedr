@@ -84,6 +84,7 @@ window.App = {
         sentences: []
 
     utility:
+
         formatNumber: (number) ->
             Number(number).toLocaleString('en')
 
@@ -158,6 +159,80 @@ window.App = {
             chrome.runtime.sendMessage(
                 {url: href}
             )
+
+        getBinding: (action) ->
+            humanReadableBinding = ' :'
+
+            for keyBinding, keyAction of User.bindings
+                if keyAction is action
+                    binding = keyBinding
+                    break
+
+            if binding
+                keys = binding.split '+'
+
+                for key in keys
+                    humanReadableBinding += " #{@parseKeyCode key}"
+
+            else humanReadableBinding = ''
+
+            humanReadableBinding.trim()
+
+        parseKeyCode: (binding) ->
+            keyCodes = 
+                ' ': 'Spacebar'
+                '\t': 'Tab'
+                'p': 'F1'
+                'q': 'F2'
+                'r': 'F3'
+                's': 'F4'
+                't': 'F5'
+                'u': 'F6'
+                'v': 'F7'
+                'w': 'F8'
+                'x': 'F9'
+                'y': 'F10'
+                'z': 'F11'
+                '{': 'F12'
+                '\u00C0': '`',
+                '\u00BD': '-',
+                '\u00BB': '=',
+                '\u00DB': '[',
+                '\u00DD': ']',
+                '\u00DC': '\\',
+                '\u00BA': ';',
+                '\u00DE': '\'',
+                '\u00BC': ',',
+                '\u00BE': '.',
+                '\u00BF': '/',
+                '$': 'Home'
+                '#': 'End'
+                '!': 'PgUp'
+                '"': 'PgDn'
+                '.': 'Del'
+                '&': '\u2191'
+                '(': '\u2193'
+                '%': '\u2190'
+                '\'': '\u2192'
+                'o': 'Num /'
+                'j': 'Num *'
+                'm': 'Num -'
+                'k': 'Num +'
+                'n': 'Num .'
+                '`': 'Num 0'
+                'a': 'Num 1'
+                'b': 'Num 2'
+                'c': 'Num 3'
+                'd': 'Num 4'
+                'e': 'Num 5'
+                'f': 'Num 6'
+                'g': 'Num 7'
+                'h': 'Num 8'
+                'i': 'Num 9'
+
+            keyChar = if keyCodes.hasOwnProperty binding then keyCodes[binding] else binding
+
+            keyChar.charAt(0).toUpperCase() + keyChar.slice(1);
 
     parse:
         selection: ->
@@ -270,6 +345,9 @@ window.App = {
 
             menuItems = ['Alpha', 'Settings', 'Close']
             for menuItem in menuItems
+
+                item = doc.createElement 'li'
+
                 switch menuItem
                     when 'Alpha'
                         elementFunction = -> App.utility.openUrl('alpha.html')
@@ -278,7 +356,9 @@ window.App = {
                     when 'Close'
                         elementFunction = App.speedr.destroy
 
-                item = doc.createElement('li')
+                        item.className = 'js-speedr-tooltip'
+                        item.setAttribute 'data-tooltip', "Close Speedr#{App.utility.getBinding('close')}"
+
                 item.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';'
                 item.appendChild(doc.createTextNode(menuItem))
                 item.addEventListener('click', elementFunction)
@@ -297,7 +377,8 @@ window.App = {
             document.body.appendChild(overlay)
 
             # These must be run after the document has been appended
-            if settings.showMinimap then App.speedrExtras.minimap.create(settings, theme, box)
+            if settings.showMinimap
+                App.speedrExtras.minimap.create(settings, theme, box)
 
             if settings.showCountdown
                 box.appendChild(App.speedrExtras.countdown(settings, theme))
@@ -311,12 +392,11 @@ window.App = {
                 box.appendChild(App.speedrExtras.wpm(theme))
                 App.actions.updateWPM()
 
-            App.utility.runOnceAfterAnimation(
-                box
-                ->
-                    overlay.className = overlay.className.replace(' fade-in', '')
-                    box.className = box.className.replace(' flip-in', '')
-            )
+            App.speedrExtras.tooltips.init()
+
+            App.utility.runOnceAfterAnimation box, ->
+                overlay.className = overlay.className.replace(' fade-in', '')
+                box.className = box.className.replace(' flip-in', '')
 
         destroy: ->
             doc = document
@@ -332,12 +412,9 @@ window.App = {
             overlay.className += ' fade-out'
 
             # Flip out and fade out
-            App.utility.runOnceAfterAnimation(
-                newBox
-                ->
-                    newBox.remove()
-                    overlay.remove()
-            )
+            App.utility.runOnceAfterAnimation newBox, ->
+                newBox.remove()
+                overlay.remove()
 
             # Reset some settings
             App.speedr.reset()
@@ -408,7 +485,14 @@ window.App = {
                     )
 
                 if settings.showControls
-                    doc.getElementById('js-play-pause').innerText = if App.i is App.text.parsed.length - 1 then 'Restart' else 'Play'
+                    playButton = doc.getElementById 'js-play-pause'
+
+                    if App.i is App.text.parsed.length - 1
+                        playButton.innerText = 'Restart'
+                        playButton.setAttribute 'data-tooltip', "Restart#{App.utility.getBinding('reset')}"
+                    else
+                        playButton.innerText = 'Play'
+                        playButton.setAttribute 'data-tooltip', 'Play'
 
                 if App.scrollWatcher then clearTimeout(App.scrollWatcher)
 
@@ -418,7 +502,10 @@ window.App = {
                 settings = User.settings
                 toggleClass = App.utility.toggleClass
 
-                if settings.showControls then doc.getElementById('js-play-pause').innerText = 'Pause'
+                if settings.showControls
+                    playButton = doc.getElementById 'js-play-pause'
+                    playButton.innerText = 'Pause'
+                    playButton.setAttribute 'data-tooltip', "Pause#{App.utility.getBinding('toggle')}"
 
                 # Check to see if we're at the end, if so, then we need to reset it first
                 if App.i is App.text.parsed.length - 1 then App.speedr.loop.reset()
@@ -512,26 +599,34 @@ window.App = {
 
             buttons = ['prev-Para', 'prev-Sent', 'prev-Word', 'play-Pause', 'next-Word', 'next-Sent', 'next-Para']
             for button, i in buttons
+                element = doc.createElement 'div'
+
                 switch button
                     when 'prev-Para'
                         elementFunction = -> App.actions.navigateText('prev', 'paragraph')
+                        element.setAttribute 'data-tooltip', "Previous Paragraph#{App.utility.getBinding('prev paragraph')}"
                     when 'prev-Sent'
                         elementFunction = -> App.actions.navigateText('prev', 'sentence')
+                        element.setAttribute 'data-tooltip', "Previous Sentence#{App.utility.getBinding('prev sentence')}"
                     when 'prev-Word'
                         elementFunction = -> App.actions.navigateText('prev', 'word')
+                        element.setAttribute 'data-tooltip', "Previous Word#{App.utility.getBinding('prev word')}"
                     when 'play-Pause'
                         elementFunction = App.speedr.loop.toggle
+                        element.setAttribute 'data-tooltip', "Play#{App.utility.getBinding('toggle')}"
                     when 'next-Word'
                         elementFunction = -> App.actions.navigateText('next', 'word')
+                        element.setAttribute 'data-tooltip', "Next Word#{App.utility.getBinding('next word')}"
                     when 'next-Sent'
                         elementFunction = -> App.actions.navigateText('next', 'sentence')
+                        element.setAttribute 'data-tooltip', "Next Sentence#{App.utility.getBinding('next sentence')}"
                     when 'next-Para'
                         elementFunction = -> App.actions.navigateText('next', 'paragraph')
+                        element.setAttribute 'data-tooltip', "Next Paragraph#{App.utility.getBinding('next paragraph')}"
 
                 text = button.split('-').pop()
 
-                element = doc.createElement('div')
-                element.className = 'speedr-button'
+                element.className = 'speedr-button js-speedr-tooltip'
                 element.appendChild(doc.createTextNode(text))
                 element.addEventListener('click', elementFunction, false)
 
@@ -568,7 +663,8 @@ window.App = {
 
             menu = doc.createElement('div')
             menu.id = 'js-speedr-menu-button'
-            menu.className = 'speedr-menu-button speedr-small-text speedr-button-fade'
+            menu.className = 'speedr-menu-button speedr-small-text speedr-button-fade js-speedr-tooltip'
+            menu.setAttribute 'data-tooltip', "Toggle Menu#{App.utility.getBinding('toggle menu')}"
             menu.appendChild(doc.createTextNode('Menu'))
             menu.addEventListener('click', App.actions.toggleMenu)
 
@@ -676,6 +772,46 @@ window.App = {
 
             status
 
+        tooltips:
+            init: ->
+                tooltips = document.getElementsByClassName 'js-speedr-tooltip'
+
+                for tooltip in tooltips
+                    tooltip.addEventListener 'mouseover', =>
+                        target = event.target
+
+                        @timeout = setTimeout =>
+                            @create target
+                        , 500
+
+                    tooltip.addEventListener 'mouseout', =>
+                        clearTimeout @timeout
+
+                        if @activeTooltip then @destroy()
+
+                    tooltip.addEventListener 'click', =>
+                        if @activeTooltip then @destroy()
+
+            create: (element) ->
+                position = element.getBoundingClientRect()
+
+                tooltip = document.createElement 'span'
+                tooltip.className = 'speedr-tooltip'
+                tooltip.innerText = element.getAttribute 'data-tooltip'
+                tooltip.style.cssText = "top: #{position.top}; left: #{position.left + (position.width / 2)};"
+
+                @activeTooltip = tooltip
+
+                document.body.appendChild tooltip
+
+            destroy: (tooltip = @activeTooltip) ->
+                tooltip.className += ' fade-out-quick'
+
+                App.utility.runOnceAfterAnimation tooltip, ->
+                    tooltip.remove()
+
+                @activeTooltip = undefined
+
         wpm: (theme) ->
             wpm = document.createElement('div')
             wpm.id = 'js-speedr-wpm'
@@ -757,6 +893,9 @@ window.App = {
 
             return if (settings.wordsDisplayed + words) < 1
 
+            # First we pause
+            App.speedr.loop.stop() if App.pause is false
+
             User.settings.wordsDisplayed = settings.wordsDisplayed + words
 
             App.i = 0
@@ -831,7 +970,7 @@ window.App = {
             word.style.color = theme.primaryText
 
             highlighted = word.getElementsByTagName('span')[0]
-            highlighted.style.color = theme.highlightColor
+            if highlighted then highlighted.style.color = theme.highlightColor
 
             pointer = wordContainer.getElementsByClassName('speedr-pointer')[0]
             pointer.style.borderTopColor = theme.highlightColor
@@ -857,7 +996,7 @@ window.App = {
             User.settings.primaryTheme = newTheme
             User.settings.secondaryTheme = currentTheme
 
-            App.chrome.settings.save().speedrExtras
+            App.chrome.settings.save()
 
     chrome:
         settings:

@@ -167,6 +167,84 @@
         return chrome.runtime.sendMessage({
           url: href
         });
+      },
+      getBinding: function(action) {
+        var binding, humanReadableBinding, key, keyAction, keyBinding, keys, _i, _len, _ref;
+        humanReadableBinding = ' :';
+        _ref = User.bindings;
+        for (keyBinding in _ref) {
+          keyAction = _ref[keyBinding];
+          if (keyAction === action) {
+            binding = keyBinding;
+            break;
+          }
+        }
+        if (binding) {
+          keys = binding.split('+');
+          for (_i = 0, _len = keys.length; _i < _len; _i++) {
+            key = keys[_i];
+            humanReadableBinding += " " + (this.parseKeyCode(key));
+          }
+        } else {
+          humanReadableBinding = '';
+        }
+        return humanReadableBinding.trim();
+      },
+      parseKeyCode: function(binding) {
+        var keyChar, keyCodes;
+        keyCodes = {
+          ' ': 'Spacebar',
+          '\t': 'Tab',
+          'p': 'F1',
+          'q': 'F2',
+          'r': 'F3',
+          's': 'F4',
+          't': 'F5',
+          'u': 'F6',
+          'v': 'F7',
+          'w': 'F8',
+          'x': 'F9',
+          'y': 'F10',
+          'z': 'F11',
+          '{': 'F12',
+          '\u00C0': '`',
+          '\u00BD': '-',
+          '\u00BB': '=',
+          '\u00DB': '[',
+          '\u00DD': ']',
+          '\u00DC': '\\',
+          '\u00BA': ';',
+          '\u00DE': '\'',
+          '\u00BC': ',',
+          '\u00BE': '.',
+          '\u00BF': '/',
+          '$': 'Home',
+          '#': 'End',
+          '!': 'PgUp',
+          '"': 'PgDn',
+          '.': 'Del',
+          '&': '\u2191',
+          '(': '\u2193',
+          '%': '\u2190',
+          '\'': '\u2192',
+          'o': 'Num /',
+          'j': 'Num *',
+          'm': 'Num -',
+          'k': 'Num +',
+          'n': 'Num .',
+          '`': 'Num 0',
+          'a': 'Num 1',
+          'b': 'Num 2',
+          'c': 'Num 3',
+          'd': 'Num 4',
+          'e': 'Num 5',
+          'f': 'Num 6',
+          'g': 'Num 7',
+          'h': 'Num 8',
+          'i': 'Num 9'
+        };
+        keyChar = keyCodes.hasOwnProperty(binding) ? keyCodes[binding] : binding;
+        return keyChar.charAt(0).toUpperCase() + keyChar.slice(1);
       }
     },
     parse: {
@@ -260,6 +338,7 @@
         menuItems = ['Alpha', 'Settings', 'Close'];
         for (_i = 0, _len = menuItems.length; _i < _len; _i++) {
           menuItem = menuItems[_i];
+          item = doc.createElement('li');
           switch (menuItem) {
             case 'Alpha':
               elementFunction = function() {
@@ -273,8 +352,9 @@
               break;
             case 'Close':
               elementFunction = App.speedr.destroy;
+              item.className = 'js-speedr-tooltip';
+              item.setAttribute('data-tooltip', "Close Speedr" + (App.utility.getBinding('close')));
           }
-          item = doc.createElement('li');
           item.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';';
           item.appendChild(doc.createTextNode(menuItem));
           item.addEventListener('click', elementFunction);
@@ -304,6 +384,7 @@
           box.appendChild(App.speedrExtras.wpm(theme));
           App.actions.updateWPM();
         }
+        App.speedrExtras.tooltips.init();
         return App.utility.runOnceAfterAnimation(box, function() {
           overlay.className = overlay.className.replace(' fade-in', '');
           return box.className = box.className.replace(' flip-in', '');
@@ -359,7 +440,7 @@
           }
         },
         stop: function() {
-          var bar, doc, newSpeed, oldSpeed, settings, toggleClass;
+          var bar, doc, newSpeed, oldSpeed, playButton, settings, toggleClass;
           doc = document;
           settings = User.settings;
           toggleClass = App.utility.toggleClass;
@@ -383,19 +464,28 @@
             }, newSpeed);
           }
           if (settings.showControls) {
-            doc.getElementById('js-play-pause').innerText = App.i === App.text.parsed.length - 1 ? 'Restart' : 'Play';
+            playButton = doc.getElementById('js-play-pause');
+            if (App.i === App.text.parsed.length - 1) {
+              playButton.innerText = 'Restart';
+              playButton.setAttribute('data-tooltip', "Restart" + (App.utility.getBinding('reset')));
+            } else {
+              playButton.innerText = 'Play';
+              playButton.setAttribute('data-tooltip', 'Play');
+            }
           }
           if (App.scrollWatcher) {
             return clearTimeout(App.scrollWatcher);
           }
         },
         startPrepare: function() {
-          var doc, settings, toggleClass;
+          var doc, playButton, settings, toggleClass;
           doc = document;
           settings = User.settings;
           toggleClass = App.utility.toggleClass;
           if (settings.showControls) {
-            doc.getElementById('js-play-pause').innerText = 'Pause';
+            playButton = doc.getElementById('js-play-pause');
+            playButton.innerText = 'Pause';
+            playButton.setAttribute('data-tooltip', "Pause" + (App.utility.getBinding('toggle')));
           }
           if (App.i === App.text.parsed.length - 1) {
             App.speedr.loop.reset();
@@ -496,43 +586,50 @@
         buttons = ['prev-Para', 'prev-Sent', 'prev-Word', 'play-Pause', 'next-Word', 'next-Sent', 'next-Para'];
         for (i = _i = 0, _len = buttons.length; _i < _len; i = ++_i) {
           button = buttons[i];
+          element = doc.createElement('div');
           switch (button) {
             case 'prev-Para':
               elementFunction = function() {
                 return App.actions.navigateText('prev', 'paragraph');
               };
+              element.setAttribute('data-tooltip', "Previous Paragraph" + (App.utility.getBinding('prev paragraph')));
               break;
             case 'prev-Sent':
               elementFunction = function() {
                 return App.actions.navigateText('prev', 'sentence');
               };
+              element.setAttribute('data-tooltip', "Previous Sentence" + (App.utility.getBinding('prev sentence')));
               break;
             case 'prev-Word':
               elementFunction = function() {
                 return App.actions.navigateText('prev', 'word');
               };
+              element.setAttribute('data-tooltip', "Previous Word" + (App.utility.getBinding('prev word')));
               break;
             case 'play-Pause':
               elementFunction = App.speedr.loop.toggle;
+              element.setAttribute('data-tooltip', "Play" + (App.utility.getBinding('toggle')));
               break;
             case 'next-Word':
               elementFunction = function() {
                 return App.actions.navigateText('next', 'word');
               };
+              element.setAttribute('data-tooltip', "Next Word" + (App.utility.getBinding('next word')));
               break;
             case 'next-Sent':
               elementFunction = function() {
                 return App.actions.navigateText('next', 'sentence');
               };
+              element.setAttribute('data-tooltip', "Next Sentence" + (App.utility.getBinding('next sentence')));
               break;
             case 'next-Para':
               elementFunction = function() {
                 return App.actions.navigateText('next', 'paragraph');
               };
+              element.setAttribute('data-tooltip', "Next Paragraph" + (App.utility.getBinding('next paragraph')));
           }
           text = button.split('-').pop();
-          element = doc.createElement('div');
-          element.className = 'speedr-button';
+          element.className = 'speedr-button js-speedr-tooltip';
           element.appendChild(doc.createTextNode(text));
           element.addEventListener('click', elementFunction, false);
           if (i < 3) {
@@ -568,7 +665,8 @@
         doc = document;
         menu = doc.createElement('div');
         menu.id = 'js-speedr-menu-button';
-        menu.className = 'speedr-menu-button speedr-small-text speedr-button-fade';
+        menu.className = 'speedr-menu-button speedr-small-text speedr-button-fade js-speedr-tooltip';
+        menu.setAttribute('data-tooltip', "Toggle Menu" + (App.utility.getBinding('toggle menu')));
         menu.appendChild(doc.createTextNode('Menu'));
         menu.addEventListener('click', App.actions.toggleMenu);
         return menu;
@@ -664,6 +762,56 @@
         status.appendChild(timeLeft);
         return status;
       },
+      tooltips: {
+        init: function() {
+          var tooltip, tooltips, _i, _len, _results,
+            _this = this;
+          tooltips = document.getElementsByClassName('js-speedr-tooltip');
+          _results = [];
+          for (_i = 0, _len = tooltips.length; _i < _len; _i++) {
+            tooltip = tooltips[_i];
+            tooltip.addEventListener('mouseover', function() {
+              var target;
+              target = event.target;
+              return _this.timeout = setTimeout(function() {
+                return _this.create(target);
+              }, 500);
+            });
+            tooltip.addEventListener('mouseout', function() {
+              clearTimeout(_this.timeout);
+              if (_this.activeTooltip) {
+                return _this.destroy();
+              }
+            });
+            _results.push(tooltip.addEventListener('click', function() {
+              if (_this.activeTooltip) {
+                return _this.destroy();
+              }
+            }));
+          }
+          return _results;
+        },
+        create: function(element) {
+          var position, tooltip;
+          position = element.getBoundingClientRect();
+          tooltip = document.createElement('span');
+          tooltip.className = 'speedr-tooltip';
+          tooltip.innerText = element.getAttribute('data-tooltip');
+          tooltip.style.cssText = "top: " + position.top + "; left: " + (position.left + (position.width / 2)) + ";";
+          this.activeTooltip = tooltip;
+          return document.body.appendChild(tooltip);
+        },
+        destroy: function(tooltip) {
+          if (tooltip == null) {
+            tooltip = this.activeTooltip;
+          }
+          tooltip.className += ' fade-out-quick';
+          App.utility.runOnceAfterAnimation(tooltip, function() {
+            return tooltip.remove();
+          });
+          return this.activeTooltip = void 0;
+        }
+      },
       wpm: function(theme) {
         var wpm;
         wpm = document.createElement('div');
@@ -746,6 +894,9 @@
         settings = User.settings;
         if ((settings.wordsDisplayed + words) < 1) {
           return;
+        }
+        if (App.pause === false) {
+          App.speedr.loop.stop();
         }
         User.settings.wordsDisplayed = settings.wordsDisplayed + words;
         App.i = 0;
@@ -830,7 +981,9 @@
         word = doc.getElementById('js-speedr-word');
         word.style.color = theme.primaryText;
         highlighted = word.getElementsByTagName('span')[0];
-        highlighted.style.color = theme.highlightColor;
+        if (highlighted) {
+          highlighted.style.color = theme.highlightColor;
+        }
         pointer = wordContainer.getElementsByClassName('speedr-pointer')[0];
         pointer.style.borderTopColor = theme.highlightColor;
         menu = doc.getElementById('js-speedr-menu');
@@ -854,7 +1007,7 @@
         }
         User.settings.primaryTheme = newTheme;
         User.settings.secondaryTheme = currentTheme;
-        return App.chrome.settings.save().speedrExtras;
+        return App.chrome.settings.save();
       }
     },
     chrome: {

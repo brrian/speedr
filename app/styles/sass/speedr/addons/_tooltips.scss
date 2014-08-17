@@ -1,0 +1,14 @@
+.speedr-tooltip {
+	position: absolute;
+	z-index: 2147483647;
+	display: inline-block;
+	margin-top: -22px;
+	padding: 7px 10px;
+	font-size: 11px;
+	background-color: rgba(#000, .8);
+	color: #fff;
+	transform: translateX(-50%);
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(#000, .6);
+	backface-visibility: hidden;
+}
