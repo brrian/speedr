@@ -35,7 +35,8 @@ module.exports = function (grunt) {
             },
             coffee: {
                 files: ['<%= config.app %>/scripts/coffee/**/*.{coffee,litcoffee,coffee.md}'],
-                tasks: ['coffee:chrome'],
+                // tasks: ['coffee:chrome'],
+                tasks: ['browserify:chrome'],
                 options: {
                     livereload: true
                 }
@@ -64,6 +65,17 @@ module.exports = function (grunt) {
                     '<%= config.app %>/manifest.json',
                     '<%= config.app %>/_locales/{,*/}*.json'
                 ]
+            }
+        },
+
+        browserify: {
+            chrome: {
+                files: {
+                    '<%= config.app %>/scripts/speedr.js': '<%= config.app %>/scripts/coffee/speedr.coffee'
+                },
+                options: {
+                    transform: ['coffeeify']
+                }
             }
         },
 
@@ -331,7 +343,8 @@ module.exports = function (grunt) {
         // Run some tasks in parallel to speed up build process
         concurrent: {
             chrome: [
-                'coffee:chrome',
+                // 'coffee:chrome',
+                'browserify:chrome',
                 'compass:chrome',
             ],
             dist: [

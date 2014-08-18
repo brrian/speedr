@@ -108,6 +108,7 @@
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\000031}}
 *, *:before, *:after {
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -148,6 +149,7 @@ input[type=text] {
   border: none;
   border-bottom: dotted 1px #444;
   outline: none;
+  -webkit-transition: border-bottom-color 200ms ease-in-out;
   transition: border-bottom-color 200ms ease-in-out;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_general\.scss}line{font-family:\0000313}}
@@ -242,6 +244,7 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
   content: '';
   position: absolute;
   z-index: -1;
+  top: -webkit-calc(50% - 5px);
   top: calc(50% - 5px);
   width: 100%;
   border-top: dotted 1px #444;
@@ -280,6 +283,7 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
   font-size: .86em;
   text-transform: uppercase;
   opacity: 0;
+  -webkit-transition: opacity 200ms ease-in-out;
   transition: opacity 200ms ease-in-out;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000365}}
@@ -287,6 +291,7 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
   display: inline-block;
   margin-right: 15px;
   color: #999;
+  -webkit-transition: color 200ms ease-in-out;
   transition: color 200ms ease-in-out;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000371}}
@@ -296,6 +301,7 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000378}}
 .keyboard-key {
+  background: -webkit-linear-gradient(top, #f2f2f2 0%, #e6e6e6 100%);
   background: linear-gradient(to bottom, #f2f2f2 0%, #e6e6e6 100%);
   display: inline-block;
   min-width: 30px;
@@ -328,6 +334,7 @@ footer button {
   outline: none;
   text-transform: uppercase;
   letter-spacing: 2px;
+  -webkit-transition: color 200ms ease-in-out;
   transition: color 200ms ease-in-out;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000323}}
