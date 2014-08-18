@@ -71,7 +71,8 @@ module.exports = function (grunt) {
         browserify: {
             chrome: {
                 files: {
-                    '<%= config.app %>/scripts/speedr.js': '<%= config.app %>/scripts/coffee/speedr.coffee'
+                    '<%= config.app %>/scripts/speedr.js': '<%= config.app %>/scripts/coffee/speedr.coffee',
+                    '<%= config.app %>/scripts/options.js': '<%= config.app %>/scripts/coffee/options.coffee'
                 },
                 options: {
                     transform: ['coffeeify']

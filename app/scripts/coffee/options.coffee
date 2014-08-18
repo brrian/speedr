@@ -2,115 +2,15 @@
 
 $ = jQuery
 
+Utility = require './common/utility.coffee'
+Defaults = require './common/defaults.coffee'
+
 User = {}
-
-Defaults =
-    settings: 
-        fontFamily: 'Source Sans Pro'
-
-        primaryTheme: 'Solarized (Light)'
-
-        boxWidth: 500
-        boxHeight: 245
-        minimapWidth: 175
-
-        countdownSpeed: 1000
-
-        showControls: true
-        showCountdown: true
-        showMenuButton: true
-        showMinimap: true
-        showStatus: true
-        showWPM: true
-
-        wpm: 350
-        minimap: true
-        fontSize: 33
-
-        delayOnPunctuation: true
-        punctuationDelayTime: 30
-
-        delayOnSentence: true
-        sentenceDelayTime: 50
-
-        pauseOnParagraph: false
-        delayOnParagraph: true
-        paragraphDelayTime: 300
-
-        delayOnLongWords: true
-        longWordLength: 8
-        longWordDelayTime: 50
-
-    bindings:
-        ' ': 'toggle'
-        '%': 'prev word'
-        '&': 'bigger'
-        '\'': 'next word'
-        '(': 'smaller'
-        'Q': 'close'
-        'R': 'reset'
-        'alt+V': 'open'
-        'ctrl+%': 'prev paragraph'
-        'ctrl+\'': 'next paragraph'
-        'shift+%': 'prev sentence'
-        'shift+\'': 'next sentence'
-        'Û': 'slower'
-        'Ý': 'faster'
-        'M': 'toggle menu'
-        'I': 'toggle theme'
-
-KeyCodes = 
-    ' ': 'Spacebar'
-    '\t': 'Tab'
-    'p': 'F1'
-    'q': 'F2'
-    'r': 'F3'
-    's': 'F4'
-    't': 'F5'
-    'u': 'F6'
-    'v': 'F7'
-    'w': 'F8'
-    'x': 'F9'
-    'y': 'F10'
-    'z': 'F11'
-    '{': 'F12'
-    '\u00C0': '`',
-    '\u00BD': '-',
-    '\u00BB': '=',
-    '\u00DB': '[',
-    '\u00DD': ']',
-    '\u00DC': '\\',
-    '\u00BA': ';',
-    '\u00DE': '\'',
-    '\u00BC': ',',
-    '\u00BE': '.',
-    '\u00BF': '/',
-    '$': 'Home'
-    '#': 'End'
-    '!': 'PgUp'
-    '"': 'PgDn'
-    '.': 'Del'
-    '&': '\u2191'
-    '(': '\u2193'
-    '%': '\u2190'
-    '\'': '\u2192'
-    'o': 'Num /'
-    'j': 'Num *'
-    'm': 'Num -'
-    'k': 'Num +'
-    'n': 'Num .'
-    '`': 'Num 0'
-    'a': 'Num 1'
-    'b': 'Num 2'
-    'c': 'Num 3'
-    'd': 'Num 4'
-    'e': 'Num 5'
-    'f': 'Num 6'
-    'g': 'Num 7'
-    'h': 'Num 8'
-    'i': 'Num 9'
-
 App = {}
+
+generateKeyCombo = Utility.generateKeyCombo
+
+parseKeyCode = Utility.parseKeyCode
 
 populateDefaults = ->
     populateSettings(Defaults.settings)
@@ -143,17 +43,6 @@ populateBindings = (object) ->
             bindingContainer.removeClass 'binding-text binding-text-empty'
             $('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo bindingContainer
 
-generateKeyCombo = (event) ->
-    # Create key binding
-    keyCombo = ''
-
-    if event.ctrlKey then keyCombo += 'ctrl+'
-    if event.altKey then keyCombo += 'alt+'
-    if event.shiftKey then keyCombo += 'shift+'
-    if event.metaKey then keyCombo += 'meta+'
-
-    keyCombo += String.fromCharCode(event.keyCode)
-
 generateKeyElements = (keyBinding) ->
     keys = keyBinding.split('+')
     keysContainer = ''
@@ -162,13 +51,6 @@ generateKeyElements = (keyBinding) ->
         keysContainer += '<span class="keyboard-key">' + parseKeyCode(key) + '</span>'
 
     keysContainer
-
-parseKeyCode = (key, keyCodes) ->
-    keyCodes = keyCodes or KeyCodes
-
-    keyChar = if keyCodes.hasOwnProperty key then keyCodes[key] else key
-
-    keyChar.charAt(0).toUpperCase() + keyChar.slice(1);
 
 keyBindingListener = (event) ->
     unless event.keyCode is 18 or event.keyCode is 17 or event.keyCode is 16 or event.keyCode is 13 or event.keyCode is 8 or event.keyCode is 91 or event.keyCode is 93
