@@ -17,6 +17,7 @@ User =
         showMinimap: true
         showStatus: true
         showWPM: true
+        showTooltips: true
 
         wpm: 350
         wordsDisplayed: 8

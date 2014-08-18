@@ -96,7 +96,8 @@ Speedr =
 	        box.appendChild(App.addons.wpm(theme))
 	        App.actions.updateWPM()
 
-	    App.addons.tooltips.init()
+	    if settings.showTooltips
+	    	App.addons.tooltips.init()
 
 	    App.utility.runOnceAfterAnimation box, ->
 	        overlay.className = overlay.className.replace(' fade-in', '')

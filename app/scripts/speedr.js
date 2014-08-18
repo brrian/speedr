@@ -16,6 +16,7 @@ User = {
     showMinimap: true,
     showStatus: true,
     showWPM: true,
+    showTooltips: true,
     wpm: 350,
     wordsDisplayed: 8,
     fontSize: 33,
@@ -635,11 +636,14 @@ Tooltips = {
     var position, tooltip;
     position = element.getBoundingClientRect();
     tooltip = document.createElement('span');
-    tooltip.className = 'speedr-tooltip';
+    tooltip.className = 'speedr-tooltip speedr-tooltip-fly-up';
     tooltip.innerText = element.getAttribute('data-tooltip');
     tooltip.style.cssText = "top: " + position.top + "px; left: " + (position.left + (position.width / 2)) + "px;";
     this.activeTooltip = tooltip;
-    return document.body.appendChild(tooltip);
+    document.body.appendChild(tooltip);
+    return App.utility.runOnceAfterAnimation(tooltip, function() {
+      return tooltip.className = tooltip.className.replace(' speedr-tooltip-fly-up', '');
+    });
   },
   destroy: function(tooltip) {
     if (tooltip == null) {
@@ -1129,7 +1133,9 @@ Speedr = {
       box.appendChild(App.addons.wpm(theme));
       App.actions.updateWPM();
     }
-    App.addons.tooltips.init();
+    if (settings.showTooltips) {
+      App.addons.tooltips.init();
+    }
     return App.utility.runOnceAfterAnimation(box, function() {
       overlay.className = overlay.className.replace(' fade-in', '');
       return box.className = box.className.replace(' flip-in', '');

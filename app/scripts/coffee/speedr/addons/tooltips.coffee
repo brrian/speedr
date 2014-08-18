@@ -22,13 +22,16 @@ Tooltips =
         position = element.getBoundingClientRect()
 
         tooltip = document.createElement 'span'
-        tooltip.className = 'speedr-tooltip'
+        tooltip.className = 'speedr-tooltip speedr-tooltip-fly-up'
         tooltip.innerText = element.getAttribute 'data-tooltip'
         tooltip.style.cssText = "top: #{position.top}px; left: #{position.left + (position.width / 2)}px;"
 
         @activeTooltip = tooltip
 
         document.body.appendChild tooltip
+
+        App.utility.runOnceAfterAnimation tooltip, ->
+            tooltip.className = tooltip.className.replace ' speedr-tooltip-fly-up', ''
 
     destroy: (tooltip = @activeTooltip) ->
         tooltip.className += ' fade-out-quick'
