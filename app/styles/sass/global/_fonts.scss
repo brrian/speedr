@@ -1,6 +1,12 @@
 @font-face {
-    font-family: 'Source Sans Pro';
-    src: url('chrome-extension://__MSG_@@extension_id__/fonts/SourceSansPro-Regular.ttf');
+    font-family: 'Open Sans';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/OpenSans-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans Light';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/OpenSans-Light.ttf');
     font-weight: normal;
 }
 
@@ -20,6 +26,10 @@
     font-family: 'Kameron';
     src: url('chrome-extension://__MSG_@@extension_id__/fonts/Kameron-Regular.ttf');
     font-weight: normal;
+}
+
+.font-open-sans {
+    font-family: 'Open Sans Light';
 }
 
 .font-garamond {

@@ -47,14 +47,12 @@ module.exports =
 	    menu.id = 'js-speedr-menu'
 	    menu.className = 'speedr-menu speedr-small-text'
 
-	    menuItems = ['Alpha', 'Settings', 'Close']
+	    menuItems = ['Settings', 'Close']
 	    for menuItem in menuItems
 
 	        item = doc.createElement 'li'
 
 	        switch menuItem
-	            when 'Alpha'
-	                elementFunction = -> App.utility.openUrl('alpha.html')
 	            when 'Settings'
 	                elementFunction = -> App.utility.openUrl('options.html')
 	            when 'Close'

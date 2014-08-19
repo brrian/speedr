@@ -1,6 +1,6 @@
 module.exports =
     settings:
-        fontFamily: 'Source Sans Pro'
+        fontFamily: 'Open Sans Light'
 
         primaryTheme: 'Solarized (Light)'
         secondaryTheme: 'Solarized (Dark)'

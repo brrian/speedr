@@ -29,7 +29,7 @@
         bottom: 0;
         left: 0;
         margin: auto;
-        font-family: 'Source Sans Pro';
+        font-family: 'Open Sans';
         font-size: 16px;
         backface-visibility: hidden;
         transition: background-color $themeTransitionSpeed ease-in-out, color $themeTransitionSpeed ease-in-out;
@@ -54,13 +54,14 @@
             border-color: transparent;
             border-style: solid;
             border-width: 6px;
+            border-radius: 50%;
             transition: border-color $themeTransitionSpeed ease-in-out;
         }
 
         .speedr-word {
             position: relative;
-            height: 1.25em;
-            line-height: 1.25em;
+            height: 1.5em;
+            line-height: 1.5em;
             white-space: nowrap;
             overflow: hidden;
 

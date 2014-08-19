@@ -77,6 +77,15 @@ module.exports = function (grunt) {
                 options: {
                     transform: ['coffeeify']
                 }
+            },
+            dist: {
+                files: {
+                    '<%= config.dist %>/scripts/speedr.js': '<%= config.app %>/scripts/coffee/speedr.coffee',
+                    '<%= config.dist %>/scripts/options.js': '<%= config.app %>/scripts/coffee/options.coffee'
+                },
+                options: {
+                    transform: ['coffeeify']
+                }
             }
         },
 
@@ -336,6 +345,7 @@ module.exports = function (grunt) {
                         'styles/{,*/}*.css',
                         'styles/fonts/{,*/}*.*',
                         '_locales/{,*/}*.json',
+                        'fonts/**/*.*',
                     ]
                 }]
             }
@@ -349,7 +359,8 @@ module.exports = function (grunt) {
                 'compass:chrome',
             ],
             dist: [
-                'coffee:dist',
+                // 'coffee:dist',
+                'browserify:dist',
                 'compass:dist',
                 'imagemin',
                 'svgmin'
