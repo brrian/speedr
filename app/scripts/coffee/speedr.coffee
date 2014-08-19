@@ -14,6 +14,8 @@ window.App =
     addons:
         controls: require './speedr/addons/controls.coffee'
 
+        context: require './speedr/addons/context.coffee'
+
         countdown: require './speedr/addons/countdown.coffee'
 
         menuButton: require './speedr/addons/menuButton.coffee'

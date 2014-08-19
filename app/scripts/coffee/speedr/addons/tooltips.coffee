@@ -1,4 +1,4 @@
-Tooltips =
+module.exports =
     init: ->
         tooltips = document.getElementsByClassName 'js-speedr-tooltip'
 
@@ -34,11 +34,9 @@ Tooltips =
             tooltip.className = tooltip.className.replace ' speedr-tooltip-fly-up', ''
 
     destroy: (tooltip = @activeTooltip) ->
-        tooltip.className += ' fade-out-quick'
+        tooltip.className += ' speedr-fade-out-quick'
 
         App.utility.runOnceAfterAnimation tooltip, ->
             tooltip.remove()
 
         @activeTooltip = undefined
-
-module.exports = Tooltips

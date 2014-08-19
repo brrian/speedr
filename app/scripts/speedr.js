@@ -1,7 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var User;
-
-User = {
+module.exports = {
   settings: {
     fontFamily: 'Source Sans Pro',
     primaryTheme: 'Solarized (Light)',
@@ -17,8 +15,9 @@ User = {
     showStatus: true,
     showWPM: true,
     showTooltips: true,
+    showContext: true,
     wpm: 350,
-    wordsDisplayed: 8,
+    wordsDisplayed: 1,
     fontSize: 33,
     delayOnPunctuation: false,
     punctuationDelayTime: 1000,
@@ -69,14 +68,10 @@ User = {
   }
 };
 
-module.exports = User;
-
 
 
 },{}],2:[function(require,module,exports){
-var Utility;
-
-Utility = {
+module.exports = {
   generateKeyCombo: function(event) {
     var keyCombo;
     keyCombo = '';
@@ -149,8 +144,6 @@ Utility = {
   }
 };
 
-module.exports = Utility;
-
 
 
 },{}],3:[function(require,module,exports){
@@ -165,6 +158,7 @@ window.App = {
   speedr: require('./speedr/speedr.coffee'),
   addons: {
     controls: require('./speedr/addons/controls.coffee'),
+    context: require('./speedr/addons/context.coffee'),
     countdown: require('./speedr/addons/countdown.coffee'),
     menuButton: require('./speedr/addons/menuButton.coffee'),
     minimap: require('./speedr/addons/minimap.coffee'),
@@ -186,10 +180,8 @@ App.init();
 
 
 
-},{"./common/defaults.coffee":1,"./speedr/actions.coffee":4,"./speedr/addons/controls.coffee":5,"./speedr/addons/countdown.coffee":6,"./speedr/addons/menuButton.coffee":7,"./speedr/addons/minimap.coffee":8,"./speedr/addons/status.coffee":9,"./speedr/addons/tooltips.coffee":10,"./speedr/addons/wpm.coffee":11,"./speedr/chrome.coffee":12,"./speedr/keyDownListener.coffee":13,"./speedr/parse.coffee":15,"./speedr/speedr.coffee":16,"./speedr/utility.coffee":17}],4:[function(require,module,exports){
-var Actions;
-
-Actions = {
+},{"./common/defaults.coffee":1,"./speedr/actions.coffee":4,"./speedr/addons/context.coffee":5,"./speedr/addons/controls.coffee":6,"./speedr/addons/countdown.coffee":7,"./speedr/addons/menuButton.coffee":8,"./speedr/addons/minimap.coffee":9,"./speedr/addons/status.coffee":10,"./speedr/addons/tooltips.coffee":11,"./speedr/addons/wpm.coffee":12,"./speedr/chrome.coffee":13,"./speedr/keyDownListener.coffee":14,"./speedr/parse.coffee":16,"./speedr/speedr.coffee":17,"./speedr/utility.coffee":18}],4:[function(require,module,exports){
+module.exports = {
   calculateInterval: function() {
     return App.interval = 60000 / User.settings.wpm;
   },
@@ -281,8 +273,9 @@ Actions = {
       if (App.scrollWatcher) {
         App.addons.minimap.updateScroll();
       }
-      return App.addons.minimap.updateContents();
+      App.addons.minimap.updateContents();
     }
+    return App.chrome.settings.save();
   },
   navigateText: function(direction, type) {
     var i, settings;
@@ -379,11 +372,59 @@ Actions = {
   }
 };
 
-module.exports = Actions;
-
 
 
 },{}],5:[function(require,module,exports){
+module.exports = {
+  init: function() {
+    var speedrWord;
+    speedrWord = document.getElementById('js-speedr-word');
+    speedrWord.addEventListener('mouseover', (function(_this) {
+      return function() {
+        if (App.pause) {
+          return _this.timeout = setTimeout(function() {
+            return _this.create();
+          }, 600);
+        }
+      };
+    })(this));
+    return speedrWord.addEventListener('mouseout', (function(_this) {
+      return function() {
+        clearTimeout(_this.timeout);
+        if (_this.activeContext) {
+          return _this.destroy();
+        }
+      };
+    })(this));
+  },
+  create: function() {
+    var context, position, sentence;
+    sentence = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker];
+    position = document.getElementById('js-speedr-box').getBoundingClientRect();
+    context = document.createElement('span');
+    context.className = 'speedr-context speedr-tooltip-fly-up';
+    context.innerText = sentence;
+    context.style.cssText = "max-width: " + (User.settings.boxWidth * .9) + "px; bottom: " + (position.bottom + 10) + "px;";
+    document.body.appendChild(context);
+    this.activeContext = context;
+    return App.utility.runOnceAfterAnimation(context, function() {
+      return context.className = context.className.replace(' speedr-tooltip-fly-up', '');
+    });
+  },
+  destroy: function() {
+    this.activeContext.className += ' speedr-fade-out-quick';
+    return App.utility.runOnceAfterAnimation(this.activeContext, (function(_this) {
+      return function() {
+        _this.activeContext.remove();
+        return _this.activeContext = void 0;
+      };
+    })(this));
+  }
+};
+
+
+
+},{}],6:[function(require,module,exports){
 module.exports = function() {
   var button, buttons, controls, controlsLeft, controlsRight, doc, element, elementFunction, i, playPause, text, _i, _len;
   doc = document;
@@ -461,7 +502,7 @@ module.exports = function() {
 
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = function(settings, theme) {
   var bar, countdown, doc;
   doc = document;
@@ -477,7 +518,7 @@ module.exports = function(settings, theme) {
 
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function() {
   var doc, menu;
   doc = document;
@@ -492,7 +533,7 @@ module.exports = function() {
 
 
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Minimap;
 
 Minimap = {
@@ -575,7 +616,7 @@ module.exports = Minimap;
 
 
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function() {
   var doc, status, timeLeft, wordsLeft;
   doc = document;
@@ -595,10 +636,8 @@ module.exports = function() {
 
 
 
-},{}],10:[function(require,module,exports){
-var Tooltips;
-
-Tooltips = {
+},{}],11:[function(require,module,exports){
+module.exports = {
   init: function() {
     var tooltip, tooltips, _i, _len, _results;
     tooltips = document.getElementsByClassName('js-speedr-tooltip');
@@ -649,7 +688,7 @@ Tooltips = {
     if (tooltip == null) {
       tooltip = this.activeTooltip;
     }
-    tooltip.className += ' fade-out-quick';
+    tooltip.className += ' speedr-fade-out-quick';
     App.utility.runOnceAfterAnimation(tooltip, function() {
       return tooltip.remove();
     });
@@ -657,11 +696,9 @@ Tooltips = {
   }
 };
 
-module.exports = Tooltips;
 
 
-
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function(theme) {
   var wpm;
   wpm = document.createElement('div');
@@ -673,10 +710,8 @@ module.exports = function(theme) {
 
 
 
-},{}],12:[function(require,module,exports){
-var Chrome;
-
-Chrome = {
+},{}],13:[function(require,module,exports){
+module.exports = {
   settings: {
     get: function() {
       return chrome.storage.sync.get(['settings', 'bindings'], function(data) {
@@ -716,11 +751,9 @@ Chrome = {
   }
 };
 
-module.exports = Chrome;
 
 
-
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function(event) {
   var keyCombo;
   keyCombo = App.utility.generateKeyCombo(event);
@@ -836,10 +869,8 @@ module.exports = function(event) {
 
 
 
-},{}],14:[function(require,module,exports){
-var Loop;
-
-Loop = {
+},{}],15:[function(require,module,exports){
+module.exports = {
   toggle: function() {
     if (App.pause) {
       return App.speedr.loop.startPrepare();
@@ -900,6 +931,9 @@ Loop = {
     }
     App.i++;
     App.pause = false;
+    if (settings.showContext && App.addons.context.activeContext) {
+      App.addons.context.destroy();
+    }
     if (settings.showStatus) {
       toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden');
     }
@@ -981,14 +1015,10 @@ Loop = {
   }
 };
 
-module.exports = Loop;
 
 
-
-},{}],15:[function(require,module,exports){
-var Parse;
-
-Parse = {
+},{}],16:[function(require,module,exports){
+module.exports = {
   selection: function() {
     App.text.original = window.getSelection().toString();
     return this.text();
@@ -1045,14 +1075,10 @@ Parse = {
   }
 };
 
-module.exports = Parse;
 
 
-
-},{}],16:[function(require,module,exports){
-var Speedr;
-
-Speedr = {
+},{}],17:[function(require,module,exports){
+module.exports = {
   create: function() {
     var box, countdown, doc, elementFunction, item, menu, menuItem, menuItems, overlay, pointer, settings, theme, wordContainer, wordWrapper, _i, _len;
     App.active = true;
@@ -1061,10 +1087,10 @@ Speedr = {
     theme = User.themes[settings.primaryTheme];
     overlay = doc.createElement('div');
     overlay.id = 'js-speedr-container';
-    overlay.className = 'speedr-container fade-in';
+    overlay.className = 'speedr-container speedr-fade-in';
     box = doc.createElement('div');
     box.id = 'js-speedr-box';
-    box.className = 'speedr-box flip-in';
+    box.className = 'speedr-box speedr-flip-in';
     box.style.cssText = 'color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;';
     wordContainer = doc.createElement('div');
     wordContainer.className = 'speedr-word-container';
@@ -1136,9 +1162,12 @@ Speedr = {
     if (settings.showTooltips) {
       App.addons.tooltips.init();
     }
+    if (settings.showContext) {
+      App.addons.context.init();
+    }
     return App.utility.runOnceAfterAnimation(box, function() {
-      overlay.className = overlay.className.replace(' fade-in', '');
-      return box.className = box.className.replace(' flip-in', '');
+      overlay.className = overlay.className.replace(' speedr-fade-in', '');
+      return box.className = box.className.replace(' speedr-flip-in', '');
     });
   },
   destroy: function() {
@@ -1146,10 +1175,10 @@ Speedr = {
     doc = document;
     oldBox = doc.getElementById('js-speedr-box');
     newBox = oldBox.cloneNode(true);
-    newBox.className += ' flip-out';
+    newBox.className += ' speedr-flip-out';
     oldBox.parentNode.replaceChild(newBox, oldBox);
     overlay = doc.getElementById('js-speedr-container');
-    overlay.className += ' fade-out';
+    overlay.className += ' speedr-fade-out';
     App.utility.runOnceAfterAnimation(newBox, function() {
       newBox.remove();
       return overlay.remove();
@@ -1165,7 +1194,7 @@ Speedr = {
     word = App.text.parsed[marker].text;
     if (User.settings.wordsDisplayed === 1) {
       orp = Math.round((word.length + 1) * 0.4) - 1;
-      html = "<div data-before=\"" + (word.slice(0, orp)) + "\" data-after=\"" + (word.slice(orp + 1)) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
+      html = "<div data-before=\"" + (word.slice(0, orp).replace(/["“”]/g, '&quot;')) + "\" data-after=\"" + (word.slice(orp + 1).replace(/["“”]/g, '&quot;')) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
     } else {
       html = "<div>" + word + "</div>";
     }
@@ -1185,16 +1214,14 @@ Speedr = {
   loop: require('./loop.coffee')
 };
 
-module.exports = Speedr;
 
 
-
-},{"./loop.coffee":14}],17:[function(require,module,exports){
-var Utility, common;
+},{"./loop.coffee":15}],18:[function(require,module,exports){
+var common;
 
 common = require('./../common/utility.coffee');
 
-Utility = {
+module.exports = {
   formatNumber: function(number) {
     return Number(number).toLocaleString('en');
   },
@@ -1302,8 +1329,6 @@ Utility = {
   generateKeyCombo: common.generateKeyCombo,
   parseKeyCode: common.parseKeyCode
 };
-
-module.exports = Utility;
 
 
 

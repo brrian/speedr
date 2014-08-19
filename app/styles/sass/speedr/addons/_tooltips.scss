@@ -1,14 +1,18 @@
-.speedr-tooltip {
+%tooltip {
 	position: fixed;
 	z-index: 2147483647;
 	display: inline-block;
+	background-color: rgba(#000, .8);
+	color: #fff;
+	border-radius: 2px;
+	box-shadow: 0 1px 7px rgba(#000, .4);
+	backface-visibility: hidden;
+	transform: translate3d(-50%, 0, 0);
+}
+
+.speedr-tooltip {
+	@extend %tooltip;
 	margin-top: -22px;
 	padding: 7px 10px;
 	font-size: 11px;
-	background-color: rgba(#000, .8);
-	color: #fff;
-	transform: translate3d(-50%, 0, 0);
-	border-radius: 2px;
-	box-shadow: 0 1px 3px rgba(#000, .6);
-	backface-visibility: hidden;
 }

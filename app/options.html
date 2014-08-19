@@ -52,6 +52,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="words-displayed">Words displayed:</label>
+                    <input type="text" id="words-displayed" name="wordsDisplayed"> at a time
+                    <div class="error"></div>
+                </div>
+
+                <div class="form-group">
                     <input type="checkbox" id="delay-punctuation" name="delayOnPunctuation">
                     <label for="delay-punctuation">Delay <input type="text" name="punctuationDelayTime"> ms on punctuation <div class="error error-with-checkbox"></div></label>
                 </div>
@@ -109,6 +115,10 @@
                     <div class="form-group-thirds">
                         <input type="checkbox" id="tooltips" name="showTooltips">
                         <label for="tooltips">Tooltips</label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="context" name="showContext">
+                        <label for="context">Context</label>
                     </div>
                 </div>
             </section>

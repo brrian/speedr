@@ -49,13 +49,11 @@
 	100% {
 		transform: translate3d(-50%, 0, 0);
 	}
-
 }
 
-.fade-in { animation: fade-in 400ms ease-in; }
-.fade-out { animation: fade-out 400ms ease-out; }
-.fade-out-quick { animation: fade-out 250ms ease-out; }
-.flip-in { animation: flip-in 400ms $ease-out-back; }
-.flip-out { animation: flip-out 300ms ease-out; }
-
+.speedr-fade-in { animation: fade-in 400ms ease-in; }
+.speedr-fade-out { animation: fade-out 400ms ease-out; }
+.speedr-fade-out-quick { animation: fade-out 250ms ease-out; }
+.speedr-flip-in { animation: flip-in 400ms $ease-out-back; }
+.speedr-flip-out { animation: flip-out 300ms ease-out; }
 .speedr-tooltip-fly-up { animation: fly-up-centered 70ms ease-in; }

@@ -1,7 +1,6 @@
 common = require './../common/utility.coffee'
 
-Utility =
-
+module.exports =
     formatNumber: (number) ->
         Number(number).toLocaleString('en')
 
@@ -94,5 +93,3 @@ Utility =
     generateKeyCombo: common.generateKeyCombo
 
     parseKeyCode: common.parseKeyCode
-
-module.exports = Utility

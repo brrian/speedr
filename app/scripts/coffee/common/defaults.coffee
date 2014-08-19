@@ -1,4 +1,4 @@
-User =
+module.exports =
     settings:
         fontFamily: 'Source Sans Pro'
 
@@ -18,9 +18,10 @@ User =
         showStatus: true
         showWPM: true
         showTooltips: true
+        showContext: true
 
         wpm: 350
-        wordsDisplayed: 8
+        wordsDisplayed: 1
         fontSize: 33
 
         delayOnPunctuation: false
@@ -71,5 +72,3 @@ User =
         'Ý': 'faster'
         'M': 'toggle menu'
         'I': 'toggle theme'
-
-module.exports = User

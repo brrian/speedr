@@ -1,5 +1,4 @@
-Parse =
-
+module.exports =
     selection: ->
         App.text.original = window.getSelection().toString()
 
@@ -58,5 +57,3 @@ Parse =
 
         sentence.match regex
         # sentence.split(' ')
-
-module.exports = Parse

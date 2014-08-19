@@ -1,4 +1,4 @@
-Chrome =
+module.exports =
 	settings:
 	    get: ->
 	        chrome.storage.sync.get(
@@ -27,5 +27,3 @@ Chrome =
 	            wordCount = data.wordCount || 0
 
 	            chrome.storage.sync.set({wordCount: wordCount + count})
-
-module.exports = Chrome	            

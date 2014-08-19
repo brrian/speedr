@@ -1,4 +1,4 @@
-Speedr =
+module.exports =
 	create: ->
 	    App.active = true
 
@@ -10,12 +10,12 @@ Speedr =
 	    # Create the overlay
 	    overlay = doc.createElement('div')
 	    overlay.id = 'js-speedr-container'
-	    overlay.className = 'speedr-container fade-in'
+	    overlay.className = 'speedr-container speedr-fade-in'
 
 	    # Create the pop up box
 	    box = doc.createElement('div')
 	    box.id = 'js-speedr-box'
-	    box.className = 'speedr-box flip-in'
+	    box.className = 'speedr-box speedr-flip-in'
 	    box.style.cssText = 'color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;'
 
 	    # Create the word container
@@ -99,9 +99,12 @@ Speedr =
 	    if settings.showTooltips
 	    	App.addons.tooltips.init()
 
+	    if settings.showContext 
+	    	App.addons.context.init()
+
 	    App.utility.runOnceAfterAnimation box, ->
-	        overlay.className = overlay.className.replace(' fade-in', '')
-	        box.className = box.className.replace(' flip-in', '')
+	        overlay.className = overlay.className.replace(' speedr-fade-in', '')
+	        box.className = box.className.replace(' speedr-flip-in', '')
 
 	destroy: ->
 	    doc = document
@@ -109,12 +112,12 @@ Speedr =
 	    # Remove event listeners
 	    oldBox = doc.getElementById('js-speedr-box')
 	    newBox = oldBox.cloneNode(true)
-	    newBox.className += ' flip-out'
+	    newBox.className += ' speedr-flip-out'
 
 	    oldBox.parentNode.replaceChild(newBox, oldBox)
 
 	    overlay = doc.getElementById('js-speedr-container')
-	    overlay.className += ' fade-out'
+	    overlay.className += ' speedr-fade-out'
 
 	    # Flip out and fade out
 	    App.utility.runOnceAfterAnimation newBox, ->
@@ -132,7 +135,7 @@ Speedr =
 
 	    if User.settings.wordsDisplayed is 1
 	        orp = Math.round((word.length + 1) * 0.4) - 1
-	        html = "<div data-before=\"#{word.slice(0, orp)}\" data-after=\"#{word.slice(orp + 1)}\"><span style=\"color: #{theme.highlightColor};\">#{word[orp]}</span></div>"
+	        html = "<div data-before=\"#{word.slice(0, orp).replace(/["“”]/g, '&quot;')}\" data-after=\"#{word.slice(orp + 1).replace(/["“”]/g, '&quot;')}\"><span style=\"color: #{theme.highlightColor};\">#{word[orp]}</span></div>"
 	    else
 	        html = "<div>#{word}</div>"
 
@@ -150,5 +153,3 @@ Speedr =
 	    App.minimapElements = {}
 
 	loop: require './loop.coffee'
-
-module.exports = Speedr

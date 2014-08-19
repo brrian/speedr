@@ -1,4 +1,4 @@
-Actions =
+module.exports =
 	calculateInterval: ->
 	    App.interval = 60000 / User.settings.wpm
 
@@ -88,6 +88,8 @@ Actions =
 	        if App.scrollWatcher then App.addons.minimap.updateScroll()
 	        App.addons.minimap.updateContents()
 
+        App.chrome.settings.save()
+
 	navigateText: (direction, type) ->
 	    i = App.i
 	    settings = User.settings
@@ -175,5 +177,3 @@ Actions =
 	    User.settings.secondaryTheme = currentTheme
 
 	    App.chrome.settings.save()
-
-module.exports = Actions

@@ -1,4 +1,4 @@
-Utility =
+module.exports =
     generateKeyCombo: (event) ->
         # Create key binding
         keyCombo = ''
@@ -64,5 +64,3 @@ Utility =
         keyChar = if keyCodes.hasOwnProperty key then keyCodes[key] else key
 
         keyChar.charAt(0).toUpperCase() + keyChar.slice(1)
-
-module.exports = Utility
