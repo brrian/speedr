@@ -2,11 +2,11 @@ module.exports =
     settings:
         fontFamily: 'Open Sans Light'
 
-        primaryTheme: 'Solarized (Light)'
+        primaryTheme: 'Speedr (Light)'
         secondaryTheme: 'Solarized (Dark)'
 
-        boxWidth: 500
-        boxHeight: 245
+        boxWidth: 600
+        boxHeight: 300
         minimapWidth: 175
 
         countdownSpeed: 1000
@@ -39,6 +39,13 @@ module.exports =
         longWordDelayTime: 100
 
     themes: 
+        'Speedr (Light)':
+            primaryText: '#444'
+            secondaryText: '#666'
+            boxColor: '#f2f0e7'
+            borderColor: 'rgba(175, 150, 190, .2)'
+            highlightColor: '#dc322f'
+
         'Solarized (Light)': 
             primaryText: '#444'
             secondaryText: '#657b83'

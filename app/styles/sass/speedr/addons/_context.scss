@@ -2,8 +2,9 @@
 	@extend %tooltip;
 	left: 50%;
 	padding: 8px 14px;
+	font-family: 'Open Sans';
 	font-size: 13px;
-	text-align: justify;
 	line-height: 1.3;
+	text-align: justify;
 	white-space: normal;
 }

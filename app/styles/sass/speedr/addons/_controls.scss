@@ -1,64 +1,66 @@
 .speedr-controls {
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	margin: auto;
-	width: 380px;
-	text-align: center;
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    padding: 0 8px;
 
-	.speedr-button {
-	    display: inline-block;
-	    padding: 10px 0;
-	    margin-right: 15px;
-	    opacity: .8;
-	    cursor: default;
-	    transition: opacity 200ms ease-in-out;
+    &-left {
+        float: left;
+    }
 
-	    &:last-child {
-	        margin-right: 0;
-	    }
+    &-right {
+        float: right;
+    }
 
-	    &:hover {
-	        opacity: 1;
-	    }
-	}
+    .speedr-button {
+        position: relative;
+        display: inline-block;
+        padding: 8px 10px;
+        opacity: .4;
+        cursor: default;
+        white-space: nowrap;
+        transition: opacity 120ms ease-in;
 
-	.play-pause {
-	    display: table-cell;
-	    font-size: 1.09em;
-	    margin: 0;
+        &:hover {
+            opacity: 1;
 
-	    &:before, &:after {
-	        position: relative;
-	        top: -1px;
-	    }
+            .speedr-button-actions {
+                top: -16px;
+                opacity: 1;
+                visibility: visible;
+            }
+        }
 
-	    &:before {
-	        content: '\2039';
-	        margin-right: 5px;
-	    }
+        &--centered {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
 
-	    &:after {
-	        content: '\203A';
-	        margin-left: 5px;
-	    }
-	}
+        &-actions {
+            position: absolute;
+            top: -10px;
+            left: 4px;
+            cursor: default;
+            opacity: 0;
+            visibility: hidden;
+            transition: top 100ms ease-in, opacity 100ms ease-in;
 
-	&-side {
-	    display: table-cell;
-	    width: 50%;
+            &--right {
+                left: auto;
+                right: 4px;
+            }
+        }
 
-	    &:hover {
-	        .speedr-button {
-	            opacity: .5;
-	            transition: opacity 500ms ease-in-out;
+        &-action {
+            display: inline-block;
+            padding: 4px 6px;
+            opacity: .4;
+            transition: opacity 120ms ease-in;
 
-	            &:hover {
-	                opacity: 1;
-	                transition: opacity 200ms ease-in-out;
-	            }
-	        }
-	    }
-	}
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
 }

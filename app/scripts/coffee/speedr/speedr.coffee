@@ -45,17 +45,17 @@ module.exports =
 	    # Create the menu
 	    menu = doc.createElement('ul')
 	    menu.id = 'js-speedr-menu'
-	    menu.className = 'speedr-menu speedr-small-text'
+	    menu.className = 'speedr-menu'
 
-	    menuItems = ['Settings', 'Close']
+	    menuItems = ['settings', 'close']
 	    for menuItem in menuItems
 
 	        item = doc.createElement 'li'
 
 	        switch menuItem
-	            when 'Settings'
+	            when 'settings'
 	                elementFunction = -> App.utility.openUrl('options.html')
-	            when 'Close'
+	            when 'close'
 	                elementFunction = App.speedr.destroy
 
 	                item.className = 'js-speedr-tooltip'
@@ -116,6 +116,10 @@ module.exports =
 
 	    overlay = doc.getElementById('js-speedr-container')
 	    overlay.className += ' speedr-fade-out'
+
+	    # If tooltips or context popups are active, destroy them
+	    if User.settings.showTooltips and App.addons.tooltips.activeTooltip then App.addons.tooltips.destroy()
+	    if User.settings.showContext and App.addons.context.activeContext then App.addons.context.destroy()
 
 	    # Flip out and fade out
 	    App.utility.runOnceAfterAnimation newBox, ->

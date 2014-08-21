@@ -30,7 +30,7 @@ module.exports = (event) ->
 	            false
 	    when 'more words'
 	        if App.active
-	            App.actions.changeWordsDisplayed +1
+	            App.actions.changeWordsDisplayed 1
 	            false
 	    when 'less words'
 	        if App.active

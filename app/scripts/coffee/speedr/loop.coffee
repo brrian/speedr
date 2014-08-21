@@ -42,11 +42,11 @@ module.exports =
             playButton = doc.getElementById 'js-play-pause'
 
             if App.i is App.text.parsed.length - 1
-                playButton.innerText = 'Restart'
+                playButton.innerText = 'restart'
                 playButton.setAttribute 'data-tooltip', "Restart#{App.utility.getBinding('reset')}"
             else
-                playButton.innerText = 'Play'
-                playButton.setAttribute 'data-tooltip', 'Play'
+                playButton.innerText = 'start'
+                playButton.setAttribute 'data-tooltip', 'Start'
 
         if App.scrollWatcher then clearTimeout App.scrollWatcher
 
@@ -58,8 +58,8 @@ module.exports =
 
         if settings.showControls
             playButton = doc.getElementById 'js-play-pause'
-            playButton.innerText = 'Pause'
-            playButton.setAttribute 'data-tooltip', "Pause#{App.utility.getBinding('toggle')}"
+            playButton.innerText = 'stop'
+            playButton.setAttribute 'data-tooltip', "Stop#{App.utility.getBinding('toggle')}"
 
         # Check to see if we're at the end, if so, then we need to reset it first
         if App.i is App.text.parsed.length - 1 then App.speedr.loop.reset()

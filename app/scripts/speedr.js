@@ -2,10 +2,10 @@
 module.exports = {
   settings: {
     fontFamily: 'Open Sans Light',
-    primaryTheme: 'Solarized (Light)',
+    primaryTheme: 'Speedr (Light)',
     secondaryTheme: 'Solarized (Dark)',
-    boxWidth: 500,
-    boxHeight: 245,
+    boxWidth: 600,
+    boxHeight: 300,
     minimapWidth: 175,
     countdownSpeed: 1000,
     showControls: true,
@@ -31,6 +31,13 @@ module.exports = {
     longWordDelayTime: 100
   },
   themes: {
+    'Speedr (Light)': {
+      primaryText: '#444',
+      secondaryText: '#666',
+      boxColor: '#f2f0e7',
+      borderColor: 'rgba(175, 150, 190, .2)',
+      highlightColor: '#dc322f'
+    },
     'Solarized (Light)': {
       primaryText: '#444',
       secondaryText: '#657b83',
@@ -193,7 +200,7 @@ module.exports = {
     wordsLeft = App.text.parsed.length - App.i - 1;
     timeLeft = (wordsLeft / wpm * 60).toFixed(2);
     if (wordsDisplayed === 1) {
-      totalWpm = "" + wpm + " WPM";
+      totalWpm = "" + wpm + " wpm";
       totalWords = App.utility.formatNumber(wordsLeft);
     } else {
       totalWpm = "" + (wpm * wordsDisplayed) + " WPM (" + wpm + "&times;" + wordsDisplayed + ")";
@@ -201,7 +208,7 @@ module.exports = {
     }
     timeLeft = timeLeft === '0.00' ? '0' : "~" + timeLeft;
     wordPlurality = totalWords === '1' ? 'word' : 'words';
-    doc.getElementById('js-speedr-time-left').innerHTML = timeLeft + ' s @ ' + totalWpm;
+    doc.getElementById('js-speedr-time-left').innerHTML = timeLeft + 's @ ' + totalWpm;
     return doc.getElementById('js-speedr-words-left').innerHTML = "" + totalWords + " " + wordPlurality + " left";
   },
   updateWPM: function() {
@@ -217,7 +224,7 @@ module.exports = {
     var countdown, settings;
     settings = User.settings;
     countdown = document.getElementById('js-speedr-countdown-bar').offsetParent;
-    return countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.25 + 12) / 2) + 'px';
+    return countdown.style.height = Math.ceil(settings.boxHeight / 2) - Math.ceil((settings.fontSize * 1.4 + 12) / 2) + 'px';
   },
   changeWPM: function(wpm) {
     var settings;
@@ -426,76 +433,105 @@ module.exports = {
 
 },{}],6:[function(require,module,exports){
 module.exports = function() {
-  var button, buttons, controls, controlsLeft, controlsRight, doc, element, elementFunction, i, playPause, text, _i, _len;
+  var action1, action2, actions, button, buttons, controlButton, controls, controlsLeft, controlsRight, doc, i, playPause, _i, _len;
   doc = document;
   controls = doc.createElement('div');
-  controls.className = 'speedr-controls speedr-small-text';
+  controls.className = 'speedr-controls';
   controlsLeft = doc.createElement('div');
-  controlsLeft.className = 'speedr-controls-side';
+  controlsLeft.className = 'speedr-controls-left';
   controlsRight = doc.createElement('div');
-  controlsRight.className = 'speedr-controls-side';
-  buttons = ['prev-Para', 'prev-Sent', 'prev-Word', 'play-Pause', 'next-Word', 'next-Sent', 'next-Para'];
+  controlsRight.className = 'speedr-controls-right';
+  buttons = ['speed', 'words', 'word', 'sentence', 'paragraph'];
   for (i = _i = 0, _len = buttons.length; _i < _len; i = ++_i) {
     button = buttons[i];
-    element = doc.createElement('div');
+    controlButton = doc.createElement('div');
+    controlButton.className = 'speedr-button';
+    controlButton.innerText = button;
+    actions = doc.createElement('div');
+    actions.className = 'speedr-button-actions';
+    action1 = doc.createElement('span');
+    action1.className = 'speedr-button-action js-speedr-tooltip';
+    action2 = doc.createElement('span');
+    action2.className = 'speedr-button-action js-speedr-tooltip';
     switch (button) {
-      case 'prev-Para':
-        elementFunction = function() {
-          return App.actions.navigateText('prev', 'paragraph');
-        };
-        element.setAttribute('data-tooltip', "Previous Paragraph" + (App.utility.getBinding('prev paragraph')));
+      case 'speed':
+        action1.innerText = 'faster';
+        action1.setAttribute('data-tooltip', "Increase speed" + (App.utility.getBinding('faster')));
+        action1.addEventListener('click', function() {
+          return App.actions.changeWPM(25);
+        });
+        action2.innerText = 'slower';
+        action2.setAttribute('data-tooltip', "Decrease speed" + (App.utility.getBinding('slower')));
+        action2.addEventListener('click', function() {
+          return App.actions.changeWPM(-25);
+        });
         break;
-      case 'prev-Sent':
-        elementFunction = function() {
-          return App.actions.navigateText('prev', 'sentence');
-        };
-        element.setAttribute('data-tooltip', "Previous Sentence" + (App.utility.getBinding('prev sentence')));
+      case 'words':
+        action1.innerText = 'more';
+        action1.setAttribute('data-tooltip', "Show more words" + (App.utility.getBinding('more words')));
+        action1.addEventListener('click', function() {
+          return App.actions.changeWordsDisplayed(1);
+        });
+        action2.innerText = 'less';
+        action2.setAttribute('data-tooltip', "Show less words" + (App.utility.getBinding('less words')));
+        action2.addEventListener('click', function() {
+          return App.actions.changeWordsDisplayed(-1);
+        });
         break;
-      case 'prev-Word':
-        elementFunction = function() {
+      case 'word':
+        action1.innerText = 'previous';
+        action1.setAttribute('data-tooltip', "Previous word" + (App.utility.getBinding('prev word')));
+        action1.addEventListener('click', function() {
           return App.actions.navigateText('prev', 'word');
-        };
-        element.setAttribute('data-tooltip', "Previous Word" + (App.utility.getBinding('prev word')));
-        break;
-      case 'play-Pause':
-        elementFunction = App.speedr.loop.toggle;
-        element.setAttribute('data-tooltip', "Play" + (App.utility.getBinding('toggle')));
-        break;
-      case 'next-Word':
-        elementFunction = function() {
+        });
+        action2.innerText = 'next';
+        action2.setAttribute('data-tooltip', "Next word" + (App.utility.getBinding('next word')));
+        action2.addEventListener('click', function() {
           return App.actions.navigateText('next', 'word');
-        };
-        element.setAttribute('data-tooltip', "Next Word" + (App.utility.getBinding('next word')));
+        });
         break;
-      case 'next-Sent':
-        elementFunction = function() {
+      case 'sentence':
+        action1.innerText = 'previous';
+        action1.setAttribute('data-tooltip', "Previous sentence" + (App.utility.getBinding('prev sentence')));
+        action1.addEventListener('click', function() {
+          return App.actions.navigateText('prev', 'sentence');
+        });
+        action2.innerText = 'next';
+        action2.setAttribute('data-tooltip', "Next sentence" + (App.utility.getBinding('next sentence')));
+        action2.addEventListener('click', function() {
           return App.actions.navigateText('next', 'sentence');
-        };
-        element.setAttribute('data-tooltip', "Next Sentence" + (App.utility.getBinding('next sentence')));
+        });
         break;
-      case 'next-Para':
-        elementFunction = function() {
+      case 'paragraph':
+        action1.innerText = 'previous';
+        action1.setAttribute('data-tooltip', "Previous paragraph" + (App.utility.getBinding('prev paragraph')));
+        action1.addEventListener('click', function() {
+          return App.actions.navigateText('prev', 'paragraph');
+        });
+        action2.innerText = 'next';
+        action2.setAttribute('data-tooltip', "Next paragraph" + (App.utility.getBinding('next paragraph')));
+        action2.addEventListener('click', function() {
           return App.actions.navigateText('next', 'paragraph');
-        };
-        element.setAttribute('data-tooltip', "Next Paragraph" + (App.utility.getBinding('next paragraph')));
+        });
+        actions.className += ' speedr-button-actions--right';
     }
-    text = button.split('-').pop();
-    element.className = 'speedr-button js-speedr-tooltip';
-    element.appendChild(doc.createTextNode(text));
-    element.addEventListener('click', elementFunction, false);
-    if (i < 3) {
-      controlsLeft.appendChild(element);
-    } else if (i > 3) {
-      controlsRight.appendChild(element);
+    actions.appendChild(action1);
+    actions.appendChild(action2);
+    controlButton.appendChild(actions);
+    if (i < 2) {
+      controlsLeft.appendChild(controlButton);
     } else {
-      element.id = 'js-play-pause';
-      element.className += ' play-pause';
-      element.innerText = 'Play';
-      playPause = element;
+      controlsRight.appendChild(controlButton);
     }
   }
-  controls.appendChild(controlsLeft);
+  playPause = doc.createElement('div');
+  playPause.id = 'js-play-pause';
+  playPause.className = 'speedr-button speedr-button--centered js-speedr-tooltip';
+  playPause.innerText = 'start';
+  playPause.setAttribute('data-tooltip', "Start" + (App.utility.getBinding('toggle')));
+  playPause.addEventListener('click', App.speedr.loop.toggle);
   controls.appendChild(playPause);
+  controls.appendChild(controlsLeft);
   controls.appendChild(controlsRight);
   return controls;
 };
@@ -524,9 +560,9 @@ module.exports = function() {
   doc = document;
   menu = doc.createElement('div');
   menu.id = 'js-speedr-menu-button';
-  menu.className = 'speedr-menu-button speedr-small-text speedr-button-fade js-speedr-tooltip';
+  menu.className = 'speedr-menu-button speedr-button-fade js-speedr-tooltip';
   menu.setAttribute('data-tooltip', "Toggle Menu" + (App.utility.getBinding('toggle menu')));
-  menu.appendChild(doc.createTextNode('Menu'));
+  menu.appendChild(doc.createTextNode('menu'));
   menu.addEventListener('click', App.actions.toggleMenu);
   return menu;
 };
@@ -543,7 +579,7 @@ Minimap = {
     minimap = doc.createElement('div');
     minimap.id = 'js-speedr-minimap';
     minimap.className = 'speedr-minimap';
-    minimap.style.cssText = 'background-color: ' + theme.boxColor + '; width: ' + settings.minimapWidth + 'px; height: ' + settings.boxHeight + 'px; border-left-color: ' + theme.borderColor + ';';
+    minimap.style.cssText = "background-color: " + theme.boxColor + "; width: " + settings.minimapWidth + "px; height: " + settings.boxHeight + "px; border-left-color: " + theme.borderColor + "; box-shadow: -3px 0 0 " + theme.boxColor + ";";
     contents = this.createContents();
     minimap.appendChild(contents);
     box.appendChild(minimap);
@@ -672,12 +708,17 @@ module.exports = {
     return _results;
   },
   create: function(element) {
-    var position, tooltip;
+    var arrow, position, theme, tooltip;
+    theme = User.themes[User.settings.primaryTheme];
     position = element.getBoundingClientRect();
     tooltip = document.createElement('span');
     tooltip.className = 'speedr-tooltip speedr-tooltip-fly-up';
     tooltip.innerText = element.getAttribute('data-tooltip');
-    tooltip.style.cssText = "top: " + position.top + "px; left: " + (position.left + (position.width / 2)) + "px;";
+    tooltip.style.cssText = "top: " + position.top + "px; left: " + (position.left + (position.width / 2)) + "px; background-color: " + theme.highlightColor + ";";
+    arrow = document.createElement('span');
+    arrow.className = 'speedr-tooltip-arrow';
+    arrow.style.borderTopColor = theme.highlightColor;
+    tooltip.appendChild(arrow);
     this.activeTooltip = tooltip;
     document.body.appendChild(tooltip);
     return App.utility.runOnceAfterAnimation(tooltip, function() {
@@ -703,7 +744,7 @@ module.exports = function(theme) {
   var wpm;
   wpm = document.createElement('div');
   wpm.id = 'js-speedr-wpm';
-  wpm.className = 'speedr-wpm speedr-small-text';
+  wpm.className = 'speedr-wpm';
   wpm.style.backgroundColor = theme.boxColor;
   return wpm;
 };
@@ -798,7 +839,7 @@ module.exports = function(event) {
       break;
     case 'more words':
       if (App.active) {
-        App.actions.changeWordsDisplayed(+1);
+        App.actions.changeWordsDisplayed(1);
         return false;
       }
       break;
@@ -905,11 +946,11 @@ module.exports = {
     if (settings.showControls) {
       playButton = doc.getElementById('js-play-pause');
       if (App.i === App.text.parsed.length - 1) {
-        playButton.innerText = 'Restart';
+        playButton.innerText = 'restart';
         playButton.setAttribute('data-tooltip', "Restart" + (App.utility.getBinding('reset')));
       } else {
-        playButton.innerText = 'Play';
-        playButton.setAttribute('data-tooltip', 'Play');
+        playButton.innerText = 'start';
+        playButton.setAttribute('data-tooltip', 'Start');
       }
     }
     if (App.scrollWatcher) {
@@ -923,8 +964,8 @@ module.exports = {
     toggleClass = App.utility.toggleClass;
     if (settings.showControls) {
       playButton = doc.getElementById('js-play-pause');
-      playButton.innerText = 'Pause';
-      playButton.setAttribute('data-tooltip', "Pause" + (App.utility.getBinding('toggle')));
+      playButton.innerText = 'stop';
+      playButton.setAttribute('data-tooltip', "Stop" + (App.utility.getBinding('toggle')));
     }
     if (App.i === App.text.parsed.length - 1) {
       App.speedr.loop.reset();
@@ -1109,18 +1150,18 @@ module.exports = {
     countdown.className = 'speedr-countdown';
     menu = doc.createElement('ul');
     menu.id = 'js-speedr-menu';
-    menu.className = 'speedr-menu speedr-small-text';
-    menuItems = ['Settings', 'Close'];
+    menu.className = 'speedr-menu';
+    menuItems = ['settings', 'close'];
     for (_i = 0, _len = menuItems.length; _i < _len; _i++) {
       menuItem = menuItems[_i];
       item = doc.createElement('li');
       switch (menuItem) {
-        case 'Settings':
+        case 'settings':
           elementFunction = function() {
             return App.utility.openUrl('options.html');
           };
           break;
-        case 'Close':
+        case 'close':
           elementFunction = App.speedr.destroy;
           item.className = 'js-speedr-tooltip';
           item.setAttribute('data-tooltip', "Close Speedr" + (App.utility.getBinding('close')));
@@ -1174,6 +1215,12 @@ module.exports = {
     oldBox.parentNode.replaceChild(newBox, oldBox);
     overlay = doc.getElementById('js-speedr-container');
     overlay.className += ' speedr-fade-out';
+    if (User.settings.showTooltips && App.addons.tooltips.activeTooltip) {
+      App.addons.tooltips.destroy();
+    }
+    if (User.settings.showContext && App.addons.context.activeContext) {
+      App.addons.context.destroy();
+    }
     App.utility.runOnceAfterAnimation(newBox, function() {
       newBox.remove();
       return overlay.remove();

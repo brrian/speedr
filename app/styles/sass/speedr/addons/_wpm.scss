@@ -1,9 +1,10 @@
 .speedr-wpm {
 	position: absolute;
 	top: 100%;
-	right: 0;
-	font-size: 11px;
-	padding: 8px 16px;
+	right: 6px;
+	padding: 10px 12px;
 	box-shadow: inset 0 20px 10px -20px rgba(0,0,0,0.4);
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
 	transition: background-color $themeTransitionSpeed ease-in-out;
 }

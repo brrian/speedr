@@ -1,48 +1,51 @@
 .speedr-minimap {
-	position: absolute;
-	top: 0;
-	left: 100%;
-	padding: 8px;
-	font-size: 1.125em;
-	line-height: 5px;
-	border-left-style: solid;
-	border-left-width: 1px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	transition: background-color $themeTransitionSpeed ease-in-out, border-left-color $themeTransitionSpeed ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    padding: 8px;
+    font-size: 1.125em;
+    line-height: 5px;
+    border-left-style: solid;
+    border-left-width: 1px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    transition: background-color $themeTransitionSpeed ease-in-out, border-left-color $themeTransitionSpeed ease-in-out;
 
-	&::-webkit-scrollbar {
-	    width: 5px;
-	}
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
 
-	&::-webkit-scrollbar-track {
-	    background-color: darken(#f0f0f0, 3%);
-	}
+    &::-webkit-scrollbar-track {
+        background-color: darken(#f0f0f0, 3%);
+    }
 
-	&::-webkit-scrollbar-thumb {
-	    background: rgba(0,0,0,0.10); 
-	}
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.10); 
+    }
 
-	p {
-	    margin: 0 0 5px 0 !important;
-	    padding: 0 !important;
-	    border: 0 !important;
-	    font: 1.125em/5px !important;
-	    vertical-align: baseline !important;
+    p {
+        margin: 0 0 5px 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        font-size: 16px !important;
+        line-height: 5px !important;
+        vertical-align: baseline !important;
 
-	    span {
-	    	display: inline !important;
-	        margin-right: -1px;
-	        opacity: .4;
+        span {
+            display: inline !important;
+            margin-right: -1px;
+            opacity: .4;
 
-	        &:first-child {
-	            margin-left: 8px;
-	        }
+            &:first-child {
+                margin-left: 8px;
+            }
 
-	        &.speedr-read {
-	            opacity: 1;
-	            line-height: 5px;
-	        }
-	    }
-	}
+            &.speedr-read {
+                opacity: 1;
+                line-height: 5px;
+            }
+        }
+    }
 }

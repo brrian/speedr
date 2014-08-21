@@ -19,12 +19,19 @@ module.exports =
                 if @activeTooltip then @destroy()
 
     create: (element) ->
+        theme = User.themes[User.settings.primaryTheme]
         position = element.getBoundingClientRect()
 
         tooltip = document.createElement 'span'
         tooltip.className = 'speedr-tooltip speedr-tooltip-fly-up'
         tooltip.innerText = element.getAttribute 'data-tooltip'
-        tooltip.style.cssText = "top: #{position.top}px; left: #{position.left + (position.width / 2)}px;"
+        tooltip.style.cssText = "top: #{position.top}px; left: #{position.left + (position.width / 2)}px; background-color: #{theme.highlightColor};"
+
+        arrow = document.createElement 'span'
+        arrow.className = 'speedr-tooltip-arrow'
+        arrow.style.borderTopColor = theme.highlightColor
+
+        tooltip.appendChild arrow
 
         @activeTooltip = tooltip
 
