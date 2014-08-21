@@ -203,7 +203,7 @@ module.exports = {
       totalWpm = "" + wpm + " wpm";
       totalWords = App.utility.formatNumber(wordsLeft);
     } else {
-      totalWpm = "" + (wpm * wordsDisplayed) + " WPM (" + wpm + "&times;" + wordsDisplayed + ")";
+      totalWpm = "" + (wpm * wordsDisplayed) + " wpm (" + wpm + "&times;" + wordsDisplayed + ")";
       totalWords = wordsLeft !== 0 ? "~" + (App.utility.formatNumber(wordsLeft * wordsDisplayed)) : "0";
     }
     timeLeft = timeLeft === '0.00' ? '0' : "~" + timeLeft;
@@ -335,7 +335,7 @@ module.exports = {
     return toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active');
   },
   toggleTheme: function() {
-    var box, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
+    var box, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, minimapHeight, minimapWidth, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
     doc = document;
     settings = User.settings;
     currentTheme = settings.primaryTheme;
@@ -366,8 +366,9 @@ module.exports = {
     }
     if (settings.showMinimap === true) {
       minimap = doc.getElementById('js-speedr-minimap');
-      minimap.style.backgroundColor = theme.boxColor;
-      minimap.style.borderLeftColor = theme.borderColor;
+      minimapWidth = minimap.offsetWidth;
+      minimapHeight = minimap.offsetHeight;
+      minimap.style.cssText = "width: " + minimapWidth + "px; height: " + minimapHeight + "; background-color: " + theme.boxColor + "; border-left-color: " + theme.borderColor + "; box-shadow: -3px 0 0 " + theme.boxColor;
     }
     if (settings.showCountdown === true) {
       countdownBar = doc.getElementById('js-speedr-countdown-bar');

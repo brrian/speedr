@@ -15,7 +15,7 @@ module.exports =
             totalWpm = "#{wpm} wpm"
             totalWords = App.utility.formatNumber wordsLeft
         else
-            totalWpm = "#{wpm * wordsDisplayed} WPM (#{wpm}&times;#{wordsDisplayed})"
+            totalWpm = "#{wpm * wordsDisplayed} wpm (#{wpm}&times;#{wordsDisplayed})"
             totalWords = unless wordsLeft is 0 then "~#{App.utility.formatNumber(wordsLeft * wordsDisplayed)}" else "0"
 
         timeLeft = if timeLeft is '0.00' then '0' else "~#{timeLeft}"
@@ -166,8 +166,9 @@ module.exports =
 
         if settings.showMinimap is true
             minimap = doc.getElementById 'js-speedr-minimap'
-            minimap.style.backgroundColor = theme.boxColor
-            minimap.style.borderLeftColor = theme.borderColor
+            minimapWidth = minimap.offsetWidth
+            minimapHeight = minimap.offsetHeight
+            minimap.style.cssText = "width: #{minimapWidth}px; height: #{minimapHeight}; background-color: #{theme.boxColor}; border-left-color: #{theme.borderColor}; box-shadow: -3px 0 0 #{theme.boxColor}"
 
         if settings.showCountdown is true
             countdownBar = doc.getElementById 'js-speedr-countdown-bar'

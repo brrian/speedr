@@ -11,7 +11,7 @@
     overflow-x: hidden;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    transition: background-color $themeTransitionSpeed ease-in-out, border-left-color $themeTransitionSpeed ease-in-out;
+    transition: background-color $themeTransitionSpeed ease-in-out, border-left-color $themeTransitionSpeed ease-in-out, box-shadow $themeTransitionSpeed ease-in-out;
 
     &::-webkit-scrollbar {
         width: 5px;
