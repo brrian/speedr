@@ -312,6 +312,9 @@ module.exports = {
     if (settings.showStatus) {
       App.actions.updateStatus();
     }
+    if (settings.showContext && App.addons.context.activeContext) {
+      document.querySelector('.speedr-context').innerText = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker];
+    }
     if (settings.showMinimap) {
       App.addons.minimap.update();
       if (App.scrollWatcher) {
@@ -335,7 +338,7 @@ module.exports = {
     return toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active');
   },
   toggleTheme: function() {
-    var box, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, minimapHeight, minimapWidth, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
+    var box, contents, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, minimapHeight, minimapWidth, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
     doc = document;
     settings = User.settings;
     currentTheme = settings.primaryTheme;
@@ -369,6 +372,8 @@ module.exports = {
       minimapWidth = minimap.offsetWidth;
       minimapHeight = minimap.offsetHeight;
       minimap.style.cssText = "width: " + minimapWidth + "px; height: " + minimapHeight + "; background-color: " + theme.boxColor + "; border-left-color: " + theme.borderColor + "; box-shadow: -3px 0 0 " + theme.boxColor;
+      contents = minimap.querySelector('.contents');
+      contents.style.backgroundImage = "linear-gradient(to right, " + theme.primaryText + " 50%, rgba(255, 255, 255, 0) 20%)";
     }
     if (settings.showCountdown === true) {
       countdownBar = doc.getElementById('js-speedr-countdown-bar');
@@ -589,26 +594,30 @@ Minimap = {
     }
   },
   createContents: function() {
-    var contents, doc, i, paragraphElement, word, wordElement, wordText, _i, _len, _ref;
+    var contents, doc, i, paragraphElement, theme, word, wordElement, _i, _len, _ref;
     doc = document;
+    theme = User.themes[User.settings.primaryTheme];
     contents = doc.createElement('div');
     contents.className = 'contents';
+    contents.style.backgroundImage = "linear-gradient(to right, " + theme.secondaryText + " 50%, rgba(255, 255, 255, 0) 20%)";
     paragraphElement = doc.createElement('p');
+    paragraphElement.className = 'speedr-minimap-para';
     _ref = App.text.parsed;
     for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
       word = _ref[i];
       wordElement = doc.createElement('span');
-      wordText = doc.createTextNode(word.text.replace(/\S/g, '.'));
-      wordElement.appendChild(wordText);
+      wordElement.className = 'speedr-minimap-word';
+      wordElement.style.cssText = "width: " + ((word.text.length - 1) * 4) + "px;";
       paragraphElement.appendChild(wordElement);
       paragraphElement.appendChild(doc.createTextNode(' '));
       if (word.paragraphEnd) {
         contents.appendChild(paragraphElement);
         paragraphElement = doc.createElement('p');
+        paragraphElement.className = 'speedr-minimap-para';
       }
       App.minimapElements[i] = wordElement;
     }
-    App.minimapElements[0].className = 'speedr-read';
+    App.minimapElements[0].className = 'speedr-minimap-word--read';
     return contents;
   },
   updateContents: function() {
@@ -623,7 +632,7 @@ Minimap = {
     i = App.i;
     _results = [];
     for (num = _i = 0, _ref = App.text.parsed.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; num = 0 <= _ref ? ++_i : --_i) {
-      _results.push(App.minimapElements[num].className = num <= i ? 'speedr-read' : '');
+      _results.push(App.minimapElements[num].className = num <= i ? 'speedr-minimap-word--read' : 'speedr-minimap-word');
     }
     return _results;
   },
@@ -1020,7 +1029,7 @@ module.exports = {
     App.speedr.showWord(i);
     App.i++;
     if (settings.showMinimap) {
-      App.minimapElements[i].className = 'speedr-read';
+      App.minimapElements[i].className = 'speedr-minimap-word--read';
     }
     if (nextWord) {
       if (settings.delayOnPunctuation && word.hasPunctuation) {
@@ -1311,7 +1320,7 @@ module.exports = {
       _results.push(element.addEventListener(prefix, function() {
         event.target.removeEventListener(event.type, arguments.callee);
         return callback(event);
-      }, false));
+      }));
     }
     return _results;
   },

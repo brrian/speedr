@@ -114,6 +114,9 @@ module.exports =
 
         if settings.showStatus then App.actions.updateStatus()
 
+        if settings.showContext and App.addons.context.activeContext
+            document.querySelector('.speedr-context').innerText = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker]
+
         if settings.showMinimap
             App.addons.minimap.update()
             if App.scrollWatcher then App.addons.minimap.updateScroll()
@@ -169,6 +172,9 @@ module.exports =
             minimapWidth = minimap.offsetWidth
             minimapHeight = minimap.offsetHeight
             minimap.style.cssText = "width: #{minimapWidth}px; height: #{minimapHeight}; background-color: #{theme.boxColor}; border-left-color: #{theme.borderColor}; box-shadow: -3px 0 0 #{theme.boxColor}"
+
+            contents = minimap.querySelector '.contents'
+            contents.style.backgroundImage = "linear-gradient(to right, #{theme.secondaryText} 50%, rgba(255, 255, 255, 0) 20%)"
 
         if settings.showCountdown is true
             countdownBar = doc.getElementById 'js-speedr-countdown-bar'

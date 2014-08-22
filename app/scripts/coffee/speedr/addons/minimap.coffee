@@ -19,30 +19,34 @@ Minimap =
 
     createContents: ->
         doc = document
+        theme = User.themes[User.settings.primaryTheme]
 
-        contents = doc.createElement('div')
+        contents = doc.createElement 'div'
         contents.className = 'contents'
+        contents.style.backgroundImage = "linear-gradient(to right, #{theme.secondaryText} 50%, rgba(255, 255, 255, 0) 20%)"
 
-        paragraphElement = doc.createElement('p')
+        paragraphElement = doc.createElement 'p'
+        paragraphElement.className = 'speedr-minimap-para'
 
         # Loop through each word array and create a element
         for word, i in App.text.parsed
-            wordElement = doc.createElement('span')
-            wordText = doc.createTextNode(word.text.replace(/\S/g, '.'))
+            wordElement = doc.createElement 'span'
+            wordElement.className = 'speedr-minimap-word'
+            wordElement.style.cssText = "width: #{(word.text.length - 1) * 4}px;"
 
-            wordElement.appendChild(wordText)
-            paragraphElement.appendChild(wordElement)
-            paragraphElement.appendChild(doc.createTextNode(' '))
+            paragraphElement.appendChild wordElement
+            paragraphElement.appendChild doc.createTextNode(' ')
 
             # If this is the end of the paragraph then create a new p element
             if word.paragraphEnd
-                contents.appendChild(paragraphElement)
-                paragraphElement = doc.createElement('p')
+                contents.appendChild paragraphElement
+                paragraphElement = doc.createElement 'p'
+                paragraphElement.className = 'speedr-minimap-para'
 
             App.minimapElements[i] = wordElement
 
         # Make the first element active
-        App.minimapElements[0].className = 'speedr-read'
+        App.minimapElements[0].className = 'speedr-minimap-word--read'
 
         contents
 
@@ -59,13 +63,13 @@ Minimap =
         i = App.i
 
         for num in [0..App.text.parsed.length - 1]
-            App.minimapElements[num].className = if num <= i then 'speedr-read' else ''
+            App.minimapElements[num].className = if num <= i then 'speedr-minimap-word--read' else 'speedr-minimap-word'
 
     updateScroll: ->
         # Get the current active word
         i = App.i
 
-        minimap = document.getElementById('js-speedr-minimap')
+        minimap = document.getElementById 'js-speedr-minimap'
         activeOffset = App.minimapElements[i].offsetTop
 
         if App.scrolling is false or App.scrolling is undefined

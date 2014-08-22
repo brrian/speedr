@@ -360,7 +360,7 @@
   position: relative;
   display: inline-block;
   padding: 8px 10px;
-  opacity: .4;
+  opacity: .6;
   cursor: default;
   white-space: nowrap;
   -webkit-transition: opacity 120ms ease-in;
@@ -573,8 +573,8 @@
   overflow-x: hidden;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
-  -webkit-transition: background-color 200ms ease-in-out, border-left-color 200ms ease-in-out;
-  transition: background-color 200ms ease-in-out, border-left-color 200ms ease-in-out;
+  -webkit-transition: background-color 200ms ease-in-out, border-left-color 200ms ease-in-out, box-shadow 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out, border-left-color 200ms ease-in-out, box-shadow 200ms ease-in-out;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000316}}
 .speedr-minimap::-webkit-scrollbar {
@@ -589,28 +589,38 @@
   background: rgba(0, 0, 0, 0.1);
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000328}}
-.speedr-minimap p {
-  margin: 0 0 5px 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  font-size: 16px !important;
-  line-height: 5px !important;
-  vertical-align: baseline !important;
+.speedr-minimap .contents {
+  background-size: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000336}}
-.speedr-minimap p span {
-  display: inline !important;
-  margin-right: -1px;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000332}}
+.speedr-minimap-para {
+  background-image: inherit;
+  background-size: 0;
+  font-size: 11px;
+  line-height: 0;
+  margin-bottom: 2px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000340}}
+.speedr-minimap-word, .speedr-minimap-word--read {
+  display: inline-block;
+  height: 2px;
+  height: 4px;
+  background-image: inherit;
+  background-size: 4px 2px;
+  background-repeat: repeat-x;
+  background-position: left;
+  margin: 0 -2px 0 0;
+  font-size: 0;
+  line-height: 0;
   opacity: .4;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000341}}
-.speedr-minimap p span:first-child {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000353}}
+.speedr-minimap-word:first-child, .speedr-minimap-word--read:first-child {
   margin-left: 8px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000345}}
-.speedr-minimap p span.speedr-read {
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_minimap\.scss}line{font-family:\0000357}}
+.speedr-minimap-word--read {
   opacity: 1;
-  line-height: 5px;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/speedr\/addons\/_status\.scss}line{font-family:\000033}}

@@ -113,7 +113,7 @@ module.exports =
         App.speedr.showWord(i)
         App.i++
 
-        if settings.showMinimap then App.minimapElements[i].className = 'speedr-read'
+        if settings.showMinimap then App.minimapElements[i].className = 'speedr-minimap-word--read'
 
         if nextWord
             if settings.delayOnPunctuation and word.hasPunctuation

@@ -37,13 +37,9 @@ module.exports =
         prefixes = ['webkitAnimationEnd', 'animationend']
 
         for prefix in prefixes
-            element.addEventListener(
-                prefix
-                ->
-                    event.target.removeEventListener(event.type, arguments.callee)
-                    callback(event)
-                false
-            )
+            element.addEventListener prefix, ->
+                event.target.removeEventListener event.type, arguments.callee
+                callback event
 
     scrollTo: (element, to, duration) ->
         start = element.scrollTop
