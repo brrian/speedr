@@ -34,7 +34,7 @@ module.exports = {
     'Speedr (Light)': {
       primaryText: '#444',
       secondaryText: '#666',
-      boxColor: '#f2f0e7',
+      boxColor: '#f2f0ec',
       borderColor: 'rgba(175, 150, 190, .2)',
       highlightColor: '#dc322f'
     },

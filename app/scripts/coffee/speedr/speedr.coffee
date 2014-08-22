@@ -1,4 +1,9 @@
 module.exports =
+	init: (text) ->
+		App.parse.text text 
+		App.speedr.create()
+		App.speedr.showWord()
+
 	create: ->
 	    App.active = true
 

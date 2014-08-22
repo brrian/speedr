@@ -34,7 +34,7 @@ module.exports = {
     'Speedr (Light)': {
       primaryText: '#444',
       secondaryText: '#666',
-      boxColor: '#f2f0e7',
+      boxColor: '#f2f0ec',
       borderColor: 'rgba(175, 150, 190, .2)',
       highlightColor: '#dc322f'
     },
@@ -183,6 +183,16 @@ window.App = {
 
 window.onkeydown = require('./speedr/keyDownListener.coffee');
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  switch (request.command) {
+    case 'parse.selection':
+      return App.speedr.init(window.getSelection().toString());
+    case 'parse.selection.start':
+      App.speedr.init(window.getSelection().toString());
+      return setTimeout(App.speedr.loop.toggle, 400);
+  }
+});
+
 App.init();
 
 
@@ -268,7 +278,7 @@ module.exports = {
     User.settings.wordsDisplayed = settings.wordsDisplayed + words;
     App.i = 0;
     App.text.parsed = [];
-    App.parse.text();
+    App.parse.loop();
     App.speedr.showWord();
     if (settings.showWPM) {
       this.updateWPM();
@@ -373,7 +383,7 @@ module.exports = {
       minimapHeight = minimap.offsetHeight;
       minimap.style.cssText = "width: " + minimapWidth + "px; height: " + minimapHeight + "; background-color: " + theme.boxColor + "; border-left-color: " + theme.borderColor + "; box-shadow: -3px 0 0 " + theme.boxColor;
       contents = minimap.querySelector('.contents');
-      contents.style.backgroundImage = "linear-gradient(to right, " + theme.primaryText + " 50%, rgba(255, 255, 255, 0) 20%)";
+      contents.style.backgroundImage = "linear-gradient(to right, " + theme.secondaryText + " 50%, rgba(255, 255, 255, 0) 20%)";
     }
     if (settings.showCountdown === true) {
       countdownBar = doc.getElementById('js-speedr-countdown-bar');
@@ -809,109 +819,107 @@ module.exports = function(event) {
   var keyCombo;
   keyCombo = App.utility.generateKeyCombo(event);
   switch (User.bindings[keyCombo]) {
-    case 'open':
-      if (!App.active && window.getSelection().toString().length) {
-        App.parse.selection();
-        App.speedr.create();
-        App.speedr.showWord();
+    case "open":
+      if (!App.active && window.getSelection().type === "Range") {
+        App.speedr.init(window.getSelection().toString());
         return false;
       }
       break;
-    case 'close':
+    case "close":
       if (App.active) {
         App.speedr.destroy();
         return false;
       }
       break;
-    case 'slower':
+    case "slower":
       if (App.active) {
         App.actions.changeWPM(-25);
         return false;
       }
       break;
-    case 'faster':
+    case "faster":
       if (App.active) {
         App.actions.changeWPM(25);
         return false;
       }
       break;
-    case 'bigger':
+    case "bigger":
       if (App.active) {
         App.actions.changeFontSize(2);
         return false;
       }
       break;
-    case 'smaller':
+    case "smaller":
       if (App.active) {
         App.actions.changeFontSize(-2);
         return false;
       }
       break;
-    case 'more words':
+    case "more words":
       if (App.active) {
         App.actions.changeWordsDisplayed(1);
         return false;
       }
       break;
-    case 'less words':
+    case "less words":
       if (App.active) {
         App.actions.changeWordsDisplayed(-1);
         return false;
       }
       break;
-    case 'toggle':
+    case "toggle":
       if (App.active) {
         App.speedr.loop.toggle();
         return false;
       }
       break;
-    case 'reset':
+    case "reset":
       if (App.active) {
         App.speedr.loop.reset();
         return false;
       }
       break;
-    case 'prev word':
+    case "prev word":
       if (App.active) {
-        App.actions.navigateText('prev', 'word');
+        App.actions.navigateText("prev", "word");
         return false;
       }
       break;
-    case 'prev sentence':
+    case "prev sentence":
       if (App.active) {
-        App.actions.navigateText('prev', 'sentence');
+        App.actions.navigateText("prev", "sentence");
         return false;
       }
       break;
-    case 'prev paragraph':
+    case "prev paragraph":
       if (App.active) {
-        App.actions.navigateText('prev', 'paragraph');
+        App.actions.navigateText("prev", "paragraph");
         return false;
       }
       break;
-    case 'next word':
+    case "next word":
       if (App.active) {
-        App.actions.navigateText('next', 'word');
+        App.actions.navigateText("next", "word");
         return false;
       }
       break;
-    case 'next sentence':
+    case "next sentence":
       if (App.active) {
-        App.actions.navigateText('next', 'sentence');
+        App.actions.navigateText("next", "sentence");
         return false;
       }
       break;
-    case 'next paragraph':
+    case "next paragraph":
       if (App.active) {
-        return App.actions.navigateText('next', 'paragraph');
+        return App.actions.navigateText("next", "paragraph");
       }
       break;
-    case 'toggle menu':
+    case "toggle menu":
       if (App.active) {
         return App.actions.toggleMenu();
       }
       break;
-    case 'toggle theme':
+    case "toggle theme":
       if (App.active) {
         return App.actions.toggleTheme();
       }
@@ -1070,11 +1078,11 @@ module.exports = {
 
 },{}],16:[function(require,module,exports){
 module.exports = {
-  selection: function() {
-    App.text.original = window.getSelection().toString();
-    return this.text();
+  text: function(text) {
+    App.text.original = text;
+    return this.loop();
   },
-  text: function() {
+  loop: function() {
     var counter, paragraph, paragraphStart, paragraphs, sentence, sentenceCounter, sentenceStart, sentences, word, wordObj, words, _i, _j, _k, _len, _len1, _len2, _results;
     counter = 0;
     sentenceCounter = 0;
@@ -1130,6 +1138,11 @@ module.exports = {
 
 },{}],17:[function(require,module,exports){
 module.exports = {
+  init: function(text) {
+    App.parse.text(text);
+    App.speedr.create();
+    return App.speedr.showWord();
+  },
   create: function() {
     var box, countdown, doc, elementFunction, item, menu, menuItem, menuItems, overlay, pointer, settings, theme, wordContainer, wordWrapper, _i, _len;
     App.active = true;

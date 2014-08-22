@@ -79,7 +79,7 @@ module.exports =
         App.i = 0
         App.text.parsed = []
 
-        App.parse.text()
+        App.parse.loop()
         App.speedr.showWord()
 
         if settings.showWPM then @updateWPM()

@@ -1,10 +1,10 @@
 module.exports =
-    selection: ->
-        App.text.original = window.getSelection().toString()
+    text: (text) ->
+        App.text.original = text
 
-        @text()
+        @loop()
 
-    text: ->
+    loop: ->
         counter = 0
         sentenceCounter = 0
 
