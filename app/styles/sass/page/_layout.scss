@@ -1,10 +1,6 @@
-*, *:before, *:after {
-	box-sizing: border-box;
-}
-
 body {
-	font-family: 'Open Sans', sans-serif;
-	background-color: $beige;
+	font-family: 'Roboto';
+	background-color: $boxColor;
 	color: #444;
 	font-size: 13px;
 	margin: 0;
@@ -12,14 +8,14 @@ body {
 }
 
 section {
-	@include clearfix;
 	width: 800px;
-	margin: 0 auto 20px auto;
+	margin: 0 auto 30px auto;
+	overflow: hidden;
 
 	h1 {
 		font-size: 1.29em;
-		color: $red;
-		text-transform: uppercase;
+		color: $highlightColor;
+		text-transform: lowercase;
 		letter-spacing: 1px;
 		margin-bottom: 20px;
 	}

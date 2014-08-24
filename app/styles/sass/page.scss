@@ -1,12 +1,11 @@
-@import 'compass/utilities/general/clearfix';
-
 @import 'global/fonts';
+@import 'global/variables';
+@import 'global/reset';
 
 @import 'page/animations';
-@import 'page/variables';
 
+@import 'page/base';
 @import 'page/layout';
-@import 'page/general';
 
 @import 'page/form';
 @import 'page/binding';

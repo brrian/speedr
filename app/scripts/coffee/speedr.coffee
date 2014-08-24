@@ -35,16 +35,8 @@ window.App =
     init: ->
         App.speedr.reset()
         App.chrome.settings.get()
+        App.chrome.extension.init()
 
 window.onkeydown = require './speedr/keyDownListener.coffee'
-
-chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
-    switch request.command
-        when 'parse.selection'
-            App.speedr.init window.getSelection().toString()
-
-        when 'parse.selection.start'
-            App.speedr.init window.getSelection().toString()
-            setTimeout App.speedr.loop.toggle, 400
 
 App.init()

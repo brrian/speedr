@@ -1,31 +1,23 @@
 <!doctype html>
 <html>
     <head>
-        <link href="styles/page.css" rel="stylesheet">
-        <!-- build:js scripts/popup.js -->
-        <script src="scripts/popup.js"></script>
-        <!-- endbuild -->
+        <link href="styles/popup.css" rel="stylesheet">
     </head>
-    <body class="popup" style="width: 300px; padding: 10px;">
-    	Speedr (<a href="alpha.html" target="_blank">alpha 0.3.0</a>)
-    	<p>
-    		<small>Instructions</small>
-    		<br>
-    		Select text and activate Speedr
-    		<br>
-    		<small>(Default: Alt + V)</small>
-    	</p>
-		<p>
-			<small>Settings</small>
-			<br>
-			Go to the <a href="options.html" target="_blank">options</a> page to modify your settings and key bindings.
-		</p>
-		<p>
-			<small>Feedback</small>
-			<br>
-			Your feedback is important to me!
-			<br>
-			For suggestions, improvements, or critiques, find me on Twitter <a href="https://twitter.com/brianpeepants" target="_blank">@brianpeepants</a>.
-		</p>
+    <body class="popup">
+        <ul class="primary-nav">
+            <li>
+                <a href="#" id="js-read-selection" class="primary-nav__link--disabled">
+                    <p class="primary-nav__link">Read selected text</p>
+                    <span id="js-read-selection-subtext" class="primary-nav__subtext"></span>
+                </a>
+            </li>
+        </ul>
+        <ul class="secondary-nav">
+            <li><a href="#">statistics</a></li>
+            <li><a href="options.html" target="_blank">settings</a></li>
+            <li><a href="help.html" target="_blank">help</a></li>
+            <li><a href="#">feedback</a></li>
+        </ul>
+        <script src="scripts/popup.js"></script>
     </body>
 </html>

@@ -70,20 +70,29 @@ module.exports = function (grunt) {
 
         browserify: {
             chrome: {
-                files: {
-                    '<%= config.app %>/scripts/speedr.js': '<%= config.app %>/scripts/coffee/speedr.coffee',
-                    '<%= config.app %>/scripts/options.js': '<%= config.app %>/scripts/coffee/options.coffee',
-                    '<%= config.app %>/scripts/background.js': '<%= config.app %>/scripts/coffee/background.coffee'
-                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.app %>/scripts/coffee/',
+                        src: ['*.coffee'],
+                        dest: '<%= config.app %>/scripts',
+                        ext: '.js'
+                    }
+                ],
                 options: {
                     transform: ['coffeeify']
                 }
             },
             dist: {
-                files: {
-                    '<%= config.dist %>/scripts/speedr.js': '<%= config.app %>/scripts/coffee/speedr.coffee',
-                    '<%= config.dist %>/scripts/options.js': '<%= config.app %>/scripts/coffee/options.coffee'
-                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.app %>/scripts/coffee/',
+                        src: ['*.coffee'],
+                        dest: '<%= config.dist %>/scripts',
+                        ext: '.js'
+                    }
+                ],
                 options: {
                     transform: ['coffeeify']
                 }

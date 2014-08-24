@@ -27,21 +27,26 @@
 
 	.binding-details {
 		display: inline-block;
+
+		.error {
+			margin-top: 3px;
+		}
 	}
 
 	.binding {
 		display: inline-block;
-		background-color: $beige;
+		background-color: $boxColor;
 		padding-right: 3px;
 
 		&.binding-text {
 			&:before {
-				font-size: .86em;
+				font-size: 13px;
+				font-weight: lighter;
+				font-style: italic;
 				color: #999;
-				height: 30px;
-				line-height: 30px;
-				text-transform: uppercase;
-				letter-spacing: 1px;
+				height: 31px;
+				line-height: 31px;
+				text-transform: lowercase;
 			}
 
 			&.binding-text-empty:before {
@@ -57,7 +62,7 @@
 	.controls {
 		display: inline-block;
 		margin-left: 20px;
-		font-size: .86em;
+		font-size: 13px;
 		text-transform: uppercase;
 		opacity: 0;
 		transition: opacity 200ms ease-in-out;
@@ -80,7 +85,7 @@
 	display: inline-block;
 	min-width: 30px;
 	text-align: center;
-	padding: 5px 8px;
+	padding: 8px 11px;
 	margin-right: 3px;
 	border: 1px solid #808080;
 	border-radius: 4px;

@@ -27,3 +27,17 @@ module.exports =
 	            wordCount = data.wordCount || 0
 
 	            chrome.storage.sync.set({wordCount: wordCount + count})
+
+	extension:
+		init: ->
+			chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
+			    switch request.command
+			        when 'request.selection'
+			            sendResponse window.getSelection().toString().slice 0, 75
+
+			        when 'parse.selection'
+			            unless App.active then App.speedr.init window.getSelection().toString() else App.speedr.loop.toggle()
+
+			        when 'parse.selection.start'
+			            App.speedr.init window.getSelection().toString()
+			            setTimeout App.speedr.loop.toggle, 400

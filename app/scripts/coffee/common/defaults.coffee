@@ -9,7 +9,7 @@ module.exports =
         boxHeight: 300
         minimapWidth: 175
 
-        countdownSpeed: 1000
+        countdownSpeed: 750
 
         showControls: true
         showCountdown: true
@@ -25,18 +25,18 @@ module.exports =
         fontSize: 33
 
         delayOnPunctuation: false
-        punctuationDelayTime: 1000
+        punctuationDelayTime: 60
 
         delayOnSentence: false
-        sentenceDelayTime: 150
+        sentenceDelayTime: 80
 
         pauseOnParagraph: false
         delayOnParagraph: false
-        paragraphDelayTime: 300
+        paragraphDelayTime: 100
 
-        delayOnLongWords: false
-        longWordLength: 8
-        longWordDelayTime: 100
+        delayOnLongWords: true
+        longWordLength: 9
+        longWordDelayTime: 80
 
     themes: 
         'Speedr (Light)':
@@ -75,7 +75,7 @@ module.exports =
         'ctrl+\'': 'next paragraph'
         'shift+%': 'prev sentence'
         'shift+\'': 'next sentence'
-        'Û': 'slower'
-        'Ý': 'faster'
+        '\u00DB': 'slower'
+        '\u00DD': 'faster'
         'M': 'toggle menu'
         'I': 'toggle theme'

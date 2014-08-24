@@ -10,7 +10,7 @@ module.exports = ->
     controlsRight = doc.createElement 'div'
     controlsRight.className = 'speedr-controls-right'
 
-    buttons = ['speed', 'words', 'word', 'sentence', 'paragraph']
+    buttons = ['speed', 'words', 'font', 'word', 'sentence', 'paragraph']
 
     for button, i in buttons
         controlButton = doc.createElement 'div'
@@ -43,6 +43,14 @@ module.exports = ->
                 action2.innerText = 'less'
                 action2.setAttribute 'data-tooltip', "Show less words#{App.utility.getBinding('less words')}"
                 action2.addEventListener 'click', -> App.actions.changeWordsDisplayed -1
+            when 'font'
+                action1.innerText = 'bigger'
+                action1.setAttribute 'data-tooltip', "Increase font size#{App.utility.getBinding('bigger')}"
+                action1.addEventListener 'click', -> App.actions.changeFontSize 2 
+
+                action2.innerText = 'smaller'
+                action2.setAttribute 'data-tooltip', "Decrease font size#{App.utility.getBinding('smaller')}"
+                action2.addEventListener 'click', -> App.actions.changeFontSize -2
             when 'word'
                 action1.innerText = 'previous'
                 action1.setAttribute 'data-tooltip', "Previous word#{App.utility.getBinding('prev word')}"
@@ -74,7 +82,7 @@ module.exports = ->
         actions.appendChild action2
         controlButton.appendChild actions
 
-        if i < 2 then controlsLeft.appendChild controlButton
+        if i < 3 then controlsLeft.appendChild controlButton
         else controlsRight.appendChild controlButton
 
     playPause = doc.createElement 'div'

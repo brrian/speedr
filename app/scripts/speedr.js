@@ -7,7 +7,7 @@ module.exports = {
     boxWidth: 600,
     boxHeight: 300,
     minimapWidth: 175,
-    countdownSpeed: 1000,
+    countdownSpeed: 750,
     showControls: true,
     showCountdown: true,
     showMenuButton: true,
@@ -20,15 +20,15 @@ module.exports = {
     wordsDisplayed: 1,
     fontSize: 33,
     delayOnPunctuation: false,
-    punctuationDelayTime: 1000,
+    punctuationDelayTime: 60,
     delayOnSentence: false,
-    sentenceDelayTime: 150,
+    sentenceDelayTime: 80,
     pauseOnParagraph: false,
     delayOnParagraph: false,
-    paragraphDelayTime: 300,
-    delayOnLongWords: false,
-    longWordLength: 8,
-    longWordDelayTime: 100
+    paragraphDelayTime: 100,
+    delayOnLongWords: true,
+    longWordLength: 9,
+    longWordDelayTime: 80
   },
   themes: {
     'Speedr (Light)': {
@@ -68,8 +68,8 @@ module.exports = {
     'ctrl+\'': 'next paragraph',
     'shift+%': 'prev sentence',
     'shift+\'': 'next sentence',
-    'Û': 'slower',
-    'Ý': 'faster',
+    '\u00DB': 'slower',
+    '\u00DD': 'faster',
     'M': 'toggle menu',
     'I': 'toggle theme'
   }
@@ -177,21 +177,12 @@ window.App = {
   chrome: require('./speedr/chrome.coffee'),
   init: function() {
     App.speedr.reset();
-    return App.chrome.settings.get();
+    App.chrome.settings.get();
+    return App.chrome.extension.init();
   }
 };
 
 window.onkeydown = require('./speedr/keyDownListener.coffee');
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  switch (request.command) {
-    case 'parse.selection':
-      return App.speedr.init(window.getSelection().toString());
-    case 'parse.selection.start':
-      App.speedr.init(window.getSelection().toString());
-      return setTimeout(App.speedr.loop.toggle, 400);
-  }
-});
 
 App.init();
 
@@ -457,7 +448,7 @@ module.exports = function() {
   controlsLeft.className = 'speedr-controls-left';
   controlsRight = doc.createElement('div');
   controlsRight.className = 'speedr-controls-right';
-  buttons = ['speed', 'words', 'word', 'sentence', 'paragraph'];
+  buttons = ['speed', 'words', 'font', 'word', 'sentence', 'paragraph'];
   for (i = _i = 0, _len = buttons.length; _i < _len; i = ++_i) {
     button = buttons[i];
     controlButton = doc.createElement('div');
@@ -492,6 +483,18 @@ module.exports = function() {
         action2.setAttribute('data-tooltip', "Show less words" + (App.utility.getBinding('less words')));
         action2.addEventListener('click', function() {
           return App.actions.changeWordsDisplayed(-1);
+        });
+        break;
+      case 'font':
+        action1.innerText = 'bigger';
+        action1.setAttribute('data-tooltip', "Increase font size" + (App.utility.getBinding('bigger')));
+        action1.addEventListener('click', function() {
+          return App.actions.changeFontSize(2);
+        });
+        action2.innerText = 'smaller';
+        action2.setAttribute('data-tooltip', "Decrease font size" + (App.utility.getBinding('smaller')));
+        action2.addEventListener('click', function() {
+          return App.actions.changeFontSize(-2);
         });
         break;
       case 'word':
@@ -534,7 +537,7 @@ module.exports = function() {
     actions.appendChild(action1);
     actions.appendChild(action2);
     controlButton.appendChild(actions);
-    if (i < 2) {
+    if (i < 3) {
       controlsLeft.appendChild(controlButton);
     } else {
       controlsRight.appendChild(controlButton);
@@ -807,6 +810,26 @@ module.exports = {
         return chrome.storage.sync.set({
           wordCount: wordCount + count
         });
+      });
+    }
+  },
+  extension: {
+    init: function() {
+      return chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        switch (request.command) {
+          case 'request.selection':
+            return sendResponse(window.getSelection().toString().slice(0, 75));
+          case 'parse.selection':
+            if (!App.active) {
+              return App.speedr.init(window.getSelection().toString());
+            } else {
+              return App.speedr.loop.toggle();
+            }
+            break;
+          case 'parse.selection.start':
+            App.speedr.init(window.getSelection().toString());
+            return setTimeout(App.speedr.loop.toggle, 400);
+        }
       });
     }
   }
