@@ -185,28 +185,49 @@ table {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\000031}}
 body {
-  padding-top: 50px;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\000031}}
-body {
   font-family: 'Roboto';
   background-color: #f2f0ec;
   color: #444;
   font-size: 13px;
   margin: 0;
-  padding-bottom: 77px;
+  padding: 50px 0 77px 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000310}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000310}}
+p {
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000315}}
+em {
+  font-weight: bold;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000319}}
+i {
+  font-style: italic;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000323}}
+ol {
+  list-style-type: decimal;
+  margin-left: 40px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000327}}
+ol li {
+  line-height: 1.4;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\000031}}
 section {
   width: 800px;
   margin: 0 auto 30px auto;
   overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000315}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\000036}}
 section h1 {
-  font-size: 1.29em;
+  font-size: 18px;
   color: #dc322f;
   text-transform: lowercase;
   letter-spacing: 1px;

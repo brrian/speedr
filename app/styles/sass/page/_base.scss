@@ -1,3 +1,30 @@
 body {
-	padding-top: 50px;
+	font-family: 'Roboto';
+	background-color: $boxColor;
+	color: #444;
+	font-size: 13px;
+	margin: 0;
+	padding: 50px 0 77px 0;
+}
+
+p {
+	line-height: 1.4;
+	margin-bottom: 10px;
+}
+
+em {
+	font-weight: bold;
+}
+
+i {
+	font-style: italic;
+}
+
+ol {
+	list-style-type: decimal;
+	margin-left: 40px;
+
+	li {
+		line-height: 1.4;
+	}
 }
