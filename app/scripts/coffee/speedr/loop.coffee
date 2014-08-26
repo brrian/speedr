@@ -14,8 +14,6 @@ module.exports =
         # Correct the counter
         App.i--
 
-        App.actions.getWordCount()
-
         # If showStatus is true, we need to show it
         if settings.showStatus
             App.actions.updateStatus()
@@ -50,6 +48,8 @@ module.exports =
 
         if App.scrollWatcher then clearTimeout App.scrollWatcher
 
+        App.speedr.stats.stop()
+
     startPrepare: ->
         # Cache some variables
         doc = document
@@ -78,9 +78,11 @@ module.exports =
         if settings.showCountdown
             toggleClass(doc.getElementById('js-speedr-countdown-bar'), 'speedr-countdown-bar-zero')
 
-            App.countdownTimeout = setTimeout(@start, settings.countdownSpeed)
+            App.countdownTimeout = setTimeout @start, settings.countdownSpeed
         else
             @start()
+
+        App.speedr.stats.start()
 
     start: ->
         App.loop = App.speedr.loop.create()
@@ -93,7 +95,6 @@ module.exports =
 
         if App.pause is false then App.speedr.loop.stop()
 
-        App.wordCount = 0
         App.speedr.showWord(App.i = 0)
 
         if settings.showStatus then App.actions.updateStatus()

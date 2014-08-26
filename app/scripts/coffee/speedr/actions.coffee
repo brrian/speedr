@@ -110,8 +110,6 @@ module.exports =
 
         App.speedr.showWord()
 
-        App.wordCount = App.i
-
         if settings.showStatus then App.actions.updateStatus()
 
         if settings.showContext and App.addons.context.activeContext
@@ -120,11 +118,6 @@ module.exports =
         if settings.showMinimap
             App.addons.minimap.update()
             if App.scrollWatcher then App.addons.minimap.updateScroll()
-
-    getWordCount: ->
-        count = App.i - App.wordCount
-        App.wordCount = App.i
-        App.chrome.wordCount.save(count)
 
     toggleMenu: ->
         doc = document

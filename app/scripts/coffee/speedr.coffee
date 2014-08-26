@@ -33,6 +33,9 @@ window.App =
     chrome: require './speedr/chrome.coffee'
 
     init: ->
+        chrome.storage.sync.get (data) ->
+            console.log data
+
         App.speedr.reset()
         App.chrome.settings.get()
         App.chrome.extension.init()

@@ -176,6 +176,9 @@ window.App = {
   actions: require('./speedr/actions.coffee'),
   chrome: require('./speedr/chrome.coffee'),
   init: function() {
+    chrome.storage.sync.get(function(data) {
+      return console.log(data);
+    });
     App.speedr.reset();
     App.chrome.settings.get();
     return App.chrome.extension.init();
@@ -309,7 +312,6 @@ module.exports = {
         App.i = direction === 'prev' ? App.utility.findPrevOfType('paragraphStart') : App.utility.findNextOfType('paragraphStart');
     }
     App.speedr.showWord();
-    App.wordCount = App.i;
     if (settings.showStatus) {
       App.actions.updateStatus();
     }
@@ -322,12 +324,6 @@ module.exports = {
         return App.addons.minimap.updateScroll();
       }
     }
-  },
-  getWordCount: function() {
-    var count;
-    count = App.i - App.wordCount;
-    App.wordCount = App.i;
-    return App.chrome.wordCount.save(count);
   },
   toggleMenu: function() {
     var doc, toggleClass;
@@ -802,13 +798,17 @@ module.exports = {
       return _results;
     }
   },
-  wordCount: {
-    save: function(count) {
-      return chrome.storage.sync.get('wordCount', function(data) {
-        var wordCount;
-        wordCount = data.wordCount || 0;
+  stats: {
+    save: function(time, words) {
+      return chrome.storage.sync.get('stats', function(data) {
+        var syncTime, syncWords;
+        syncTime = data.stats.time || 0;
+        syncWords = data.stats.words || 0;
         return chrome.storage.sync.set({
-          wordCount: wordCount + count
+          stats: {
+            time: syncTime + time,
+            words: syncWords + words
+          }
         });
       });
     }
@@ -968,7 +968,6 @@ module.exports = {
     App.pause = true;
     clearTimeout(App.loop);
     App.i--;
-    App.actions.getWordCount();
     if (settings.showStatus) {
       App.actions.updateStatus();
       toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden');
@@ -995,8 +994,9 @@ module.exports = {
       }
     }
     if (App.scrollWatcher) {
-      return clearTimeout(App.scrollWatcher);
+      clearTimeout(App.scrollWatcher);
     }
+    return App.speedr.stats.stop();
   },
   startPrepare: function() {
     var doc, playButton, settings, toggleClass;
@@ -1021,10 +1021,11 @@ module.exports = {
     }
     if (settings.showCountdown) {
       toggleClass(doc.getElementById('js-speedr-countdown-bar'), 'speedr-countdown-bar-zero');
-      return App.countdownTimeout = setTimeout(this.start, settings.countdownSpeed);
+      App.countdownTimeout = setTimeout(this.start, settings.countdownSpeed);
     } else {
-      return this.start();
+      this.start();
     }
+    return App.speedr.stats.start();
   },
   start: function() {
     App.loop = App.speedr.loop.create();
@@ -1038,7 +1039,6 @@ module.exports = {
     if (App.pause === false) {
       App.speedr.loop.stop();
     }
-    App.wordCount = 0;
     App.speedr.showWord(App.i = 0);
     if (settings.showStatus) {
       App.actions.updateStatus();
@@ -1296,8 +1296,22 @@ module.exports = {
     App.text.parsed = [];
     App.interval = App.actions.calculateInterval();
     App.i = 0;
-    App.wordCount = 0;
     return App.minimapElements = {};
+  },
+  stats: {
+    start: function() {
+      this.time = new Date().getTime();
+      this.index = App.i;
+      if (User.settings.showCountdown) {
+        return this.time += User.settings.countdownSpeed;
+      }
+    },
+    stop: function() {
+      var time, words;
+      time = new Date().getTime() - this.time;
+      words = App.i - this.index;
+      return App.chrome.stats.save(time, words);
+    }
   },
   loop: require('./loop.coffee')
 };
