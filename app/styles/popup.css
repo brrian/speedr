@@ -1,5 +1,6 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/My\%20Projects\/Speedr\%20\(ext\)\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\000031}}
 *, *:before, *:after {
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -128,6 +129,7 @@ a {
 .primary-nav a, .secondary-nav a {
   display: inline-block;
   width: 100%;
+  -webkit-transition: color 100ms ease-in;
   transition: color 100ms ease-in;
 }
 

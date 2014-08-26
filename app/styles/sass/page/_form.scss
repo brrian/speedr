@@ -46,31 +46,33 @@ input[type=radio], input[type=checkbox] {
 	}
 }
 
-.form-group {
-	margin: 0 0 35px 30px;
+.form {
+	&-group {
+		margin: 0 0 35px 30px;
 
-	.form-details {
+		&-half {
+			width: 50%;
+			float: left;
+		}
+
+		&-thirds {
+			width: 33%;
+			float: left;
+			margin-bottom: 15px;
+		}
+	}
+
+	&-details {
 		font-size: .857em;
 		color: #999;
-		margin-top: 3px;
+		margin-top: 6px;
 
 		&.form-details-button {
 			margin-left: 30px;
 		}
 	}
 
-	.form-group-half {
-		width: 50%;
-		float: left;
-	}
-
-	.form-group-thirds {
-		width: 33%;
-		float: left;
-		margin-bottom: 15px;
-	}
-
-	.form-font-family {
+	&-font-family {
 		font-size: 31px;
 		margin: 10px 0;
 

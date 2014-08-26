@@ -1,17 +1,63 @@
-.binding-group {
-	margin: 0 0 15px 30px;
-	cursor: default;
+.binding {
+	display: inline-block;
+	background-color: $boxColor;
+	padding-right: 7px;
 
-	&:hover {
-		.controls {
-			opacity: 1;
+	&.binding-text {
+		&:before {
+			font-size: 16px;
+			font-weight: lighter;
+			font-style: italic;
+			color: #999;
+			height: 31px;
+			line-height: 31px;
+			text-transform: lowercase;
+		}
+
+		&.binding-text-empty:before {
+			content: 'No binding set'
+		}
+
+		&.binding-text-waiting:before {
+			content: 'Waiting for input'
 		}
 	}
 
-	.binding-container {
+	&-group {
+		margin: 0 0 15px 30px;
+		cursor: default;
+
+		&:hover {
+			.controls {
+				opacity: 1;
+			}
+		}
+
+		.controls {
+			display: inline-block;
+			margin-left: 20px;
+			font-size: 13px;
+			text-transform: uppercase;
+			opacity: 0;
+			transition: opacity 200ms ease-in-out;
+
+			span {
+				display: inline-block;
+				margin-right: 15px;
+				color: #999;
+				transition: color 200ms ease-in-out;
+
+				&:hover {
+					color: #444;
+				}
+			}
+		}
+	}
+
+	&-container {
 		position: relative;
 		display: inline-block;
-		width: 220px;
+		width: 275px;
 		height: 40px;
 
 		&:before {
@@ -25,57 +71,11 @@
 		}
 	}
 
-	.binding-details {
+	&-details {
 		display: inline-block;
 
 		.error {
 			margin-top: 3px;
-		}
-	}
-
-	.binding {
-		display: inline-block;
-		background-color: $boxColor;
-		padding-right: 3px;
-
-		&.binding-text {
-			&:before {
-				font-size: 13px;
-				font-weight: lighter;
-				font-style: italic;
-				color: #999;
-				height: 31px;
-				line-height: 31px;
-				text-transform: lowercase;
-			}
-
-			&.binding-text-empty:before {
-				content: 'No binding set'
-			}
-
-			&.binding-text-waiting:before {
-				content: 'Waiting for input'
-			}
-		}
-	}
-
-	.controls {
-		display: inline-block;
-		margin-left: 20px;
-		font-size: 13px;
-		text-transform: uppercase;
-		opacity: 0;
-		transition: opacity 200ms ease-in-out;
-
-		span {
-			display: inline-block;
-			margin-right: 15px;
-			color: #999;
-			transition: color 200ms ease-in-out;
-
-			&:hover {
-				color: #444;
-			}
 		}
 	}
 }
