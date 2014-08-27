@@ -14,8 +14,13 @@
   font-weight: normal;
 }
 @font-face {
-  font-family: 'EB Garamond';
-  src: url("chrome-extension://__MSG_@@extension_id__/fonts/EBGaramond-Regular.ttf");
+  font-family: 'Roboto Slab';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/RobotoSlab-Light.ttf");
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Lora';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Lora-Regular.ttf");
   font-weight: normal;
 }
 @font-face {
@@ -23,29 +28,24 @@
   src: url("chrome-extension://__MSG_@@extension_id__/fonts/Nunito-Light.ttf");
   font-weight: lighter;
 }
-@font-face {
-  font-family: 'Kameron';
-  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Kameron-Regular.ttf");
-  font-weight: normal;
-}
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000337}}
 .font-open-sans {
   font-family: 'Open Sans Light';
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000341}}
-.font-garamond {
-  font-family: 'EB Garamond';
+.font-roboto-slab {
+  font-family: 'Roboto Slab';
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000345}}
-.font-nunito {
-  font-family: 'Nunito';
+.font-lora {
+  font-family: 'Lora';
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000349}}
-.font-kameron {
-  font-family: 'Kameron';
+.font-nunito {
+  font-family: 'Nunito';
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\000031}}
@@ -436,7 +436,7 @@ footer {
   bottom: 0;
   width: 100%;
   background-color: #f2f0ec;
-  padding: 25px 0;
+  padding: 15px 0 25px 0;
   border-top: 1px solid #ccc;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
 }

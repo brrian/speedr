@@ -1,19 +1,19 @@
 module.exports =
     settings:
-        get: ->
-            chrome.storage.sync.get(
-                ['settings', 'bindings']
-                (data) ->
-                    # If we have some stored settings, replace over the defaults
-                    if data.settings
-                        App.chrome.settings.store(data.settings, 'settings')
-                        # User.settings = data.settings
-                        App.actions.calculateInterval()
+        get: new Promise (resolve, reject) ->
+            chrome.storage.sync.get ['settings', 'bindings'], (data) ->
+                # If we have some stored settings, replace over the defaults
+                if data.settings
+                    App.chrome.settings.store(data.settings, 'settings')
+                    # User.settings = data.settings
+                    App.actions.calculateInterval()
 
-                    if data.bindings then User.bindings = data.bindings
-            )
+                if data.bindings then User.bindings = data.bindings
+
+                resolve()
+
         save: ->
-            chrome.storage.sync.set(User)
+            chrome.storage.sync.set User
 
         store: (object, area) ->
             area = User[area]
@@ -24,13 +24,21 @@ module.exports =
     stats:
         save: (time, words) ->
             chrome.storage.sync.get 'stats', (data) ->
-                syncTime = data.stats.time || 0
-                syncWords = data.stats.words || 0
+                stats = data.stats || {}
+
+                date = new Date()
+                month = "#{date.getFullYear()}-#{date.getMonth() + 1}"
+
+                unless stats.hasOwnProperty month
+                    stats[month] =
+                        time: time
+                        words: words
+                else
+                    stats[month].time += time
+                    stats[month].words += words
 
                 chrome.storage.sync.set
-                    stats:
-                        time: syncTime + time
-                        words: syncWords + words
+                    stats: stats
 
     extension:
         init: ->

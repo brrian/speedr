@@ -167,7 +167,7 @@ module.exports =
 
         stop: ->
             time = new Date().getTime() - @time
-            words = App.i - @index
+            words = App.i - @index + 1
 
             App.chrome.stats.save time, words
 

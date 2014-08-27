@@ -17,8 +17,14 @@
 }
 
 @font-face {
-    font-family: 'EB Garamond';
-    src: url('chrome-extension://__MSG_@@extension_id__/fonts/EBGaramond-Regular.ttf');
+    font-family: 'Roboto Slab';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/RobotoSlab-Light.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Lora-Regular.ttf');
     font-weight: normal;
 }
 
@@ -28,24 +34,18 @@
     font-weight: lighter;
 }
 
-@font-face {
-    font-family: 'Kameron';
-    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Kameron-Regular.ttf');
-    font-weight: normal;
-}
-
 .font-open-sans {
     font-family: 'Open Sans Light';
 }
 
-.font-garamond {
-    font-family: 'EB Garamond';
+.font-roboto-slab {
+    font-family: 'Roboto Slab';
+}
+
+.font-lora {
+    font-family: 'Lora';
 }
 
 .font-nunito {
     font-family: 'Nunito';
-}
-
-.font-kameron {
-    font-family: 'Kameron';
 }

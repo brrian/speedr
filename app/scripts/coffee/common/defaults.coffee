@@ -22,7 +22,7 @@ module.exports =
 
         wpm: 350
         wordsDisplayed: 1
-        fontSize: 33
+        fontSize: 45
 
         delayOnPunctuation: false
         punctuationDelayTime: 60

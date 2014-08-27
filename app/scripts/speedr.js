@@ -176,12 +176,8 @@ window.App = {
   actions: require('./speedr/actions.coffee'),
   chrome: require('./speedr/chrome.coffee'),
   init: function() {
-    chrome.storage.sync.get(function(data) {
-      return console.log(data);
-    });
     App.speedr.reset();
-    App.chrome.settings.get();
-    return App.chrome.extension.init();
+    return App.chrome.settings.get.then(App.chrome.extension.init);
   }
 };
 
@@ -773,17 +769,18 @@ module.exports = function(theme) {
 },{}],13:[function(require,module,exports){
 module.exports = {
   settings: {
-    get: function() {
+    get: new Promise(function(resolve, reject) {
       return chrome.storage.sync.get(['settings', 'bindings'], function(data) {
         if (data.settings) {
           App.chrome.settings.store(data.settings, 'settings');
           App.actions.calculateInterval();
         }
         if (data.bindings) {
-          return User.bindings = data.bindings;
+          User.bindings = data.bindings;
         }
+        return resolve();
       });
-    },
+    }),
     save: function() {
       return chrome.storage.sync.set(User);
     },
@@ -801,14 +798,21 @@ module.exports = {
   stats: {
     save: function(time, words) {
       return chrome.storage.sync.get('stats', function(data) {
-        var syncTime, syncWords;
-        syncTime = data.stats.time || 0;
-        syncWords = data.stats.words || 0;
+        var date, month, stats;
+        stats = data.stats || {};
+        date = new Date();
+        month = "" + (date.getFullYear()) + "-" + (date.getMonth() + 1);
+        if (!stats.hasOwnProperty(month)) {
+          stats[month] = {
+            time: time,
+            words: words
+          };
+        } else {
+          stats[month].time += time;
+          stats[month].words += words;
+        }
         return chrome.storage.sync.set({
-          stats: {
-            time: syncTime + time,
-            words: syncWords + words
-          }
+          stats: stats
         });
       });
     }
@@ -1309,7 +1313,7 @@ module.exports = {
     stop: function() {
       var time, words;
       time = new Date().getTime() - this.time;
-      words = App.i - this.index;
+      words = App.i - this.index + 1;
       return App.chrome.stats.save(time, words);
     }
   },
