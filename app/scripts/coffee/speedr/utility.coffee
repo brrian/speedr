@@ -86,6 +86,20 @@ module.exports =
 
         humanReadableBinding.trim()
 
+    defaults: ->
+        target = arguments[0] || {}
+
+        for obj in arguments
+            if obj?
+                for name of obj
+                    copy = obj[name]
+
+                    if target is copy then continue
+                    else if copy isnt undefined
+                        target[name] = copy
+
+        target
+
     generateKeyCombo: common.generateKeyCombo
 
     parseKeyCode: common.parseKeyCode

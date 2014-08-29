@@ -18,7 +18,7 @@ module.exports = {
     showContext: true,
     wpm: 350,
     wordsDisplayed: 1,
-    fontSize: 33,
+    fontSize: 45,
     delayOnPunctuation: false,
     punctuationDelayTime: 60,
     delayOnSentence: false,
@@ -1165,7 +1165,12 @@ module.exports = {
 
 },{}],17:[function(require,module,exports){
 module.exports = {
-  init: function(text) {
+  init: function(text, options) {
+    this.options = App.utility.defaults({
+      overlay: true,
+      animate: true,
+      style: ''
+    }, options || {});
     App.parse.text(text);
     App.speedr.create();
     return App.speedr.showWord();
@@ -1176,13 +1181,10 @@ module.exports = {
     doc = document;
     settings = User.settings;
     theme = User.themes[settings.primaryTheme];
-    overlay = doc.createElement('div');
-    overlay.id = 'js-speedr-container';
-    overlay.className = 'speedr-container speedr-fade-in';
     box = doc.createElement('div');
     box.id = 'js-speedr-box';
-    box.className = 'speedr-box speedr-flip-in';
-    box.style.cssText = 'color: ' + theme.secondaryText + '; background-color: ' + theme.boxColor + '; width: ' + settings.boxWidth + 'px; height: ' + settings.boxHeight + 'px;';
+    box.className = 'speedr-box';
+    box.style.cssText = "color: " + theme.secondaryText + "; background-color: " + theme.boxColor + "; width: " + settings.boxWidth + "px; height: " + settings.boxHeight + "px;";
     wordContainer = doc.createElement('div');
     wordContainer.className = 'speedr-word-container';
     wordContainer.style.cssText = 'font-family: ' + settings.fontFamily + '; font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';';
@@ -1193,7 +1195,7 @@ module.exports = {
     wordContainer.appendChild(wordWrapper);
     pointer = doc.createElement('span');
     pointer.className = 'speedr-pointer';
-    pointer.style.cssText = 'border-top-color: ' + theme.highlightColor + ';';
+    pointer.style.cssText = "border-top-color: " + theme.highlightColor + ";";
     wordContainer.appendChild(pointer);
     box.appendChild(wordContainer);
     countdown = doc.createElement('div');
@@ -1228,8 +1230,32 @@ module.exports = {
     if (settings.showMenuButton) {
       box.appendChild(App.addons.menuButton());
     }
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
+    if (this.options.style) {
+      box.style.cssText += " " + this.options.style;
+    }
+    if (this.options.overlay) {
+      overlay = doc.createElement('div');
+      overlay.id = 'js-speedr-container';
+      overlay.className = 'speedr-container';
+      overlay.appendChild(box);
+    }
+    if (this.options.animate) {
+      box.className += ' speedr-flip-in';
+      if (overlay) {
+        overlay.className += ' speedr-fade-in';
+      }
+      App.utility.runOnceAfterAnimation(box, function() {
+        box.className = box.className.replace(' speedr-flip-in', '');
+        if (overlay) {
+          return overlay.className = overlay.className.replace(' speedr-fade-in', '');
+        }
+      });
+    }
+    if (overlay) {
+      document.body.appendChild(overlay);
+    } else {
+      document.body.appendChild(box);
+    }
     if (settings.showMinimap) {
       App.addons.minimap.create(settings, theme, box);
     }
@@ -1249,32 +1275,39 @@ module.exports = {
       App.addons.tooltips.init();
     }
     if (settings.showContext) {
-      App.addons.context.init();
+      return App.addons.context.init();
     }
-    return App.utility.runOnceAfterAnimation(box, function() {
-      overlay.className = overlay.className.replace(' speedr-fade-in', '');
-      return box.className = box.className.replace(' speedr-flip-in', '');
-    });
   },
   destroy: function() {
     var doc, newBox, oldBox, overlay;
     doc = document;
     oldBox = doc.getElementById('js-speedr-box');
     newBox = oldBox.cloneNode(true);
-    newBox.className += ' speedr-flip-out';
     oldBox.parentNode.replaceChild(newBox, oldBox);
     overlay = doc.getElementById('js-speedr-container');
-    overlay.className += ' speedr-fade-out';
+    if (this.options.animate) {
+      newBox.className += ' speedr-flip-out';
+      if (overlay) {
+        overlay.className += ' speedr-fade-out';
+      }
+      App.utility.runOnceAfterAnimation(newBox, function() {
+        newBox.remove();
+        if (overlay) {
+          return overlay.remove();
+        }
+      });
+    } else {
+      newBox.remove();
+      if (overlay) {
+        overlay.remove();
+      }
+    }
     if (User.settings.showTooltips && App.addons.tooltips.activeTooltip) {
       App.addons.tooltips.destroy();
     }
     if (User.settings.showContext && App.addons.context.activeContext) {
       App.addons.context.destroy();
     }
-    App.utility.runOnceAfterAnimation(newBox, function() {
-      newBox.remove();
-      return overlay.remove();
-    });
     return App.speedr.reset();
   },
   showWord: function(marker) {
@@ -1431,6 +1464,24 @@ module.exports = {
       humanReadableBinding = '';
     }
     return humanReadableBinding.trim();
+  },
+  defaults: function() {
+    var copy, name, obj, target, _i, _len;
+    target = arguments[0] || {};
+    for (_i = 0, _len = arguments.length; _i < _len; _i++) {
+      obj = arguments[_i];
+      if (obj != null) {
+        for (name in obj) {
+          copy = obj[name];
+          if (target === copy) {
+            continue;
+          } else if (copy !== void 0) {
+            target[name] = copy;
+          }
+        }
+      }
+    }
+    return target;
   },
   generateKeyCombo: common.generateKeyCombo,
   parseKeyCode: common.parseKeyCode
