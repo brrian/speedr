@@ -72,14 +72,14 @@ table {
   font-weight: lighter;
 }
 @font-face {
-  font-family: 'Open Sans Light';
+  font-family: 'Open Sans';
   src: url("chrome-extension://__MSG_@@extension_id__/fonts/OpenSans-Light.ttf");
-  font-weight: normal;
+  font-weight: lighter;
 }
 @font-face {
   font-family: 'Roboto Slab';
   src: url("chrome-extension://__MSG_@@extension_id__/fonts/RobotoSlab-Light.ttf");
-  font-weight: normal;
+  font-weight: lighter;
 }
 @font-face {
   font-family: 'Lora';
@@ -93,22 +93,25 @@ table {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000337}}
 .font-open-sans {
-  font-family: 'Open Sans Light';
+  font-family: 'Open Sans';
+  font-weight: lighter;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000341}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000342}}
 .font-roboto-slab {
   font-family: 'Roboto Slab';
+  font-weight: lighter;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000345}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000347}}
 .font-lora {
   font-family: 'Lora';
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000349}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000351}}
 .font-nunito {
   font-family: 'Nunito';
+  font-weight: lighter;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/popup\/_base\.scss}line{font-family:\000031}}

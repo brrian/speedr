@@ -79,17 +79,17 @@ showDuplicateBindings = (bindingGroups) ->
     for binding, elements of bindingGroups
         if elements.length > 1
             for element in elements
-                $(element).find('.error').text 'Duplicate binding detected!'
+                $(element).find('.form-error').text 'Duplicate binding detected!'
 
 validateSettings = ->
     passes = true
 
     # Clear any existing errors
-    $('.settings-section').find('.error').empty()
+    $('.settings-section').find('.form-error').empty()
 
     $('input[type=text]').each ->
         value = $(@).val()
-        error = $(@).siblings('.error')
+        error = $(@).siblings('.form-error')
 
         if value.length > 0 and /^[0-9]+$/.test(value) is false
             console.log error
@@ -109,7 +109,7 @@ validateBindings = ->
     $('.binding-group').each ->
         binding = $(@).attr('data-binding')
 
-        $(@).find('.error').empty()
+        $(@).find('.form-error').empty()
 
         if !bindingGroups.hasOwnProperty binding
             if binding isnt undefined
@@ -232,6 +232,10 @@ $('#js-restore-defaults').click ->
     populateDefaults()
     validateSettings()
     validateBindings()
+
+# We need to set the fontWeight programatically
+$('input[name=fontFamily]').change ->
+    $('#js-font-weight').attr 'value', $(@).attr 'data-font-weight'
 
 chrome.storage.sync.get ['settings', 'bindings'], (data) ->
     if data.settings then populateSettings(data.settings)

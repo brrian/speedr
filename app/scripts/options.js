@@ -1,7 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
   settings: {
-    fontFamily: 'Open Sans Light',
+    fontFamily: 'Open Sans',
+    fontWeight: 'lighter',
+    fontSize: 45,
     primaryTheme: 'Speedr (Light)',
     secondaryTheme: 'Solarized (Dark)',
     boxWidth: 600,
@@ -18,7 +20,6 @@ module.exports = {
     showContext: true,
     wpm: 350,
     wordsDisplayed: 1,
-    fontSize: 45,
     delayOnPunctuation: false,
     punctuationDelayTime: 60,
     delayOnSentence: false,
@@ -269,7 +270,7 @@ showDuplicateBindings = function(bindingGroups) {
         _results1 = [];
         for (_i = 0, _len = elements.length; _i < _len; _i++) {
           element = elements[_i];
-          _results1.push($(element).find('.error').text('Duplicate binding detected!'));
+          _results1.push($(element).find('.form-error').text('Duplicate binding detected!'));
         }
         return _results1;
       })());
@@ -283,11 +284,11 @@ showDuplicateBindings = function(bindingGroups) {
 validateSettings = function() {
   var passes;
   passes = true;
-  $('.settings-section').find('.error').empty();
+  $('.settings-section').find('.form-error').empty();
   $('input[type=text]').each(function() {
     var error, value;
     value = $(this).val();
-    error = $(this).siblings('.error');
+    error = $(this).siblings('.form-error');
     if (value.length > 0 && /^[0-9]+$/.test(value) === false) {
       console.log(error);
       error.text('Please enter a numeric value');
@@ -305,7 +306,7 @@ validateBindings = function() {
   $('.binding-group').each(function() {
     var action, binding;
     binding = $(this).attr('data-binding');
-    $(this).find('.error').empty();
+    $(this).find('.form-error').empty();
     if (!bindingGroups.hasOwnProperty(binding)) {
       if (binding !== void 0) {
         bindingGroups[binding] = [this];
@@ -436,6 +437,10 @@ $('#js-restore-defaults').click(function() {
   populateDefaults();
   validateSettings();
   return validateBindings();
+});
+
+$('input[name=fontFamily]').change(function() {
+  return $('#js-font-weight').attr('value', $(this).attr('data-font-weight'));
 });
 
 chrome.storage.sync.get(['settings', 'bindings'], function(data) {

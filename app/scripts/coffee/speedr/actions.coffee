@@ -162,9 +162,7 @@ module.exports =
 
         if settings.showMinimap is true
             minimap = doc.getElementById 'js-speedr-minimap'
-            minimapWidth = minimap.offsetWidth
-            minimapHeight = minimap.offsetHeight
-            minimap.style.cssText = "width: #{minimapWidth}px; height: #{minimapHeight}; background-color: #{theme.boxColor}; border-left-color: #{theme.borderColor}; box-shadow: -3px 0 0 #{theme.boxColor}"
+            minimap.style.cssText = "width: #{settings.minimapWidth}px; height: #{settings.boxHeight}px; background-color: #{theme.boxColor}; border-left-color: #{theme.borderColor}; box-shadow: -3px 0 0 #{theme.boxColor}"
 
             contents = minimap.querySelector '.contents'
             contents.style.backgroundImage = "linear-gradient(to right, #{theme.secondaryText} 50%, rgba(255, 255, 255, 0) 20%)"

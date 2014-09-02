@@ -1,8 +1,7 @@
 body {
-	font-family: 'Roboto';
+	font: 15px/1.4 'Roboto';
 	background-color: $boxColor;
 	color: #444;
-	font-size: 15px;
 	margin: 0;
 	padding: 50px 0 77px 0;
 }
@@ -16,7 +15,6 @@ a {
 }
 
 p {
-	line-height: 1.4;
 	margin-bottom: 10px;
 }
 
@@ -31,8 +29,4 @@ i {
 ol {
 	list-style-type: decimal;
 	margin-left: 40px;
-
-	li {
-		line-height: 1.4;
-	}
 }

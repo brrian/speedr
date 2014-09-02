@@ -1,10 +1,9 @@
 module.exports =
     init: (text, options) ->
-        # options =
-        #     animate: true
         @options = App.utility.defaults
             overlay: true
             animate: true
+            sync: true
             style: ''
         , options || {}
 
@@ -29,7 +28,7 @@ module.exports =
         # Create the word container
         wordContainer = doc.createElement 'div'
         wordContainer.className = 'speedr-word-container'
-        wordContainer.style.cssText = 'font-family: ' + settings.fontFamily + '; font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';'
+        wordContainer.style.cssText = "font-family: #{settings.fontFamily}; font-weight: #{settings.fontWeight}; font-size: #{settings.fontSize}px; border-bottom-color: #{theme.borderColor};"
 
         wordWrapper = doc.createElement 'div'
         wordWrapper.id = 'js-speedr-word'

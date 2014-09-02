@@ -48,7 +48,7 @@ module.exports =
 
         if App.scrollWatcher then clearTimeout App.scrollWatcher
 
-        App.speedr.stats.stop()
+        if App.speedr.options.sync is true then App.speedr.stats.stop()
 
     startPrepare: ->
         # Cache some variables
@@ -82,7 +82,7 @@ module.exports =
         else
             @start()
 
-        App.speedr.stats.start()
+        if App.speedr.options.sync is true then App.speedr.stats.start()
 
     start: ->
         App.loop = App.speedr.loop.create()

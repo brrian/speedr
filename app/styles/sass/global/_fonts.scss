@@ -11,15 +11,15 @@
 }
 
 @font-face {
-    font-family: 'Open Sans Light';
+    font-family: 'Open Sans';
     src: url('chrome-extension://__MSG_@@extension_id__/fonts/OpenSans-Light.ttf');
-    font-weight: normal;
+    font-weight: lighter;
 }
 
 @font-face {
     font-family: 'Roboto Slab';
     src: url('chrome-extension://__MSG_@@extension_id__/fonts/RobotoSlab-Light.ttf');
-    font-weight: normal;
+    font-weight: lighter;
 }
 
 @font-face {
@@ -35,11 +35,13 @@
 }
 
 .font-open-sans {
-    font-family: 'Open Sans Light';
+    font-family: 'Open Sans';
+    font-weight: lighter;
 }
 
 .font-roboto-slab {
     font-family: 'Roboto Slab';
+    font-weight: lighter;
 }
 
 .font-lora {
@@ -48,4 +50,5 @@
 
 .font-nunito {
     font-family: 'Nunito';
+    font-weight: lighter;
 }

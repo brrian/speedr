@@ -1,6 +1,8 @@
 module.exports =
     settings:
-        fontFamily: 'Open Sans Light'
+        fontFamily: 'Open Sans'
+        fontWeight: 'lighter'
+        fontSize: 45
 
         primaryTheme: 'Speedr (Light)'
         secondaryTheme: 'Solarized (Dark)'
@@ -22,7 +24,6 @@ module.exports =
 
         wpm: 350
         wordsDisplayed: 1
-        fontSize: 45
 
         delayOnPunctuation: false
         punctuationDelayTime: 60

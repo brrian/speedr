@@ -1,7 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
   settings: {
-    fontFamily: 'Open Sans Light',
+    fontFamily: 'Open Sans',
+    fontWeight: 'lighter',
+    fontSize: 45,
     primaryTheme: 'Speedr (Light)',
     secondaryTheme: 'Solarized (Dark)',
     boxWidth: 600,
@@ -18,7 +20,6 @@ module.exports = {
     showContext: true,
     wpm: 350,
     wordsDisplayed: 1,
-    fontSize: 45,
     delayOnPunctuation: false,
     punctuationDelayTime: 60,
     delayOnSentence: false,
@@ -331,7 +332,7 @@ module.exports = {
     return toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active');
   },
   toggleTheme: function() {
-    var box, contents, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, minimapHeight, minimapWidth, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
+    var box, contents, countdownBar, currentTheme, doc, highlighted, menu, menuItem, menuItems, minimap, newTheme, pointer, settings, theme, word, wordContainer, wpm, _i, _len;
     doc = document;
     settings = User.settings;
     currentTheme = settings.primaryTheme;
@@ -362,9 +363,7 @@ module.exports = {
     }
     if (settings.showMinimap === true) {
       minimap = doc.getElementById('js-speedr-minimap');
-      minimapWidth = minimap.offsetWidth;
-      minimapHeight = minimap.offsetHeight;
-      minimap.style.cssText = "width: " + minimapWidth + "px; height: " + minimapHeight + "; background-color: " + theme.boxColor + "; border-left-color: " + theme.borderColor + "; box-shadow: -3px 0 0 " + theme.boxColor;
+      minimap.style.cssText = "width: " + settings.minimapWidth + "px; height: " + settings.boxHeight + "px; background-color: " + theme.boxColor + "; border-left-color: " + theme.borderColor + "; box-shadow: -3px 0 0 " + theme.boxColor;
       contents = minimap.querySelector('.contents');
       contents.style.backgroundImage = "linear-gradient(to right, " + theme.secondaryText + " 50%, rgba(255, 255, 255, 0) 20%)";
     }
@@ -1000,7 +999,9 @@ module.exports = {
     if (App.scrollWatcher) {
       clearTimeout(App.scrollWatcher);
     }
-    return App.speedr.stats.stop();
+    if (App.speedr.options.sync === true) {
+      return App.speedr.stats.stop();
+    }
   },
   startPrepare: function() {
     var doc, playButton, settings, toggleClass;
@@ -1029,7 +1030,9 @@ module.exports = {
     } else {
       this.start();
     }
-    return App.speedr.stats.start();
+    if (App.speedr.options.sync === true) {
+      return App.speedr.stats.start();
+    }
   },
   start: function() {
     App.loop = App.speedr.loop.create();
@@ -1169,6 +1172,7 @@ module.exports = {
     this.options = App.utility.defaults({
       overlay: true,
       animate: true,
+      sync: true,
       style: ''
     }, options || {});
     App.parse.text(text);
@@ -1187,7 +1191,7 @@ module.exports = {
     box.style.cssText = "color: " + theme.secondaryText + "; background-color: " + theme.boxColor + "; width: " + settings.boxWidth + "px; height: " + settings.boxHeight + "px;";
     wordContainer = doc.createElement('div');
     wordContainer.className = 'speedr-word-container';
-    wordContainer.style.cssText = 'font-family: ' + settings.fontFamily + '; font-size: ' + settings.fontSize + 'px; border-bottom-color: ' + theme.borderColor + ';';
+    wordContainer.style.cssText = "font-family: " + settings.fontFamily + "; font-weight: " + settings.fontWeight + "; font-size: " + settings.fontSize + "px; border-bottom-color: " + theme.borderColor + ";";
     wordWrapper = doc.createElement('div');
     wordWrapper.id = 'js-speedr-word';
     wordWrapper.className = 'speedr-word';
