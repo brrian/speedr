@@ -36,6 +36,19 @@
 	}
 }
 
+@keyframes fly-up {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, 4px, 0);
+	}
+	70% {
+		opacity: 1;
+	}
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
 @keyframes fly-up-centered {
 	0% {
 		opacity: 0;
@@ -55,3 +68,4 @@
 .speedr-flip-in { animation: flip-in 400ms $ease-out-back; }
 .speedr-flip-out { animation: flip-out 300ms ease-out; }
 .speedr-tooltip-fly-up { animation: fly-up-centered 70ms ease-in; }
+.speedr-context-fly-up { animation: fly-up 70ms ease-in; }

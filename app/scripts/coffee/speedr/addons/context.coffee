@@ -15,19 +15,17 @@ module.exports =
     create: ->
         sentence = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker]
 
-        position = document.getElementById('js-speedr-box').getBoundingClientRect()
-
         context = document.createElement 'span'
-        context.className = 'speedr-context speedr-tooltip-fly-up'
+        context.className = 'speedr-context speedr-context-fly-up'
         context.innerText = sentence
-        context.style.cssText = "max-width: #{User.settings.boxWidth * .9}px; bottom: #{position.bottom + 10}px;"
+        context.style.cssText = "max-width: #{User.settings.boxWidth * .9}px; bottom: #{User.settings.boxHeight + 10}px;"
 
-        document.body.appendChild context
+        document.getElementById('js-speedr-box').appendChild context
 
         @activeContext = context
 
         App.utility.runOnceAfterAnimation context, ->
-            context.className = context.className.replace ' speedr-tooltip-fly-up', ''
+            context.className = context.className.replace ' speedr-context-fly-up', ''
 
     destroy: ->
         @activeContext.className += ' speedr-fade-out-quick'
