@@ -5,24 +5,24 @@ module.exports =
         Number(number).toLocaleString('en')
 
     findNextOfType: (type) ->
-        i = App.i
-        currentTypeStart = App.text.parsed[i][type]
+        i = Speedr.i
+        currentTypeStart = Speedr.text.parsed[i][type]
 
         while true
             i++
 
-            break unless App.text.parsed[i][type] is currentTypeStart
+            break unless Speedr.text.parsed[i][type] is currentTypeStart
 
-            if App.text.parsed[i + 1] is undefined
-                i = App.text.parsed.length - 1
+            if Speedr.text.parsed[i + 1] is undefined
+                i = Speedr.text.parsed.length - 1
                 break
 
         i
 
     findPrevOfType: (type) ->
-        i = App.i
+        i = Speedr.i
 
-        if i is App.text.parsed[i][type] then App.text.parsed[i - 1][type] else App.text.parsed[i][type]
+        if i is Speedr.text.parsed[i][type] then Speedr.text.parsed[i - 1][type] else Speedr.text.parsed[i][type]
 
     toggleClass: (element, className) ->
         # Does this element have this class?
@@ -37,7 +37,7 @@ module.exports =
         prefixes = ['webkitAnimationEnd', 'animationend']
 
         for prefix in prefixes
-            element.addEventListener prefix, ->
+            element.addEventListener prefix, (event) ->
                 event.target.removeEventListener event.type, arguments.callee
                 callback event
 
@@ -46,7 +46,7 @@ module.exports =
         change = to - start
         currentTime = 0
         increment = 20
-        App.scrolling = true
+        Speedr.scrolling = true
 
         easeInOutQuad = (time, begin, change, duration) ->
             if (time = time/(duration/2)) < 1
@@ -59,7 +59,7 @@ module.exports =
             val = easeInOutQuad(currentTime, start, change, duration)
             element.scrollTop = val
 
-            if currentTime < duration then setTimeout(animateScroll, increment) else App.scrolling = false
+            if currentTime < duration then setTimeout(animateScroll, increment) else Speedr.scrolling = false
 
         animateScroll()
 

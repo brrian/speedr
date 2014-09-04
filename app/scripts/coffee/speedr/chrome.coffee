@@ -4,9 +4,9 @@ module.exports =
             chrome.storage.sync.get ['settings', 'bindings'], (data) ->
                 # If we have some stored settings, replace over the defaults
                 if data.settings
-                    App.chrome.settings.store(data.settings, 'settings')
+                    Speedr.chrome.settings.store(data.settings, 'settings')
                     # User.settings = data.settings
-                    App.actions.calculateInterval()
+                    Speedr.actions.calculateInterval()
 
                 if data.bindings then User.bindings = data.bindings
 
@@ -48,8 +48,8 @@ module.exports =
                         sendResponse window.getSelection().toString().slice 0, 75
 
                     when 'parse.selection'
-                        unless App.active then App.speedr.init window.getSelection().toString() else App.speedr.loop.toggle()
+                        unless Speedr.active then Speedr.box.init window.getSelection().toString() else Speedr.box.loop.toggle()
 
                     when 'parse.selection.start'
-                        App.speedr.init window.getSelection().toString()
-                        setTimeout App.speedr.loop.toggle, 400
+                        Speedr.box.init window.getSelection().toString()
+                        setTimeout Speedr.box.loop.toggle, 400

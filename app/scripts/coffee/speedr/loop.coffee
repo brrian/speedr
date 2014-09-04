@@ -1,27 +1,27 @@
 module.exports =
     toggle: ->
-        if App.pause then App.speedr.loop.startPrepare() else App.speedr.loop.stop()
+        if Speedr.pause then Speedr.box.loop.startPrepare() else Speedr.box.loop.stop()
 
     stop: ->
         # Cache some variables
         doc = document
         settings = User.settings
-        toggleClass = App.utility.toggleClass
+        toggleClass = Speedr.utility.toggleClass
 
-        App.pause = true
-        clearTimeout App.loop
+        Speedr.pause = true
+        clearTimeout Speedr.loop
 
         # Correct the counter
-        App.i--
+        Speedr.i--
 
         # If showStatus is true, we need to show it
         if settings.showStatus
-            App.actions.updateStatus()
+            Speedr.actions.updateStatus()
             toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden')
 
         if settings.showCountdown
             # Stop the timeout in case they paused while counting down
-            clearTimeout(App.countdownTimeout)
+            clearTimeout(Speedr.countdownTimeout)
 
             bar = doc.getElementById('js-speedr-countdown-bar')
             oldSpeed = bar.style.transitionDuration
@@ -39,38 +39,38 @@ module.exports =
         if settings.showControls
             playButton = doc.getElementById 'js-play-pause'
 
-            if App.i is App.text.parsed.length - 1
-                playButton.innerText = 'restart'
-                playButton.setAttribute 'data-tooltip', "Restart#{App.utility.getBinding('reset')}"
+            if Speedr.i is Speedr.text.parsed.length - 1
+                playButton.textContent = 'restart'
+                playButton.setAttribute 'data-tooltip', "Restart#{Speedr.utility.getBinding('reset')}"
             else
-                playButton.innerText = 'start'
+                playButton.textContent = 'start'
                 playButton.setAttribute 'data-tooltip', 'Start'
 
-        if App.scrollWatcher then clearTimeout App.scrollWatcher
+        if Speedr.scrollWatcher then clearTimeout Speedr.scrollWatcher
 
-        if App.speedr.options.sync is true then App.speedr.stats.stop()
+        if Speedr.box.options.sync is true then Speedr.box.stats.stop()
 
     startPrepare: ->
         # Cache some variables
         doc = document
         settings = User.settings
-        toggleClass = App.utility.toggleClass
+        toggleClass = Speedr.utility.toggleClass
 
         if settings.showControls
             playButton = doc.getElementById 'js-play-pause'
-            playButton.innerText = 'stop'
-            playButton.setAttribute 'data-tooltip', "Stop#{App.utility.getBinding('toggle')}"
+            playButton.textContent = 'stop'
+            playButton.setAttribute 'data-tooltip', "Stop#{Speedr.utility.getBinding('toggle')}"
 
         # Check to see if we're at the end, if so, then we need to reset it first
-        if App.i is App.text.parsed.length - 1 then App.speedr.loop.reset()
+        if Speedr.i is Speedr.text.parsed.length - 1 then Speedr.box.loop.reset()
 
         # Start on the next word
-        App.i++
+        Speedr.i++
 
-        App.pause = false
+        Speedr.pause = false
 
         # If we have a context open, destroy it
-        if settings.showContext and App.addons.context.activeContext then App.addons.context.destroy()
+        if settings.showContext and Speedr.addons.context.activeContext then Speedr.addons.context.destroy()
 
         # If showStatus is true, we need to hide it
         if settings.showStatus then toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden')
@@ -78,43 +78,43 @@ module.exports =
         if settings.showCountdown
             toggleClass(doc.getElementById('js-speedr-countdown-bar'), 'speedr-countdown-bar-zero')
 
-            App.countdownTimeout = setTimeout @start, settings.countdownSpeed
+            Speedr.countdownTimeout = setTimeout @start, settings.countdownSpeed
         else
             @start()
 
-        if App.speedr.options.sync is true then App.speedr.stats.start()
+        if Speedr.box.options.sync is true then Speedr.box.stats.start()
 
     start: ->
-        App.loop = App.speedr.loop.create()
+        Speedr.loop = Speedr.box.loop.create()
         
         # Check to see if we need to watch for minimap scroll
-        if App.scrollWatcher then App.addons.minimap.scrollWatcher()
+        if Speedr.scrollWatcher then Speedr.addons.minimap.scrollWatcher()
 
     reset: ->
         settings = User.settings
 
-        if App.pause is false then App.speedr.loop.stop()
+        if Speedr.pause is false then Speedr.box.loop.stop()
 
-        App.speedr.showWord(App.i = 0)
+        Speedr.box.showWord(Speedr.i = 0)
 
-        if settings.showStatus then App.actions.updateStatus()
+        if settings.showStatus then Speedr.actions.updateStatus()
 
         if settings.showMinimap
-            App.addons.minimap.update()
-            if App.scrollWatcher then App.addons.minimap.updateScroll()
+            Speedr.addons.minimap.update()
+            if Speedr.scrollWatcher then Speedr.addons.minimap.updateScroll()
 
     create: ->
         settings = User.settings
 
         delay = 0
-        i = App.i
-        word = App.text.parsed[i]
-        nextWord = App.text.parsed[i + 1]
+        i = Speedr.i
+        word = Speedr.text.parsed[i]
+        nextWord = Speedr.text.parsed[i + 1]
 
-        App.speedr.showWord(i)
-        App.i++
+        Speedr.box.showWord(i)
+        Speedr.i++
 
-        if settings.showMinimap then App.minimapElements[i].className = 'speedr-minimap-word--read'
+        if settings.showMinimap then Speedr.minimapElements[i].className = 'speedr-minimap-word--read'
 
         if nextWord
             if settings.delayOnPunctuation and word.hasPunctuation
@@ -133,10 +133,10 @@ module.exports =
                 delay += settings.longWordDelayTime * multiplier
 
             if word.paragraphEnd
-                return App.speedr.loop.stop() if settings.pauseOnParagraph
+                return Speedr.box.loop.stop() if settings.pauseOnParagraph
                 if settings.delayOnParagraph then delay = settings.paragraphDelayTime
 
-            App.loop = setTimeout(App.speedr.loop.create, App.interval + delay)
+            Speedr.loop = setTimeout(Speedr.box.loop.create, Speedr.interval + delay)
         else
-            App.speedr.loop.stop()
-            if App.scrollWatcher then clearTimeout(App.scrollWatcher)
+            Speedr.box.loop.stop()
+            if Speedr.scrollWatcher then clearTimeout(Speedr.scrollWatcher)

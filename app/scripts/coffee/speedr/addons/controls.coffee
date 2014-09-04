@@ -16,7 +16,7 @@ module.exports = ->
         controlButton = doc.createElement 'div'
 
         controlButton.className = 'speedr-button'
-        controlButton.innerText = button
+        controlButton.textContent = button
 
         actions = doc.createElement 'div'
         actions.className = 'speedr-button-actions'
@@ -28,53 +28,53 @@ module.exports = ->
 
         switch button
             when 'speed'
-                action1.innerText = 'faster'
-                action1.setAttribute 'data-tooltip', "Increase speed#{App.utility.getBinding('faster')}"
-                action1.addEventListener 'click', -> App.actions.changeWPM 25
+                action1.textContent = 'faster'
+                action1.setAttribute 'data-tooltip', "Increase speed#{Speedr.utility.getBinding('faster')}"
+                action1.addEventListener 'click', -> Speedr.actions.changeWPM 25
 
-                action2.innerText = 'slower'
-                action2.setAttribute 'data-tooltip', "Decrease speed#{App.utility.getBinding('slower')}"
-                action2.addEventListener 'click', -> App.actions.changeWPM -25
+                action2.textContent = 'slower'
+                action2.setAttribute 'data-tooltip', "Decrease speed#{Speedr.utility.getBinding('slower')}"
+                action2.addEventListener 'click', -> Speedr.actions.changeWPM -25
             when 'words'
-                action1.innerText = 'more'
-                action1.setAttribute 'data-tooltip', "Show more words#{App.utility.getBinding('more words')}"
-                action1.addEventListener 'click', -> App.actions.changeWordsDisplayed 1
+                action1.textContent = 'more'
+                action1.setAttribute 'data-tooltip', "Show more words#{Speedr.utility.getBinding('more words')}"
+                action1.addEventListener 'click', -> Speedr.actions.changeWordsDisplayed 1
 
-                action2.innerText = 'less'
-                action2.setAttribute 'data-tooltip', "Show less words#{App.utility.getBinding('less words')}"
-                action2.addEventListener 'click', -> App.actions.changeWordsDisplayed -1
+                action2.textContent = 'less'
+                action2.setAttribute 'data-tooltip', "Show less words#{Speedr.utility.getBinding('less words')}"
+                action2.addEventListener 'click', -> Speedr.actions.changeWordsDisplayed -1
             when 'font'
-                action1.innerText = 'bigger'
-                action1.setAttribute 'data-tooltip', "Increase font size#{App.utility.getBinding('bigger')}"
-                action1.addEventListener 'click', -> App.actions.changeFontSize 2 
+                action1.textContent = 'bigger'
+                action1.setAttribute 'data-tooltip', "Increase font size#{Speedr.utility.getBinding('bigger')}"
+                action1.addEventListener 'click', -> Speedr.actions.changeFontSize 2 
 
-                action2.innerText = 'smaller'
-                action2.setAttribute 'data-tooltip', "Decrease font size#{App.utility.getBinding('smaller')}"
-                action2.addEventListener 'click', -> App.actions.changeFontSize -2
+                action2.textContent = 'smaller'
+                action2.setAttribute 'data-tooltip', "Decrease font size#{Speedr.utility.getBinding('smaller')}"
+                action2.addEventListener 'click', -> Speedr.actions.changeFontSize -2
             when 'word'
-                action1.innerText = 'previous'
-                action1.setAttribute 'data-tooltip', "Previous word#{App.utility.getBinding('prev word')}"
-                action1.addEventListener 'click', -> App.actions.navigateText 'prev', 'word'
+                action1.textContent = 'previous'
+                action1.setAttribute 'data-tooltip', "Previous word#{Speedr.utility.getBinding('prev word')}"
+                action1.addEventListener 'click', -> Speedr.actions.navigateText 'prev', 'word'
 
-                action2.innerText = 'next'
-                action2.setAttribute 'data-tooltip', "Next word#{App.utility.getBinding('next word')}"
-                action2.addEventListener 'click', -> App.actions.navigateText 'next', 'word'
+                action2.textContent = 'next'
+                action2.setAttribute 'data-tooltip', "Next word#{Speedr.utility.getBinding('next word')}"
+                action2.addEventListener 'click', -> Speedr.actions.navigateText 'next', 'word'
             when 'sentence'
-                action1.innerText = 'previous'
-                action1.setAttribute 'data-tooltip', "Previous sentence#{App.utility.getBinding('prev sentence')}"
-                action1.addEventListener 'click', -> App.actions.navigateText 'prev', 'sentence'
+                action1.textContent = 'previous'
+                action1.setAttribute 'data-tooltip', "Previous sentence#{Speedr.utility.getBinding('prev sentence')}"
+                action1.addEventListener 'click', -> Speedr.actions.navigateText 'prev', 'sentence'
 
-                action2.innerText = 'next'
-                action2.setAttribute 'data-tooltip', "Next sentence#{App.utility.getBinding('next sentence')}"
-                action2.addEventListener 'click', -> App.actions.navigateText 'next', 'sentence'
+                action2.textContent = 'next'
+                action2.setAttribute 'data-tooltip', "Next sentence#{Speedr.utility.getBinding('next sentence')}"
+                action2.addEventListener 'click', -> Speedr.actions.navigateText 'next', 'sentence'
             when 'paragraph'
-                action1.innerText = 'previous'
-                action1.setAttribute 'data-tooltip', "Previous paragraph#{App.utility.getBinding('prev paragraph')}"
-                action1.addEventListener 'click', -> App.actions.navigateText 'prev', 'paragraph'
+                action1.textContent = 'previous'
+                action1.setAttribute 'data-tooltip', "Previous paragraph#{Speedr.utility.getBinding('prev paragraph')}"
+                action1.addEventListener 'click', -> Speedr.actions.navigateText 'prev', 'paragraph'
 
-                action2.innerText = 'next'
-                action2.setAttribute 'data-tooltip', "Next paragraph#{App.utility.getBinding('next paragraph')}"
-                action2.addEventListener 'click', -> App.actions.navigateText 'next', 'paragraph'
+                action2.textContent = 'next'
+                action2.setAttribute 'data-tooltip', "Next paragraph#{Speedr.utility.getBinding('next paragraph')}"
+                action2.addEventListener 'click', -> Speedr.actions.navigateText 'next', 'paragraph'
 
                 actions.className += ' speedr-button-actions--right'
 
@@ -88,9 +88,9 @@ module.exports = ->
     playPause = doc.createElement 'div'
     playPause.id = 'js-play-pause'
     playPause.className = 'speedr-button speedr-button--centered js-speedr-tooltip'
-    playPause.innerText = 'start'
-    playPause.setAttribute 'data-tooltip', "Start#{App.utility.getBinding('toggle')}"
-    playPause.addEventListener 'click', App.speedr.loop.toggle 
+    playPause.textContent = 'start'
+    playPause.setAttribute 'data-tooltip', "Start#{Speedr.utility.getBinding('toggle')}"
+    playPause.addEventListener 'click', Speedr.box.loop.toggle 
 
     controls.appendChild playPause
     controls.appendChild controlsLeft

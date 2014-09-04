@@ -1,6 +1,6 @@
 module.exports =
     text: (text) ->
-        App.text.original = text
+        Speedr.text.original = text
 
         @loop()
 
@@ -9,14 +9,14 @@ module.exports =
         sentenceCounter = 0
 
         # Split the selection into paragraphs
-        paragraphs = @splitIntoParagraphs App.text.original
+        paragraphs = @splitIntoParagraphs Speedr.text.original
 
         for paragraph in paragraphs
             sentences = @splitIntoSetences paragraph
             paragraphStart = counter
 
-            # Add the sentence into the App.text.sentences array
-            App.text.sentences.push.apply App.text.sentences, sentences
+            # Add the sentence into the Speedr.text.sentences array
+            Speedr.text.sentences.push.apply Speedr.text.sentences, sentences
 
             for sentence in sentences
                 words = @splitIntoWords sentence
@@ -30,13 +30,13 @@ module.exports =
                         sentenceStart: sentenceStart
                         sentenceArrayMarker: sentenceCounter
 
-                    App.text.parsed.push wordObj
+                    Speedr.text.parsed.push wordObj
 
                     counter++
 
                 sentenceCounter++
 
-            App.text.parsed[counter - 1].paragraphEnd = true
+            Speedr.text.parsed[counter - 1].paragraphEnd = true
 
     # Return an array of paragraphs
     splitIntoParagraphs: (text) ->

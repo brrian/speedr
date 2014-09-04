@@ -15,7 +15,7 @@ Minimap =
         box.appendChild(minimap)
 
         # Finally, check to see if we need to activate the scroll watcher
-        if contents.offsetHeight > minimap.offsetHeight then App.scrollWatcher = true
+        if contents.offsetHeight > minimap.offsetHeight then Speedr.scrollWatcher = true
 
     createContents: ->
         doc = document
@@ -29,7 +29,7 @@ Minimap =
         paragraphElement.className = 'speedr-minimap-para'
 
         # Loop through each word array and create a element
-        for word, i in App.text.parsed
+        for word, i in Speedr.text.parsed
             wordElement = doc.createElement 'span'
             wordElement.className = 'speedr-minimap-word'
             wordElement.style.cssText = "width: #{(word.text.length - 1) * 4}px;"
@@ -43,10 +43,10 @@ Minimap =
                 paragraphElement = doc.createElement 'p'
                 paragraphElement.className = 'speedr-minimap-para'
 
-            App.minimapElements[i] = wordElement
+            Speedr.minimapElements[i] = wordElement
 
         # Make the first element active
-        App.minimapElements[0].className = 'speedr-minimap-word--read'
+        Speedr.minimapElements[0].className = 'speedr-minimap-word--read'
 
         contents
 
@@ -60,29 +60,29 @@ Minimap =
         minimap.replaceChild contents, oldContents
 
     update: ->
-        i = App.i
+        i = Speedr.i
 
-        for num in [0..App.text.parsed.length - 1]
-            App.minimapElements[num].className = if num <= i then 'speedr-minimap-word--read' else 'speedr-minimap-word'
+        for num in [0..Speedr.text.parsed.length - 1]
+            Speedr.minimapElements[num].className = if num <= i then 'speedr-minimap-word--read' else 'speedr-minimap-word'
 
     updateScroll: ->
         # Get the current active word
-        i = App.i
+        i = Speedr.i
 
         minimap = document.getElementById 'js-speedr-minimap'
-        activeOffset = App.minimapElements[i].offsetTop
+        activeOffset = Speedr.minimapElements[i].offsetTop
 
-        if App.scrolling is false or App.scrolling is undefined
+        if Speedr.scrolling is false or Speedr.scrolling is undefined
             # Compare the offset position and scroll position
             if User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50
-                App.utility.scrollTo(minimap, activeOffset, 1000)
+                Speedr.utility.scrollTo(minimap, activeOffset, 1000)
 
-            if App.pause is true and activeOffset < minimap.scrollTop
-                App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000)
+            if Speedr.pause is true and activeOffset < minimap.scrollTop
+                Speedr.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000)
 
     scrollWatcher: ->
-        App.addons.minimap.updateScroll() unless App.scrolling
+        Speedr.addons.minimap.updateScroll() unless Speedr.scrolling
 
-        App.scrollWatcher = setTimeout(App.addons.minimap.scrollWatcher, App.interval * 5)
+        Speedr.scrollWatcher = setTimeout(Speedr.addons.minimap.scrollWatcher, Speedr.interval * 5)
 
 module.exports = Minimap

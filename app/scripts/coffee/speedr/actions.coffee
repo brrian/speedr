@@ -1,6 +1,6 @@
 module.exports =
     calculateInterval: ->
-        App.interval = 60000 / User.settings.wpm
+        Speedr.interval = 60000 / User.settings.wpm
 
     updateStatus: ->
         doc = document
@@ -8,15 +8,15 @@ module.exports =
         wpm = User.settings.wpm
         wordsDisplayed = User.settings.wordsDisplayed
 
-        wordsLeft = App.text.parsed.length - App.i - 1
+        wordsLeft = Speedr.text.parsed.length - Speedr.i - 1
         timeLeft = (wordsLeft / wpm * 60).toFixed(2)
 
         if wordsDisplayed is 1
             totalWpm = "#{wpm} wpm"
-            totalWords = App.utility.formatNumber wordsLeft
+            totalWords = Speedr.utility.formatNumber wordsLeft
         else
             totalWpm = "#{wpm * wordsDisplayed} wpm (#{wpm}&times;#{wordsDisplayed})"
-            totalWords = unless wordsLeft is 0 then "~#{App.utility.formatNumber(wordsLeft * wordsDisplayed)}" else "0"
+            totalWords = unless wordsLeft is 0 then "~#{Speedr.utility.formatNumber(wordsLeft * wordsDisplayed)}" else "0"
 
         timeLeft = if timeLeft is '0.00' then '0' else "~#{timeLeft}"
         wordPlurality = if totalWords is '1' then 'word' else 'words'
@@ -50,7 +50,7 @@ module.exports =
         if settings.showWPM then @updateWPM()
         if settings.showStatus then @updateStatus()
 
-        App.chrome.settings.save()
+        Speedr.chrome.settings.save()
 
     changeFontSize: (px) ->
         settings = User.settings
@@ -62,9 +62,9 @@ module.exports =
         wordContainer = document.getElementById('js-speedr-word')
         wordContainer.style.fontSize = User.settings.fontSize + 'px'
 
-        if settings.showCountdown then App.actions.updateCountdownBar()
+        if settings.showCountdown then Speedr.actions.updateCountdownBar()
 
-        App.chrome.settings.save()
+        Speedr.chrome.settings.save()
 
     changeWordsDisplayed: (words) ->
         settings = User.settings
@@ -72,56 +72,56 @@ module.exports =
         return if (settings.wordsDisplayed + words) < 1
 
         # First we pause
-        App.speedr.loop.stop() if App.pause is false
+        Speedr.box.loop.stop() if Speedr.pause is false
 
         User.settings.wordsDisplayed = settings.wordsDisplayed + words
 
-        App.i = 0
-        App.text.parsed = []
+        Speedr.i = 0
+        Speedr.text.parsed = []
 
-        App.parse.loop()
-        App.speedr.showWord()
+        Speedr.parse.loop()
+        Speedr.box.showWord()
 
         if settings.showWPM then @updateWPM()
         if settings.showStatus then @updateStatus()
         if settings.showMinimap
-            if App.scrollWatcher then App.addons.minimap.updateScroll()
-            App.addons.minimap.updateContents()
+            if Speedr.scrollWatcher then Speedr.addons.minimap.updateScroll()
+            Speedr.addons.minimap.updateContents()
 
-        App.chrome.settings.save()
+        Speedr.chrome.settings.save()
 
     navigateText: (direction, type) ->
-        i = App.i
+        i = Speedr.i
         settings = User.settings
 
         # First we pause
-        App.speedr.loop.stop() if App.pause is false
+        Speedr.box.loop.stop() if Speedr.pause is false
 
         return if i is 0 and direction is 'prev'
-        return if i is App.text.parsed.length - 1 and direction is 'next'
+        return if i is Speedr.text.parsed.length - 1 and direction is 'next'
 
         switch type
             when 'word'
-                App.i = if direction is 'prev' then i - 1 else i + 1
+                Speedr.i = if direction is 'prev' then i - 1 else i + 1
             when 'sentence'
-                App.i = if direction is 'prev' then App.utility.findPrevOfType('sentenceStart') else App.utility.findNextOfType('sentenceStart')
+                Speedr.i = if direction is 'prev' then Speedr.utility.findPrevOfType('sentenceStart') else Speedr.utility.findNextOfType('sentenceStart')
             when 'paragraph'
-                App.i = if direction is 'prev' then App.utility.findPrevOfType('paragraphStart') else App.utility.findNextOfType('paragraphStart')
+                Speedr.i = if direction is 'prev' then Speedr.utility.findPrevOfType('paragraphStart') else Speedr.utility.findNextOfType('paragraphStart')
 
-        App.speedr.showWord()
+        Speedr.box.showWord()
 
-        if settings.showStatus then App.actions.updateStatus()
+        if settings.showStatus then Speedr.actions.updateStatus()
 
-        if settings.showContext and App.addons.context.activeContext
-            document.querySelector('.speedr-context').innerText = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker]
+        if settings.showContext and Speedr.addons.context.activeContext
+            document.querySelector('.speedr-context').textContent = Speedr.text.sentences[Speedr.text.parsed[Speedr.i].sentenceArrayMarker]
 
         if settings.showMinimap
-            App.addons.minimap.update()
-            if App.scrollWatcher then App.addons.minimap.updateScroll()
+            Speedr.addons.minimap.update()
+            if Speedr.scrollWatcher then Speedr.addons.minimap.updateScroll()
 
     toggleMenu: ->
         doc = document
-        toggleClass = App.utility.toggleClass
+        toggleClass = Speedr.utility.toggleClass
 
         if User.settings.showMenuButton then toggleClass(doc.getElementById('js-speedr-menu-button'), 'speedr-menu-button-active')
         
@@ -174,4 +174,4 @@ module.exports =
         User.settings.primaryTheme = newTheme
         User.settings.secondaryTheme = currentTheme
 
-        App.chrome.settings.save()
+        Speedr.chrome.settings.save()

@@ -1,18 +1,18 @@
 module.exports =
     init: (text, options) ->
-        @options = App.utility.defaults
+        @options = Speedr.utility.defaults
             overlay: true
             animate: true
             sync: true
             style: ''
         , options || {}
 
-        App.parse.text text 
-        App.speedr.create()
-        App.speedr.showWord()
+        Speedr.parse.text text 
+        Speedr.box.create()
+        Speedr.box.showWord()
 
     create: ->
-        App.active = true
+        Speedr.active = true
 
         # Cache some variables
         doc = document
@@ -42,7 +42,7 @@ module.exports =
         pointer.style.cssText = "border-top-color: #{theme.highlightColor};"
         wordContainer.appendChild pointer
 
-        # Append word container to box
+        # Speedr.nd word container to box
         box.appendChild wordContainer
 
         # Create the countdown bar
@@ -61,12 +61,12 @@ module.exports =
 
             switch menuItem
                 when 'settings'
-                    elementFunction = -> App.utility.openUrl 'options.html'
+                    elementFunction = -> Speedr.utility.openUrl 'options.html'
                 when 'close'
-                    elementFunction = App.speedr.destroy
+                    elementFunction = Speedr.box.destroy
 
                     item.className = 'js-speedr-tooltip'
-                    item.setAttribute 'data-tooltip', "Close Speedr#{App.utility.getBinding('close')}"
+                    item.setAttribute 'data-tooltip', "Close Speedr#{Speedr.utility.getBinding('close')}"
 
             item.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';'
             item.appendChild doc.createTextNode(menuItem)
@@ -74,13 +74,13 @@ module.exports =
 
             menu.appendChild item
 
-        # Append menu to the box
+        # Speedr.nd menu to the box
         box.appendChild menu
 
-        if settings.showControls then box.appendChild App.addons.controls()
-        if settings.showMenuButton then box.appendChild App.addons.menuButton()
+        if settings.showControls then box.appendChild Speedr.addons.controls()
+        if settings.showMenuButton then box.appendChild Speedr.addons.menuButton()
 
-        # Apply the different options
+        # Speedr.y the different options
         if @options.style
             box.style.cssText += " #{@options.style}"
 
@@ -96,7 +96,7 @@ module.exports =
             box.className += ' speedr-flip-in'
             if overlay then overlay.className += ' speedr-fade-in'
 
-            App.utility.runOnceAfterAnimation box, ->
+            Speedr.utility.runOnceAfterAnimation box, ->
                 box.className = box.className.replace ' speedr-flip-in', ''
                 if overlay then overlay.className = overlay.className.replace ' speedr-fade-in', ''
 
@@ -104,25 +104,25 @@ module.exports =
 
         # These must be run after the document has been appended
         if settings.showMinimap
-            App.addons.minimap.create settings, theme, box
+            Speedr.addons.minimap.create settings, theme, box
 
         if settings.showCountdown
-            box.appendChild App.addons.countdown(settings, theme)
-            App.actions.updateCountdownBar()
+            box.appendChild Speedr.addons.countdown(settings, theme)
+            Speedr.actions.updateCountdownBar()
 
         if settings.showStatus
-            box.appendChild App.addons.status()
-            App.actions.updateStatus()
+            box.appendChild Speedr.addons.status()
+            Speedr.actions.updateStatus()
 
         if settings.showWPM
-            box.appendChild App.addons.wpm(theme)
-            App.actions.updateWPM()
+            box.appendChild Speedr.addons.wpm(theme)
+            Speedr.actions.updateWPM()
 
         if settings.showTooltips
-            App.addons.tooltips.init()
+            Speedr.addons.tooltips.init()
 
         if settings.showContext 
-            App.addons.context.init()
+            Speedr.addons.context.init()
 
     destroy: ->
         doc = document
@@ -140,7 +140,7 @@ module.exports =
             if overlay then overlay.className += ' speedr-fade-out'
 
             # Flip out and fade out
-            App.utility.runOnceAfterAnimation newBox, ->
+            Speedr.utility.runOnceAfterAnimation newBox, ->
                 newBox.remove()
                 if overlay then overlay.remove()
         else
@@ -148,17 +148,17 @@ module.exports =
             if overlay then overlay.remove()
 
         # If tooltips or context popups are active, destroy them
-        if User.settings.showTooltips and App.addons.tooltips.activeTooltip then App.addons.tooltips.destroy()
-        if User.settings.showContext and App.addons.context.activeContext then App.addons.context.destroy()
+        if User.settings.showTooltips and Speedr.addons.tooltips.activeTooltip then Speedr.addons.tooltips.destroy()
+        if User.settings.showContext and Speedr.addons.context.activeContext then Speedr.addons.context.destroy()
 
         # Reset some settings
-        App.speedr.reset()
+        Speedr.box.reset()
 
     # Split word into different elements along the ORP
-    showWord: (marker = App.i) ->
+    showWord: (marker = Speedr.i) ->
         theme = User.themes[User.settings.primaryTheme]
 
-        word = App.text.parsed[marker].text
+        word = Speedr.text.parsed[marker].text
 
         if User.settings.wordsDisplayed is 1
             orp = Math.round((word.length + 1) * 0.4) - 1
@@ -170,25 +170,25 @@ module.exports =
         wordBox.innerHTML = html
 
     reset: ->
-        App.active = false
-        App.pause = true
-        App.text.sentences = []
-        App.text.parsed = []
-        App.interval = App.actions.calculateInterval()
-        App.i = 0
-        App.minimapElements = {}
+        Speedr.active = false
+        Speedr.pause = true
+        Speedr.text.sentences = []
+        Speedr.text.parsed = []
+        Speedr.interval = Speedr.actions.calculateInterval()
+        Speedr.i = 0
+        Speedr.minimapElements = {}
 
     stats:
         start: ->
             @time = new Date().getTime()
-            @index = App.i
+            @index = Speedr.i
 
             if User.settings.showCountdown then @time += User.settings.countdownSpeed
 
         stop: ->
             time = new Date().getTime() - @time
-            words = App.i - @index + 1
+            words = Speedr.i - @index + 1
 
-            App.chrome.stats.save time, words
+            Speedr.chrome.stats.save time, words
 
     loop: require './loop.coffee'

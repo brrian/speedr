@@ -23,7 +23,7 @@ sendMessage("request.selection", function(selection) {
   if (selection) {
     window.selection = selection;
     document.getElementById("js-read-selection").className = "";
-    return document.getElementById("js-read-selection-subtext").innerText = selection;
+    return document.getElementById("js-read-selection-subtext").textContent = selection;
   }
 });
 

@@ -157,13 +157,13 @@ module.exports = {
 },{}],3:[function(require,module,exports){
 window.User = require('./common/defaults.coffee');
 
-window.App = {
+window.Speedr = {
   text: {
     sentences: []
   },
   utility: require('./speedr/utility.coffee'),
   parse: require('./speedr/parse.coffee'),
-  speedr: require('./speedr/speedr.coffee'),
+  box: require('./speedr/box.coffee'),
   addons: {
     controls: require('./speedr/addons/controls.coffee'),
     context: require('./speedr/addons/context.coffee'),
@@ -177,35 +177,35 @@ window.App = {
   actions: require('./speedr/actions.coffee'),
   chrome: require('./speedr/chrome.coffee'),
   init: function() {
-    App.speedr.reset();
-    return App.chrome.settings.get.then(App.chrome.extension.init);
+    Speedr.box.reset();
+    return Speedr.chrome.settings.get.then(Speedr.chrome.extension.init);
   }
 };
 
 window.onkeydown = require('./speedr/keyDownListener.coffee');
 
-App.init();
+Speedr.init();
 
 
 
-},{"./common/defaults.coffee":1,"./speedr/actions.coffee":4,"./speedr/addons/context.coffee":5,"./speedr/addons/controls.coffee":6,"./speedr/addons/countdown.coffee":7,"./speedr/addons/menuButton.coffee":8,"./speedr/addons/minimap.coffee":9,"./speedr/addons/status.coffee":10,"./speedr/addons/tooltips.coffee":11,"./speedr/addons/wpm.coffee":12,"./speedr/chrome.coffee":13,"./speedr/keyDownListener.coffee":14,"./speedr/parse.coffee":16,"./speedr/speedr.coffee":17,"./speedr/utility.coffee":18}],4:[function(require,module,exports){
+},{"./common/defaults.coffee":1,"./speedr/actions.coffee":4,"./speedr/addons/context.coffee":5,"./speedr/addons/controls.coffee":6,"./speedr/addons/countdown.coffee":7,"./speedr/addons/menuButton.coffee":8,"./speedr/addons/minimap.coffee":9,"./speedr/addons/status.coffee":10,"./speedr/addons/tooltips.coffee":11,"./speedr/addons/wpm.coffee":12,"./speedr/box.coffee":13,"./speedr/chrome.coffee":14,"./speedr/keyDownListener.coffee":15,"./speedr/parse.coffee":17,"./speedr/utility.coffee":18}],4:[function(require,module,exports){
 module.exports = {
   calculateInterval: function() {
-    return App.interval = 60000 / User.settings.wpm;
+    return Speedr.interval = 60000 / User.settings.wpm;
   },
   updateStatus: function() {
     var doc, timeLeft, totalWords, totalWpm, wordPlurality, wordsDisplayed, wordsLeft, wpm;
     doc = document;
     wpm = User.settings.wpm;
     wordsDisplayed = User.settings.wordsDisplayed;
-    wordsLeft = App.text.parsed.length - App.i - 1;
+    wordsLeft = Speedr.text.parsed.length - Speedr.i - 1;
     timeLeft = (wordsLeft / wpm * 60).toFixed(2);
     if (wordsDisplayed === 1) {
       totalWpm = "" + wpm + " wpm";
-      totalWords = App.utility.formatNumber(wordsLeft);
+      totalWords = Speedr.utility.formatNumber(wordsLeft);
     } else {
       totalWpm = "" + (wpm * wordsDisplayed) + " wpm (" + wpm + "&times;" + wordsDisplayed + ")";
-      totalWords = wordsLeft !== 0 ? "~" + (App.utility.formatNumber(wordsLeft * wordsDisplayed)) : "0";
+      totalWords = wordsLeft !== 0 ? "~" + (Speedr.utility.formatNumber(wordsLeft * wordsDisplayed)) : "0";
     }
     timeLeft = timeLeft === '0.00' ? '0' : "~" + timeLeft;
     wordPlurality = totalWords === '1' ? 'word' : 'words';
@@ -241,7 +241,7 @@ module.exports = {
     if (settings.showStatus) {
       this.updateStatus();
     }
-    return App.chrome.settings.save();
+    return Speedr.chrome.settings.save();
   },
   changeFontSize: function(px) {
     var settings, wordContainer;
@@ -253,9 +253,9 @@ module.exports = {
     wordContainer = document.getElementById('js-speedr-word');
     wordContainer.style.fontSize = User.settings.fontSize + 'px';
     if (settings.showCountdown) {
-      App.actions.updateCountdownBar();
+      Speedr.actions.updateCountdownBar();
     }
-    return App.chrome.settings.save();
+    return Speedr.chrome.settings.save();
   },
   changeWordsDisplayed: function(words) {
     var settings;
@@ -263,14 +263,14 @@ module.exports = {
     if ((settings.wordsDisplayed + words) < 1) {
       return;
     }
-    if (App.pause === false) {
-      App.speedr.loop.stop();
+    if (Speedr.pause === false) {
+      Speedr.box.loop.stop();
     }
     User.settings.wordsDisplayed = settings.wordsDisplayed + words;
-    App.i = 0;
-    App.text.parsed = [];
-    App.parse.loop();
-    App.speedr.showWord();
+    Speedr.i = 0;
+    Speedr.text.parsed = [];
+    Speedr.parse.loop();
+    Speedr.box.showWord();
     if (settings.showWPM) {
       this.updateWPM();
     }
@@ -278,54 +278,54 @@ module.exports = {
       this.updateStatus();
     }
     if (settings.showMinimap) {
-      if (App.scrollWatcher) {
-        App.addons.minimap.updateScroll();
+      if (Speedr.scrollWatcher) {
+        Speedr.addons.minimap.updateScroll();
       }
-      App.addons.minimap.updateContents();
+      Speedr.addons.minimap.updateContents();
     }
-    return App.chrome.settings.save();
+    return Speedr.chrome.settings.save();
   },
   navigateText: function(direction, type) {
     var i, settings;
-    i = App.i;
+    i = Speedr.i;
     settings = User.settings;
-    if (App.pause === false) {
-      App.speedr.loop.stop();
+    if (Speedr.pause === false) {
+      Speedr.box.loop.stop();
     }
     if (i === 0 && direction === 'prev') {
       return;
     }
-    if (i === App.text.parsed.length - 1 && direction === 'next') {
+    if (i === Speedr.text.parsed.length - 1 && direction === 'next') {
       return;
     }
     switch (type) {
       case 'word':
-        App.i = direction === 'prev' ? i - 1 : i + 1;
+        Speedr.i = direction === 'prev' ? i - 1 : i + 1;
         break;
       case 'sentence':
-        App.i = direction === 'prev' ? App.utility.findPrevOfType('sentenceStart') : App.utility.findNextOfType('sentenceStart');
+        Speedr.i = direction === 'prev' ? Speedr.utility.findPrevOfType('sentenceStart') : Speedr.utility.findNextOfType('sentenceStart');
         break;
       case 'paragraph':
-        App.i = direction === 'prev' ? App.utility.findPrevOfType('paragraphStart') : App.utility.findNextOfType('paragraphStart');
+        Speedr.i = direction === 'prev' ? Speedr.utility.findPrevOfType('paragraphStart') : Speedr.utility.findNextOfType('paragraphStart');
     }
-    App.speedr.showWord();
+    Speedr.box.showWord();
     if (settings.showStatus) {
-      App.actions.updateStatus();
+      Speedr.actions.updateStatus();
     }
-    if (settings.showContext && App.addons.context.activeContext) {
-      document.querySelector('.speedr-context').innerText = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker];
+    if (settings.showContext && Speedr.addons.context.activeContext) {
+      document.querySelector('.speedr-context').textContent = Speedr.text.sentences[Speedr.text.parsed[Speedr.i].sentenceArrayMarker];
     }
     if (settings.showMinimap) {
-      App.addons.minimap.update();
-      if (App.scrollWatcher) {
-        return App.addons.minimap.updateScroll();
+      Speedr.addons.minimap.update();
+      if (Speedr.scrollWatcher) {
+        return Speedr.addons.minimap.updateScroll();
       }
     }
   },
   toggleMenu: function() {
     var doc, toggleClass;
     doc = document;
-    toggleClass = App.utility.toggleClass;
+    toggleClass = Speedr.utility.toggleClass;
     if (User.settings.showMenuButton) {
       toggleClass(doc.getElementById('js-speedr-menu-button'), 'speedr-menu-button-active');
     }
@@ -373,7 +373,7 @@ module.exports = {
     }
     User.settings.primaryTheme = newTheme;
     User.settings.secondaryTheme = currentTheme;
-    return App.chrome.settings.save();
+    return Speedr.chrome.settings.save();
   }
 };
 
@@ -386,7 +386,7 @@ module.exports = {
     speedrWord = document.getElementById('js-speedr-word');
     speedrWord.addEventListener('mouseover', (function(_this) {
       return function() {
-        if (App.pause) {
+        if (Speedr.pause) {
           return _this.timeout = setTimeout(function() {
             return _this.create();
           }, 600);
@@ -404,20 +404,20 @@ module.exports = {
   },
   create: function() {
     var context, sentence;
-    sentence = App.text.sentences[App.text.parsed[App.i].sentenceArrayMarker];
+    sentence = Speedr.text.sentences[Speedr.text.parsed[Speedr.i].sentenceArrayMarker];
     context = document.createElement('span');
     context.className = 'speedr-context speedr-context-fly-up';
-    context.innerText = sentence;
+    context.textContent = sentence;
     context.style.cssText = "max-width: " + (User.settings.boxWidth * .9) + "px; bottom: " + (User.settings.boxHeight + 10) + "px;";
     document.getElementById('js-speedr-box').appendChild(context);
     this.activeContext = context;
-    return App.utility.runOnceAfterAnimation(context, function() {
+    return Speedr.utility.runOnceAfterAnimation(context, function() {
       return context.className = context.className.replace(' speedr-context-fly-up', '');
     });
   },
   destroy: function() {
     this.activeContext.className += ' speedr-fade-out-quick';
-    return App.utility.runOnceAfterAnimation(this.activeContext, (function(_this) {
+    return Speedr.utility.runOnceAfterAnimation(this.activeContext, (function(_this) {
       return function() {
         _this.activeContext.remove();
         return _this.activeContext = void 0;
@@ -443,7 +443,7 @@ module.exports = function() {
     button = buttons[i];
     controlButton = doc.createElement('div');
     controlButton.className = 'speedr-button';
-    controlButton.innerText = button;
+    controlButton.textContent = button;
     actions = doc.createElement('div');
     actions.className = 'speedr-button-actions';
     action1 = doc.createElement('span');
@@ -452,75 +452,75 @@ module.exports = function() {
     action2.className = 'speedr-button-action js-speedr-tooltip';
     switch (button) {
       case 'speed':
-        action1.innerText = 'faster';
-        action1.setAttribute('data-tooltip', "Increase speed" + (App.utility.getBinding('faster')));
+        action1.textContent = 'faster';
+        action1.setAttribute('data-tooltip', "Increase speed" + (Speedr.utility.getBinding('faster')));
         action1.addEventListener('click', function() {
-          return App.actions.changeWPM(25);
+          return Speedr.actions.changeWPM(25);
         });
-        action2.innerText = 'slower';
-        action2.setAttribute('data-tooltip', "Decrease speed" + (App.utility.getBinding('slower')));
+        action2.textContent = 'slower';
+        action2.setAttribute('data-tooltip', "Decrease speed" + (Speedr.utility.getBinding('slower')));
         action2.addEventListener('click', function() {
-          return App.actions.changeWPM(-25);
+          return Speedr.actions.changeWPM(-25);
         });
         break;
       case 'words':
-        action1.innerText = 'more';
-        action1.setAttribute('data-tooltip', "Show more words" + (App.utility.getBinding('more words')));
+        action1.textContent = 'more';
+        action1.setAttribute('data-tooltip', "Show more words" + (Speedr.utility.getBinding('more words')));
         action1.addEventListener('click', function() {
-          return App.actions.changeWordsDisplayed(1);
+          return Speedr.actions.changeWordsDisplayed(1);
         });
-        action2.innerText = 'less';
-        action2.setAttribute('data-tooltip', "Show less words" + (App.utility.getBinding('less words')));
+        action2.textContent = 'less';
+        action2.setAttribute('data-tooltip', "Show less words" + (Speedr.utility.getBinding('less words')));
         action2.addEventListener('click', function() {
-          return App.actions.changeWordsDisplayed(-1);
+          return Speedr.actions.changeWordsDisplayed(-1);
         });
         break;
       case 'font':
-        action1.innerText = 'bigger';
-        action1.setAttribute('data-tooltip', "Increase font size" + (App.utility.getBinding('bigger')));
+        action1.textContent = 'bigger';
+        action1.setAttribute('data-tooltip', "Increase font size" + (Speedr.utility.getBinding('bigger')));
         action1.addEventListener('click', function() {
-          return App.actions.changeFontSize(2);
+          return Speedr.actions.changeFontSize(2);
         });
-        action2.innerText = 'smaller';
-        action2.setAttribute('data-tooltip', "Decrease font size" + (App.utility.getBinding('smaller')));
+        action2.textContent = 'smaller';
+        action2.setAttribute('data-tooltip', "Decrease font size" + (Speedr.utility.getBinding('smaller')));
         action2.addEventListener('click', function() {
-          return App.actions.changeFontSize(-2);
+          return Speedr.actions.changeFontSize(-2);
         });
         break;
       case 'word':
-        action1.innerText = 'previous';
-        action1.setAttribute('data-tooltip', "Previous word" + (App.utility.getBinding('prev word')));
+        action1.textContent = 'previous';
+        action1.setAttribute('data-tooltip', "Previous word" + (Speedr.utility.getBinding('prev word')));
         action1.addEventListener('click', function() {
-          return App.actions.navigateText('prev', 'word');
+          return Speedr.actions.navigateText('prev', 'word');
         });
-        action2.innerText = 'next';
-        action2.setAttribute('data-tooltip', "Next word" + (App.utility.getBinding('next word')));
+        action2.textContent = 'next';
+        action2.setAttribute('data-tooltip', "Next word" + (Speedr.utility.getBinding('next word')));
         action2.addEventListener('click', function() {
-          return App.actions.navigateText('next', 'word');
+          return Speedr.actions.navigateText('next', 'word');
         });
         break;
       case 'sentence':
-        action1.innerText = 'previous';
-        action1.setAttribute('data-tooltip', "Previous sentence" + (App.utility.getBinding('prev sentence')));
+        action1.textContent = 'previous';
+        action1.setAttribute('data-tooltip', "Previous sentence" + (Speedr.utility.getBinding('prev sentence')));
         action1.addEventListener('click', function() {
-          return App.actions.navigateText('prev', 'sentence');
+          return Speedr.actions.navigateText('prev', 'sentence');
         });
-        action2.innerText = 'next';
-        action2.setAttribute('data-tooltip', "Next sentence" + (App.utility.getBinding('next sentence')));
+        action2.textContent = 'next';
+        action2.setAttribute('data-tooltip', "Next sentence" + (Speedr.utility.getBinding('next sentence')));
         action2.addEventListener('click', function() {
-          return App.actions.navigateText('next', 'sentence');
+          return Speedr.actions.navigateText('next', 'sentence');
         });
         break;
       case 'paragraph':
-        action1.innerText = 'previous';
-        action1.setAttribute('data-tooltip', "Previous paragraph" + (App.utility.getBinding('prev paragraph')));
+        action1.textContent = 'previous';
+        action1.setAttribute('data-tooltip', "Previous paragraph" + (Speedr.utility.getBinding('prev paragraph')));
         action1.addEventListener('click', function() {
-          return App.actions.navigateText('prev', 'paragraph');
+          return Speedr.actions.navigateText('prev', 'paragraph');
         });
-        action2.innerText = 'next';
-        action2.setAttribute('data-tooltip', "Next paragraph" + (App.utility.getBinding('next paragraph')));
+        action2.textContent = 'next';
+        action2.setAttribute('data-tooltip', "Next paragraph" + (Speedr.utility.getBinding('next paragraph')));
         action2.addEventListener('click', function() {
-          return App.actions.navigateText('next', 'paragraph');
+          return Speedr.actions.navigateText('next', 'paragraph');
         });
         actions.className += ' speedr-button-actions--right';
     }
@@ -536,9 +536,9 @@ module.exports = function() {
   playPause = doc.createElement('div');
   playPause.id = 'js-play-pause';
   playPause.className = 'speedr-button speedr-button--centered js-speedr-tooltip';
-  playPause.innerText = 'start';
-  playPause.setAttribute('data-tooltip', "Start" + (App.utility.getBinding('toggle')));
-  playPause.addEventListener('click', App.speedr.loop.toggle);
+  playPause.textContent = 'start';
+  playPause.setAttribute('data-tooltip', "Start" + (Speedr.utility.getBinding('toggle')));
+  playPause.addEventListener('click', Speedr.box.loop.toggle);
   controls.appendChild(playPause);
   controls.appendChild(controlsLeft);
   controls.appendChild(controlsRight);
@@ -570,9 +570,9 @@ module.exports = function() {
   menu = doc.createElement('div');
   menu.id = 'js-speedr-menu-button';
   menu.className = 'speedr-menu-button speedr-button-fade js-speedr-tooltip';
-  menu.setAttribute('data-tooltip', "Toggle Menu" + (App.utility.getBinding('toggle menu')));
+  menu.setAttribute('data-tooltip', "Toggle Menu" + (Speedr.utility.getBinding('toggle menu')));
   menu.appendChild(doc.createTextNode('menu'));
-  menu.addEventListener('click', App.actions.toggleMenu);
+  menu.addEventListener('click', Speedr.actions.toggleMenu);
   return menu;
 };
 
@@ -593,7 +593,7 @@ Minimap = {
     minimap.appendChild(contents);
     box.appendChild(minimap);
     if (contents.offsetHeight > minimap.offsetHeight) {
-      return App.scrollWatcher = true;
+      return Speedr.scrollWatcher = true;
     }
   },
   createContents: function() {
@@ -605,7 +605,7 @@ Minimap = {
     contents.style.backgroundImage = "linear-gradient(to right, " + theme.secondaryText + " 50%, rgba(255, 255, 255, 0) 20%)";
     paragraphElement = doc.createElement('p');
     paragraphElement.className = 'speedr-minimap-para';
-    _ref = App.text.parsed;
+    _ref = Speedr.text.parsed;
     for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
       word = _ref[i];
       wordElement = doc.createElement('span');
@@ -618,9 +618,9 @@ Minimap = {
         paragraphElement = doc.createElement('p');
         paragraphElement.className = 'speedr-minimap-para';
       }
-      App.minimapElements[i] = wordElement;
+      Speedr.minimapElements[i] = wordElement;
     }
-    App.minimapElements[0].className = 'speedr-minimap-word--read';
+    Speedr.minimapElements[0].className = 'speedr-minimap-word--read';
     return contents;
   },
   updateContents: function() {
@@ -632,32 +632,32 @@ Minimap = {
   },
   update: function() {
     var i, num, _i, _ref, _results;
-    i = App.i;
+    i = Speedr.i;
     _results = [];
-    for (num = _i = 0, _ref = App.text.parsed.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; num = 0 <= _ref ? ++_i : --_i) {
-      _results.push(App.minimapElements[num].className = num <= i ? 'speedr-minimap-word--read' : 'speedr-minimap-word');
+    for (num = _i = 0, _ref = Speedr.text.parsed.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; num = 0 <= _ref ? ++_i : --_i) {
+      _results.push(Speedr.minimapElements[num].className = num <= i ? 'speedr-minimap-word--read' : 'speedr-minimap-word');
     }
     return _results;
   },
   updateScroll: function() {
     var activeOffset, i, minimap;
-    i = App.i;
+    i = Speedr.i;
     minimap = document.getElementById('js-speedr-minimap');
-    activeOffset = App.minimapElements[i].offsetTop;
-    if (App.scrolling === false || App.scrolling === void 0) {
+    activeOffset = Speedr.minimapElements[i].offsetTop;
+    if (Speedr.scrolling === false || Speedr.scrolling === void 0) {
       if (User.settings.boxHeight - (activeOffset - minimap.scrollTop) < 50) {
-        App.utility.scrollTo(minimap, activeOffset, 1000);
+        Speedr.utility.scrollTo(minimap, activeOffset, 1000);
       }
-      if (App.pause === true && activeOffset < minimap.scrollTop) {
-        return App.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000);
+      if (Speedr.pause === true && activeOffset < minimap.scrollTop) {
+        return Speedr.utility.scrollTo(minimap, activeOffset - User.settings.boxHeight + 60, 1000);
       }
     }
   },
   scrollWatcher: function() {
-    if (!App.scrolling) {
-      App.addons.minimap.updateScroll();
+    if (!Speedr.scrolling) {
+      Speedr.addons.minimap.updateScroll();
     }
-    return App.scrollWatcher = setTimeout(App.addons.minimap.scrollWatcher, App.interval * 5);
+    return Speedr.scrollWatcher = setTimeout(Speedr.addons.minimap.scrollWatcher, Speedr.interval * 5);
   }
 };
 
@@ -726,7 +726,7 @@ module.exports = {
     position = element.getBoundingClientRect();
     tooltip = document.createElement('span');
     tooltip.className = 'speedr-tooltip speedr-tooltip-fly-up';
-    tooltip.innerText = element.getAttribute('data-tooltip');
+    tooltip.textContent = element.getAttribute('data-tooltip');
     tooltip.style.cssText = "top: " + position.top + "px; left: " + (position.left + (position.width / 2)) + "px; background-color: " + theme.highlightColor + ";";
     arrow = document.createElement('span');
     arrow.className = 'speedr-tooltip-arrow';
@@ -734,7 +734,7 @@ module.exports = {
     tooltip.appendChild(arrow);
     this.activeTooltip = tooltip;
     document.body.appendChild(tooltip);
-    return App.utility.runOnceAfterAnimation(tooltip, function() {
+    return Speedr.utility.runOnceAfterAnimation(tooltip, function() {
       return tooltip.className = tooltip.className.replace(' speedr-tooltip-fly-up', '');
     });
   },
@@ -743,7 +743,7 @@ module.exports = {
       tooltip = this.activeTooltip;
     }
     tooltip.className += ' speedr-fade-out-quick';
-    App.utility.runOnceAfterAnimation(tooltip, function() {
+    Speedr.utility.runOnceAfterAnimation(tooltip, function() {
       return tooltip.remove();
     });
     return this.activeTooltip = void 0;
@@ -766,12 +766,205 @@ module.exports = function(theme) {
 
 },{}],13:[function(require,module,exports){
 module.exports = {
+  init: function(text, options) {
+    this.options = Speedr.utility.defaults({
+      overlay: true,
+      animate: true,
+      sync: true,
+      style: ''
+    }, options || {});
+    Speedr.parse.text(text);
+    Speedr.box.create();
+    return Speedr.box.showWord();
+  },
+  create: function() {
+    var box, countdown, doc, elementFunction, item, menu, menuItem, menuItems, overlay, pointer, settings, theme, wordContainer, wordWrapper, _i, _len;
+    Speedr.active = true;
+    doc = document;
+    settings = User.settings;
+    theme = User.themes[settings.primaryTheme];
+    box = doc.createElement('div');
+    box.id = 'js-speedr-box';
+    box.className = 'speedr-box';
+    box.style.cssText = "color: " + theme.secondaryText + "; background-color: " + theme.boxColor + "; width: " + settings.boxWidth + "px; height: " + settings.boxHeight + "px;";
+    wordContainer = doc.createElement('div');
+    wordContainer.className = 'speedr-word-container';
+    wordContainer.style.cssText = "font-family: " + settings.fontFamily + "; font-weight: " + settings.fontWeight + "; font-size: " + settings.fontSize + "px; border-bottom-color: " + theme.borderColor + ";";
+    wordWrapper = doc.createElement('div');
+    wordWrapper.id = 'js-speedr-word';
+    wordWrapper.className = 'speedr-word';
+    wordWrapper.style.color = theme.primaryText;
+    wordContainer.appendChild(wordWrapper);
+    pointer = doc.createElement('span');
+    pointer.className = 'speedr-pointer';
+    pointer.style.cssText = "border-top-color: " + theme.highlightColor + ";";
+    wordContainer.appendChild(pointer);
+    box.appendChild(wordContainer);
+    countdown = doc.createElement('div');
+    countdown.className = 'speedr-countdown';
+    menu = doc.createElement('ul');
+    menu.id = 'js-speedr-menu';
+    menu.className = 'speedr-menu';
+    menuItems = ['settings', 'close'];
+    for (_i = 0, _len = menuItems.length; _i < _len; _i++) {
+      menuItem = menuItems[_i];
+      item = doc.createElement('li');
+      switch (menuItem) {
+        case 'settings':
+          elementFunction = function() {
+            return Speedr.utility.openUrl('options.html');
+          };
+          break;
+        case 'close':
+          elementFunction = Speedr.box.destroy;
+          item.className = 'js-speedr-tooltip';
+          item.setAttribute('data-tooltip', "Close Speedr" + (Speedr.utility.getBinding('close')));
+      }
+      item.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';';
+      item.appendChild(doc.createTextNode(menuItem));
+      item.addEventListener('click', elementFunction);
+      menu.appendChild(item);
+    }
+    box.appendChild(menu);
+    if (settings.showControls) {
+      box.appendChild(Speedr.addons.controls());
+    }
+    if (settings.showMenuButton) {
+      box.appendChild(Speedr.addons.menuButton());
+    }
+    if (this.options.style) {
+      box.style.cssText += " " + this.options.style;
+    }
+    if (this.options.overlay) {
+      overlay = doc.createElement('div');
+      overlay.id = 'js-speedr-container';
+      overlay.className = 'speedr-container';
+      overlay.appendChild(box);
+    }
+    if (this.options.animate) {
+      box.className += ' speedr-flip-in';
+      if (overlay) {
+        overlay.className += ' speedr-fade-in';
+      }
+      Speedr.utility.runOnceAfterAnimation(box, function() {
+        box.className = box.className.replace(' speedr-flip-in', '');
+        if (overlay) {
+          return overlay.className = overlay.className.replace(' speedr-fade-in', '');
+        }
+      });
+    }
+    if (overlay) {
+      document.body.appendChild(overlay);
+    } else {
+      document.body.appendChild(box);
+    }
+    if (settings.showMinimap) {
+      Speedr.addons.minimap.create(settings, theme, box);
+    }
+    if (settings.showCountdown) {
+      box.appendChild(Speedr.addons.countdown(settings, theme));
+      Speedr.actions.updateCountdownBar();
+    }
+    if (settings.showStatus) {
+      box.appendChild(Speedr.addons.status());
+      Speedr.actions.updateStatus();
+    }
+    if (settings.showWPM) {
+      box.appendChild(Speedr.addons.wpm(theme));
+      Speedr.actions.updateWPM();
+    }
+    if (settings.showTooltips) {
+      Speedr.addons.tooltips.init();
+    }
+    if (settings.showContext) {
+      return Speedr.addons.context.init();
+    }
+  },
+  destroy: function() {
+    var doc, newBox, oldBox, overlay;
+    doc = document;
+    oldBox = doc.getElementById('js-speedr-box');
+    newBox = oldBox.cloneNode(true);
+    oldBox.parentNode.replaceChild(newBox, oldBox);
+    overlay = doc.getElementById('js-speedr-container');
+    if (this.options.animate) {
+      newBox.className += ' speedr-flip-out';
+      if (overlay) {
+        overlay.className += ' speedr-fade-out';
+      }
+      Speedr.utility.runOnceAfterAnimation(newBox, function() {
+        newBox.remove();
+        if (overlay) {
+          return overlay.remove();
+        }
+      });
+    } else {
+      newBox.remove();
+      if (overlay) {
+        overlay.remove();
+      }
+    }
+    if (User.settings.showTooltips && Speedr.addons.tooltips.activeTooltip) {
+      Speedr.addons.tooltips.destroy();
+    }
+    if (User.settings.showContext && Speedr.addons.context.activeContext) {
+      Speedr.addons.context.destroy();
+    }
+    return Speedr.box.reset();
+  },
+  showWord: function(marker) {
+    var html, orp, theme, word, wordBox;
+    if (marker == null) {
+      marker = Speedr.i;
+    }
+    theme = User.themes[User.settings.primaryTheme];
+    word = Speedr.text.parsed[marker].text;
+    if (User.settings.wordsDisplayed === 1) {
+      orp = Math.round((word.length + 1) * 0.4) - 1;
+      html = "<div data-before=\"" + (word.slice(0, orp).replace(/["“”]/g, '&quot;')) + "\" data-after=\"" + (word.slice(orp + 1).replace(/["“”]/g, '&quot;')) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
+    } else {
+      html = "<div>" + word + "</div>";
+    }
+    wordBox = document.getElementById('js-speedr-word');
+    return wordBox.innerHTML = html;
+  },
+  reset: function() {
+    Speedr.active = false;
+    Speedr.pause = true;
+    Speedr.text.sentences = [];
+    Speedr.text.parsed = [];
+    Speedr.interval = Speedr.actions.calculateInterval();
+    Speedr.i = 0;
+    return Speedr.minimapElements = {};
+  },
+  stats: {
+    start: function() {
+      this.time = new Date().getTime();
+      this.index = Speedr.i;
+      if (User.settings.showCountdown) {
+        return this.time += User.settings.countdownSpeed;
+      }
+    },
+    stop: function() {
+      var time, words;
+      time = new Date().getTime() - this.time;
+      words = Speedr.i - this.index + 1;
+      return Speedr.chrome.stats.save(time, words);
+    }
+  },
+  loop: require('./loop.coffee')
+};
+
+
+
+},{"./loop.coffee":16}],14:[function(require,module,exports){
+module.exports = {
   settings: {
     get: new Promise(function(resolve, reject) {
       return chrome.storage.sync.get(['settings', 'bindings'], function(data) {
         if (data.settings) {
-          App.chrome.settings.store(data.settings, 'settings');
-          App.actions.calculateInterval();
+          Speedr.chrome.settings.store(data.settings, 'settings');
+          Speedr.actions.calculateInterval();
         }
         if (data.bindings) {
           User.bindings = data.bindings;
@@ -822,15 +1015,15 @@ module.exports = {
           case 'request.selection':
             return sendResponse(window.getSelection().toString().slice(0, 75));
           case 'parse.selection':
-            if (!App.active) {
-              return App.speedr.init(window.getSelection().toString());
+            if (!Speedr.active) {
+              return Speedr.box.init(window.getSelection().toString());
             } else {
-              return App.speedr.loop.toggle();
+              return Speedr.box.loop.toggle();
             }
             break;
           case 'parse.selection.start':
-            App.speedr.init(window.getSelection().toString());
-            return setTimeout(App.speedr.loop.toggle, 400);
+            Speedr.box.init(window.getSelection().toString());
+            return setTimeout(Speedr.box.loop.toggle, 400);
         }
       });
     }
@@ -839,143 +1032,96 @@ module.exports = {
 
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function(event) {
-  var keyCombo;
-  keyCombo = App.utility.generateKeyCombo(event);
-  switch (User.bindings[keyCombo]) {
-    case "open":
-      if (!App.active && window.getSelection().type === "Range") {
-        App.speedr.init(window.getSelection().toString());
-        return false;
-      }
-      break;
-    case "close":
-      if (App.active) {
-        App.speedr.destroy();
-        return false;
-      }
-      break;
-    case "slower":
-      if (App.active) {
-        App.actions.changeWPM(-25);
-        return false;
-      }
-      break;
-    case "faster":
-      if (App.active) {
-        App.actions.changeWPM(25);
-        return false;
-      }
-      break;
-    case "bigger":
-      if (App.active) {
-        App.actions.changeFontSize(2);
-        return false;
-      }
-      break;
-    case "smaller":
-      if (App.active) {
-        App.actions.changeFontSize(-2);
-        return false;
-      }
-      break;
-    case "more words":
-      if (App.active) {
-        App.actions.changeWordsDisplayed(1);
-        return false;
-      }
-      break;
-    case "less words":
-      if (App.active) {
-        App.actions.changeWordsDisplayed(-1);
-        return false;
-      }
-      break;
-    case "toggle":
-      if (App.active) {
-        App.speedr.loop.toggle();
-        return false;
-      }
-      break;
-    case "reset":
-      if (App.active) {
-        App.speedr.loop.reset();
-        return false;
-      }
-      break;
-    case "prev word":
-      if (App.active) {
-        App.actions.navigateText("prev", "word");
-        return false;
-      }
-      break;
-    case "prev sentence":
-      if (App.active) {
-        App.actions.navigateText("prev", "sentence");
-        return false;
-      }
-      break;
-    case "prev paragraph":
-      if (App.active) {
-        App.actions.navigateText("prev", "paragraph");
-        return false;
-      }
-      break;
-    case "next word":
-      if (App.active) {
-        App.actions.navigateText("next", "word");
-        return false;
-      }
-      break;
-    case "next sentence":
-      if (App.active) {
-        App.actions.navigateText("next", "sentence");
-        return false;
-      }
-      break;
-    case "next paragraph":
-      if (App.active) {
-        return App.actions.navigateText("next", "paragraph");
-      }
-      break;
-    case "toggle menu":
-      if (App.active) {
-        return App.actions.toggleMenu();
-      }
-      break;
-    case "toggle theme":
-      if (App.active) {
-        return App.actions.toggleTheme();
-      }
+  var action, keyCombo;
+  keyCombo = Speedr.utility.generateKeyCombo(event);
+  action = User.bindings[keyCombo];
+  if (!Speedr.active && action === 'open' && window.getSelection().type === 'Range') {
+    Speedr.box.init(window.getSelection().toString());
+    return false;
+  } else if (Speedr.active) {
+    switch (action) {
+      case 'close':
+        Speedr.box.destroy();
+        break;
+      case 'slower':
+        Speedr.actions.changeWPM(-25);
+        break;
+      case 'faster':
+        Speedr.actions.changeWPM(25);
+        break;
+      case 'bigger':
+        Speedr.actions.changeFontSize(2);
+        break;
+      case 'smaller':
+        Speedr.actions.changeFontSize(-2);
+        break;
+      case 'more words':
+        Speedr.actions.changeWordsDisplayed(1);
+        break;
+      case 'less words':
+        Speedr.actions.changeWordsDisplayed(-1);
+        break;
+      case 'toggle':
+        Speedr.box.loop.toggle();
+        break;
+      case 'reset':
+        Speedr.box.loop.reset();
+        break;
+      case 'prev word':
+        Speedr.actions.navigateText('prev', 'word');
+        break;
+      case 'prev sentence':
+        Speedr.actions.navigateText('prev', 'sentence');
+        break;
+      case 'prev paragraph':
+        Speedr.actions.navigateText('prev', 'paragraph');
+        break;
+      case 'next word':
+        Speedr.actions.navigateText('next', 'word');
+        break;
+      case 'next sentence':
+        Speedr.actions.navigateText('next', 'sentence');
+        break;
+      case 'next paragraph':
+        Speedr.actions.navigateText('next', 'paragraph');
+        break;
+      case 'toggle menu':
+        Speedr.actions.toggleMenu();
+        break;
+      case 'toggle theme':
+        Speedr.actions.toggleTheme();
+    }
+    return false;
   }
 };
 
 
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = {
   toggle: function() {
-    if (App.pause) {
-      return App.speedr.loop.startPrepare();
+    if (Speedr.pause) {
+      return Speedr.box.loop.startPrepare();
     } else {
-      return App.speedr.loop.stop();
+      return Speedr.box.loop.stop();
     }
   },
   stop: function() {
     var bar, doc, newSpeed, oldSpeed, playButton, settings, toggleClass;
     doc = document;
     settings = User.settings;
-    toggleClass = App.utility.toggleClass;
-    App.pause = true;
-    clearTimeout(App.loop);
-    App.i--;
+    toggleClass = Speedr.utility.toggleClass;
+    Speedr.pause = true;
+    clearTimeout(Speedr.loop);
+    Speedr.i--;
     if (settings.showStatus) {
-      App.actions.updateStatus();
+      Speedr.actions.updateStatus();
       toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden');
     }
     if (settings.showCountdown) {
-      clearTimeout(App.countdownTimeout);
+      clearTimeout(Speedr.countdownTimeout);
       bar = doc.getElementById('js-speedr-countdown-bar');
       oldSpeed = bar.style.transitionDuration;
       newSpeed = 150;
@@ -987,72 +1133,72 @@ module.exports = {
     }
     if (settings.showControls) {
       playButton = doc.getElementById('js-play-pause');
-      if (App.i === App.text.parsed.length - 1) {
-        playButton.innerText = 'restart';
-        playButton.setAttribute('data-tooltip', "Restart" + (App.utility.getBinding('reset')));
+      if (Speedr.i === Speedr.text.parsed.length - 1) {
+        playButton.textContent = 'restart';
+        playButton.setAttribute('data-tooltip', "Restart" + (Speedr.utility.getBinding('reset')));
       } else {
-        playButton.innerText = 'start';
+        playButton.textContent = 'start';
         playButton.setAttribute('data-tooltip', 'Start');
       }
     }
-    if (App.scrollWatcher) {
-      clearTimeout(App.scrollWatcher);
+    if (Speedr.scrollWatcher) {
+      clearTimeout(Speedr.scrollWatcher);
     }
-    if (App.speedr.options.sync === true) {
-      return App.speedr.stats.stop();
+    if (Speedr.box.options.sync === true) {
+      return Speedr.box.stats.stop();
     }
   },
   startPrepare: function() {
     var doc, playButton, settings, toggleClass;
     doc = document;
     settings = User.settings;
-    toggleClass = App.utility.toggleClass;
+    toggleClass = Speedr.utility.toggleClass;
     if (settings.showControls) {
       playButton = doc.getElementById('js-play-pause');
-      playButton.innerText = 'stop';
-      playButton.setAttribute('data-tooltip', "Stop" + (App.utility.getBinding('toggle')));
+      playButton.textContent = 'stop';
+      playButton.setAttribute('data-tooltip', "Stop" + (Speedr.utility.getBinding('toggle')));
     }
-    if (App.i === App.text.parsed.length - 1) {
-      App.speedr.loop.reset();
+    if (Speedr.i === Speedr.text.parsed.length - 1) {
+      Speedr.box.loop.reset();
     }
-    App.i++;
-    App.pause = false;
-    if (settings.showContext && App.addons.context.activeContext) {
-      App.addons.context.destroy();
+    Speedr.i++;
+    Speedr.pause = false;
+    if (settings.showContext && Speedr.addons.context.activeContext) {
+      Speedr.addons.context.destroy();
     }
     if (settings.showStatus) {
       toggleClass(doc.getElementById('js-speedr-status'), 'speedr-status-hidden');
     }
     if (settings.showCountdown) {
       toggleClass(doc.getElementById('js-speedr-countdown-bar'), 'speedr-countdown-bar-zero');
-      App.countdownTimeout = setTimeout(this.start, settings.countdownSpeed);
+      Speedr.countdownTimeout = setTimeout(this.start, settings.countdownSpeed);
     } else {
       this.start();
     }
-    if (App.speedr.options.sync === true) {
-      return App.speedr.stats.start();
+    if (Speedr.box.options.sync === true) {
+      return Speedr.box.stats.start();
     }
   },
   start: function() {
-    App.loop = App.speedr.loop.create();
-    if (App.scrollWatcher) {
-      return App.addons.minimap.scrollWatcher();
+    Speedr.loop = Speedr.box.loop.create();
+    if (Speedr.scrollWatcher) {
+      return Speedr.addons.minimap.scrollWatcher();
     }
   },
   reset: function() {
     var settings;
     settings = User.settings;
-    if (App.pause === false) {
-      App.speedr.loop.stop();
+    if (Speedr.pause === false) {
+      Speedr.box.loop.stop();
     }
-    App.speedr.showWord(App.i = 0);
+    Speedr.box.showWord(Speedr.i = 0);
     if (settings.showStatus) {
-      App.actions.updateStatus();
+      Speedr.actions.updateStatus();
     }
     if (settings.showMinimap) {
-      App.addons.minimap.update();
-      if (App.scrollWatcher) {
-        return App.addons.minimap.updateScroll();
+      Speedr.addons.minimap.update();
+      if (Speedr.scrollWatcher) {
+        return Speedr.addons.minimap.updateScroll();
       }
     }
   },
@@ -1060,13 +1206,13 @@ module.exports = {
     var delay, i, matches, multiplier, nextWord, regex, settings, word;
     settings = User.settings;
     delay = 0;
-    i = App.i;
-    word = App.text.parsed[i];
-    nextWord = App.text.parsed[i + 1];
-    App.speedr.showWord(i);
-    App.i++;
+    i = Speedr.i;
+    word = Speedr.text.parsed[i];
+    nextWord = Speedr.text.parsed[i + 1];
+    Speedr.box.showWord(i);
+    Speedr.i++;
     if (settings.showMinimap) {
-      App.minimapElements[i].className = 'speedr-minimap-word--read';
+      Speedr.minimapElements[i].className = 'speedr-minimap-word--read';
     }
     if (nextWord) {
       if (settings.delayOnPunctuation && word.hasPunctuation) {
@@ -1087,17 +1233,17 @@ module.exports = {
       }
       if (word.paragraphEnd) {
         if (settings.pauseOnParagraph) {
-          return App.speedr.loop.stop();
+          return Speedr.box.loop.stop();
         }
         if (settings.delayOnParagraph) {
           delay = settings.paragraphDelayTime;
         }
       }
-      return App.loop = setTimeout(App.speedr.loop.create, App.interval + delay);
+      return Speedr.loop = setTimeout(Speedr.box.loop.create, Speedr.interval + delay);
     } else {
-      App.speedr.loop.stop();
-      if (App.scrollWatcher) {
-        return clearTimeout(App.scrollWatcher);
+      Speedr.box.loop.stop();
+      if (Speedr.scrollWatcher) {
+        return clearTimeout(Speedr.scrollWatcher);
       }
     }
   }
@@ -1105,23 +1251,23 @@ module.exports = {
 
 
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = {
   text: function(text) {
-    App.text.original = text;
+    Speedr.text.original = text;
     return this.loop();
   },
   loop: function() {
     var counter, paragraph, paragraphStart, paragraphs, sentence, sentenceCounter, sentenceStart, sentences, word, wordObj, words, _i, _j, _k, _len, _len1, _len2, _results;
     counter = 0;
     sentenceCounter = 0;
-    paragraphs = this.splitIntoParagraphs(App.text.original);
+    paragraphs = this.splitIntoParagraphs(Speedr.text.original);
     _results = [];
     for (_i = 0, _len = paragraphs.length; _i < _len; _i++) {
       paragraph = paragraphs[_i];
       sentences = this.splitIntoSetences(paragraph);
       paragraphStart = counter;
-      App.text.sentences.push.apply(App.text.sentences, sentences);
+      Speedr.text.sentences.push.apply(Speedr.text.sentences, sentences);
       for (_j = 0, _len1 = sentences.length; _j < _len1; _j++) {
         sentence = sentences[_j];
         words = this.splitIntoWords(sentence);
@@ -1135,12 +1281,12 @@ module.exports = {
             sentenceStart: sentenceStart,
             sentenceArrayMarker: sentenceCounter
           };
-          App.text.parsed.push(wordObj);
+          Speedr.text.parsed.push(wordObj);
           counter++;
         }
         sentenceCounter++;
       }
-      _results.push(App.text.parsed[counter - 1].paragraphEnd = true);
+      _results.push(Speedr.text.parsed[counter - 1].paragraphEnd = true);
     }
     return _results;
   },
@@ -1165,200 +1311,7 @@ module.exports = {
 
 
 
-},{}],17:[function(require,module,exports){
-module.exports = {
-  init: function(text, options) {
-    this.options = App.utility.defaults({
-      overlay: true,
-      animate: true,
-      sync: true,
-      style: ''
-    }, options || {});
-    App.parse.text(text);
-    App.speedr.create();
-    return App.speedr.showWord();
-  },
-  create: function() {
-    var box, countdown, doc, elementFunction, item, menu, menuItem, menuItems, overlay, pointer, settings, theme, wordContainer, wordWrapper, _i, _len;
-    App.active = true;
-    doc = document;
-    settings = User.settings;
-    theme = User.themes[settings.primaryTheme];
-    box = doc.createElement('div');
-    box.id = 'js-speedr-box';
-    box.className = 'speedr-box';
-    box.style.cssText = "color: " + theme.secondaryText + "; background-color: " + theme.boxColor + "; width: " + settings.boxWidth + "px; height: " + settings.boxHeight + "px;";
-    wordContainer = doc.createElement('div');
-    wordContainer.className = 'speedr-word-container';
-    wordContainer.style.cssText = "font-family: " + settings.fontFamily + "; font-weight: " + settings.fontWeight + "; font-size: " + settings.fontSize + "px; border-bottom-color: " + theme.borderColor + ";";
-    wordWrapper = doc.createElement('div');
-    wordWrapper.id = 'js-speedr-word';
-    wordWrapper.className = 'speedr-word';
-    wordWrapper.style.color = theme.primaryText;
-    wordContainer.appendChild(wordWrapper);
-    pointer = doc.createElement('span');
-    pointer.className = 'speedr-pointer';
-    pointer.style.cssText = "border-top-color: " + theme.highlightColor + ";";
-    wordContainer.appendChild(pointer);
-    box.appendChild(wordContainer);
-    countdown = doc.createElement('div');
-    countdown.className = 'speedr-countdown';
-    menu = doc.createElement('ul');
-    menu.id = 'js-speedr-menu';
-    menu.className = 'speedr-menu';
-    menuItems = ['settings', 'close'];
-    for (_i = 0, _len = menuItems.length; _i < _len; _i++) {
-      menuItem = menuItems[_i];
-      item = doc.createElement('li');
-      switch (menuItem) {
-        case 'settings':
-          elementFunction = function() {
-            return App.utility.openUrl('options.html');
-          };
-          break;
-        case 'close':
-          elementFunction = App.speedr.destroy;
-          item.className = 'js-speedr-tooltip';
-          item.setAttribute('data-tooltip', "Close Speedr" + (App.utility.getBinding('close')));
-      }
-      item.style.cssText = 'border-bottom-color: ' + theme.borderColor + '; background-color: ' + theme.boxColor + ';';
-      item.appendChild(doc.createTextNode(menuItem));
-      item.addEventListener('click', elementFunction);
-      menu.appendChild(item);
-    }
-    box.appendChild(menu);
-    if (settings.showControls) {
-      box.appendChild(App.addons.controls());
-    }
-    if (settings.showMenuButton) {
-      box.appendChild(App.addons.menuButton());
-    }
-    if (this.options.style) {
-      box.style.cssText += " " + this.options.style;
-    }
-    if (this.options.overlay) {
-      overlay = doc.createElement('div');
-      overlay.id = 'js-speedr-container';
-      overlay.className = 'speedr-container';
-      overlay.appendChild(box);
-    }
-    if (this.options.animate) {
-      box.className += ' speedr-flip-in';
-      if (overlay) {
-        overlay.className += ' speedr-fade-in';
-      }
-      App.utility.runOnceAfterAnimation(box, function() {
-        box.className = box.className.replace(' speedr-flip-in', '');
-        if (overlay) {
-          return overlay.className = overlay.className.replace(' speedr-fade-in', '');
-        }
-      });
-    }
-    if (overlay) {
-      document.body.appendChild(overlay);
-    } else {
-      document.body.appendChild(box);
-    }
-    if (settings.showMinimap) {
-      App.addons.minimap.create(settings, theme, box);
-    }
-    if (settings.showCountdown) {
-      box.appendChild(App.addons.countdown(settings, theme));
-      App.actions.updateCountdownBar();
-    }
-    if (settings.showStatus) {
-      box.appendChild(App.addons.status());
-      App.actions.updateStatus();
-    }
-    if (settings.showWPM) {
-      box.appendChild(App.addons.wpm(theme));
-      App.actions.updateWPM();
-    }
-    if (settings.showTooltips) {
-      App.addons.tooltips.init();
-    }
-    if (settings.showContext) {
-      return App.addons.context.init();
-    }
-  },
-  destroy: function() {
-    var doc, newBox, oldBox, overlay;
-    doc = document;
-    oldBox = doc.getElementById('js-speedr-box');
-    newBox = oldBox.cloneNode(true);
-    oldBox.parentNode.replaceChild(newBox, oldBox);
-    overlay = doc.getElementById('js-speedr-container');
-    if (this.options.animate) {
-      newBox.className += ' speedr-flip-out';
-      if (overlay) {
-        overlay.className += ' speedr-fade-out';
-      }
-      App.utility.runOnceAfterAnimation(newBox, function() {
-        newBox.remove();
-        if (overlay) {
-          return overlay.remove();
-        }
-      });
-    } else {
-      newBox.remove();
-      if (overlay) {
-        overlay.remove();
-      }
-    }
-    if (User.settings.showTooltips && App.addons.tooltips.activeTooltip) {
-      App.addons.tooltips.destroy();
-    }
-    if (User.settings.showContext && App.addons.context.activeContext) {
-      App.addons.context.destroy();
-    }
-    return App.speedr.reset();
-  },
-  showWord: function(marker) {
-    var html, orp, theme, word, wordBox;
-    if (marker == null) {
-      marker = App.i;
-    }
-    theme = User.themes[User.settings.primaryTheme];
-    word = App.text.parsed[marker].text;
-    if (User.settings.wordsDisplayed === 1) {
-      orp = Math.round((word.length + 1) * 0.4) - 1;
-      html = "<div data-before=\"" + (word.slice(0, orp).replace(/["“”]/g, '&quot;')) + "\" data-after=\"" + (word.slice(orp + 1).replace(/["“”]/g, '&quot;')) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
-    } else {
-      html = "<div>" + word + "</div>";
-    }
-    wordBox = document.getElementById('js-speedr-word');
-    return wordBox.innerHTML = html;
-  },
-  reset: function() {
-    App.active = false;
-    App.pause = true;
-    App.text.sentences = [];
-    App.text.parsed = [];
-    App.interval = App.actions.calculateInterval();
-    App.i = 0;
-    return App.minimapElements = {};
-  },
-  stats: {
-    start: function() {
-      this.time = new Date().getTime();
-      this.index = App.i;
-      if (User.settings.showCountdown) {
-        return this.time += User.settings.countdownSpeed;
-      }
-    },
-    stop: function() {
-      var time, words;
-      time = new Date().getTime() - this.time;
-      words = App.i - this.index + 1;
-      return App.chrome.stats.save(time, words);
-    }
-  },
-  loop: require('./loop.coffee')
-};
-
-
-
-},{"./loop.coffee":15}],18:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var common;
 
 common = require('./../common/utility.coffee');
@@ -1369,15 +1322,15 @@ module.exports = {
   },
   findNextOfType: function(type) {
     var currentTypeStart, i;
-    i = App.i;
-    currentTypeStart = App.text.parsed[i][type];
+    i = Speedr.i;
+    currentTypeStart = Speedr.text.parsed[i][type];
     while (true) {
       i++;
-      if (App.text.parsed[i][type] !== currentTypeStart) {
+      if (Speedr.text.parsed[i][type] !== currentTypeStart) {
         break;
       }
-      if (App.text.parsed[i + 1] === void 0) {
-        i = App.text.parsed.length - 1;
+      if (Speedr.text.parsed[i + 1] === void 0) {
+        i = Speedr.text.parsed.length - 1;
         break;
       }
     }
@@ -1385,11 +1338,11 @@ module.exports = {
   },
   findPrevOfType: function(type) {
     var i;
-    i = App.i;
-    if (i === App.text.parsed[i][type]) {
-      return App.text.parsed[i - 1][type];
+    i = Speedr.i;
+    if (i === Speedr.text.parsed[i][type]) {
+      return Speedr.text.parsed[i - 1][type];
     } else {
-      return App.text.parsed[i][type];
+      return Speedr.text.parsed[i][type];
     }
   },
   toggleClass: function(element, className) {
@@ -1407,7 +1360,7 @@ module.exports = {
     _results = [];
     for (_i = 0, _len = prefixes.length; _i < _len; _i++) {
       prefix = prefixes[_i];
-      _results.push(element.addEventListener(prefix, function() {
+      _results.push(element.addEventListener(prefix, function(event) {
         event.target.removeEventListener(event.type, arguments.callee);
         return callback(event);
       }));
@@ -1420,7 +1373,7 @@ module.exports = {
     change = to - start;
     currentTime = 0;
     increment = 20;
-    App.scrolling = true;
+    Speedr.scrolling = true;
     easeInOutQuad = function(time, begin, change, duration) {
       if ((time = time / (duration / 2)) < 1) {
         return change / 2 * time * time + begin;
@@ -1436,7 +1389,7 @@ module.exports = {
       if (currentTime < duration) {
         return setTimeout(animateScroll, increment);
       } else {
-        return App.scrolling = false;
+        return Speedr.scrolling = false;
       }
     };
     return animateScroll();

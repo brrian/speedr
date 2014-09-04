@@ -1,7 +1,7 @@
 # Set some settings
 window.User = require './common/defaults.coffee'
 
-window.App =
+window.Speedr =
     text:
         sentences: []
 
@@ -9,7 +9,7 @@ window.App =
 
     parse: require './speedr/parse.coffee'
 
-    speedr: require './speedr/speedr.coffee'
+    box: require './speedr/box.coffee'
 
     addons:
         controls: require './speedr/addons/controls.coffee'
@@ -33,9 +33,9 @@ window.App =
     chrome: require './speedr/chrome.coffee'
 
     init: ->
-        App.speedr.reset()
-        App.chrome.settings.get.then App.chrome.extension.init
+        Speedr.box.reset()
+        Speedr.chrome.settings.get.then Speedr.chrome.extension.init
 
 window.onkeydown = require './speedr/keyDownListener.coffee'
 
-App.init()
+Speedr.init()

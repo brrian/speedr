@@ -17,7 +17,7 @@ sendMessage "request.selection", (selection) ->
 	if selection
 		window.selection = selection
 		document.getElementById("js-read-selection").className = ""
-		document.getElementById("js-read-selection-subtext").innerText = selection
+		document.getElementById("js-read-selection-subtext").textContent = selection
 
 document.getElementById("js-read-selection").onclick = ->
 	if selection.length
