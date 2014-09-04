@@ -3,7 +3,7 @@ module.exports =
         tooltips = document.getElementsByClassName 'js-speedr-tooltip'
 
         for tooltip in tooltips
-            tooltip.addEventListener 'mouseover', =>
+            tooltip.addEventListener 'mouseover', (event) =>
                 target = event.target
 
                 @timeout = setTimeout =>

@@ -696,7 +696,7 @@ module.exports = {
     for (_i = 0, _len = tooltips.length; _i < _len; _i++) {
       tooltip = tooltips[_i];
       tooltip.addEventListener('mouseover', (function(_this) {
-        return function() {
+        return function(event) {
           var target;
           target = event.target;
           return _this.timeout = setTimeout(function() {
