@@ -1,6 +1,6 @@
 module.exports =
     toggle: ->
-        if Speedr.pause then Speedr.box.loop.startPrepare() else Speedr.box.loop.stop()
+        if Speedr.pause then Speedr.loop.startPrepare() else Speedr.loop.stop()
 
     stop: ->
         # Cache some variables
@@ -9,7 +9,7 @@ module.exports =
         toggleClass = Speedr.utility.toggleClass
 
         Speedr.pause = true
-        clearTimeout Speedr.loop
+        clearTimeout Speedr.loopTimeout
 
         # Correct the counter
         Speedr.i--
@@ -30,11 +30,9 @@ module.exports =
             bar.style.transitionDuration = newSpeed + 'ms, 200ms'
             toggleClass(bar, 'speedr-countdown-bar-zero')
 
-            setTimeout(
-                ->
-                    bar.style.transitionDuration = oldSpeed
-                newSpeed
-            )
+            setTimeout ->
+                bar.style.transitionDuration = oldSpeed
+            , newSpeed
 
         if settings.showControls
             playButton = doc.getElementById 'js-play-pause'
@@ -48,7 +46,7 @@ module.exports =
 
         if Speedr.scrollWatcher then clearTimeout Speedr.scrollWatcher
 
-        if Speedr.box.options.sync is true then Speedr.box.stats.stop()
+        if Speedr.box.options.sync is true then Speedr.stats.stop()
 
     startPrepare: ->
         # Cache some variables
@@ -62,7 +60,7 @@ module.exports =
             playButton.setAttribute 'data-tooltip', "Stop#{Speedr.utility.getBinding('toggle')}"
 
         # Check to see if we're at the end, if so, then we need to reset it first
-        if Speedr.i is Speedr.text.parsed.length - 1 then Speedr.box.loop.reset()
+        if Speedr.i is Speedr.text.parsed.length - 1 then Speedr.loop.reset()
 
         # Start on the next word
         Speedr.i++
@@ -82,10 +80,10 @@ module.exports =
         else
             @start()
 
-        if Speedr.box.options.sync is true then Speedr.box.stats.start()
+        if Speedr.box.options.sync is true then Speedr.stats.start()
 
     start: ->
-        Speedr.loop = Speedr.box.loop.create()
+        Speedr.loopTimeout = Speedr.loop.create()
         
         # Check to see if we need to watch for minimap scroll
         if Speedr.scrollWatcher then Speedr.addons.minimap.scrollWatcher()
@@ -93,7 +91,7 @@ module.exports =
     reset: ->
         settings = User.settings
 
-        if Speedr.pause is false then Speedr.box.loop.stop()
+        if Speedr.pause is false then Speedr.loop.stop()
 
         Speedr.box.showWord(Speedr.i = 0)
 
@@ -133,10 +131,10 @@ module.exports =
                 delay += settings.longWordDelayTime * multiplier
 
             if word.paragraphEnd
-                return Speedr.box.loop.stop() if settings.pauseOnParagraph
+                return Speedr.loop.stop() if settings.pauseOnParagraph
                 if settings.delayOnParagraph then delay = settings.paragraphDelayTime
 
-            Speedr.loop = setTimeout(Speedr.box.loop.create, Speedr.interval + delay)
+            Speedr.loopTimeout = setTimeout(Speedr.loop.create, Speedr.interval + delay)
         else
-            Speedr.box.loop.stop()
+            Speedr.loop.stop()
             if Speedr.scrollWatcher then clearTimeout(Speedr.scrollWatcher)

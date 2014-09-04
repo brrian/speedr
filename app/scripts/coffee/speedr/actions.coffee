@@ -72,7 +72,7 @@ module.exports =
         return if (settings.wordsDisplayed + words) < 1
 
         # First we pause
-        Speedr.box.loop.stop() if Speedr.pause is false
+        Speedr.loop.stop() if Speedr.pause is false
 
         User.settings.wordsDisplayed = settings.wordsDisplayed + words
 
@@ -95,7 +95,7 @@ module.exports =
         settings = User.settings
 
         # First we pause
-        Speedr.box.loop.stop() if Speedr.pause is false
+        Speedr.loop.stop() if Speedr.pause is false
 
         return if i is 0 and direction is 'prev'
         return if i is Speedr.text.parsed.length - 1 and direction is 'next'

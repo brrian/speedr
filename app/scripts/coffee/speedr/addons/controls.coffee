@@ -90,7 +90,7 @@ module.exports = ->
     playPause.className = 'speedr-button speedr-button--centered js-speedr-tooltip'
     playPause.textContent = 'start'
     playPause.setAttribute 'data-tooltip', "Start#{Speedr.utility.getBinding('toggle')}"
-    playPause.addEventListener 'click', Speedr.box.loop.toggle 
+    playPause.addEventListener 'click', Speedr.loop.toggle 
 
     controls.appendChild playPause
     controls.appendChild controlsLeft

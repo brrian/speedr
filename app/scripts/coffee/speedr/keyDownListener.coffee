@@ -15,8 +15,8 @@ module.exports = (event) ->
             when 'smaller'        then Speedr.actions.changeFontSize -2
             when 'more words'     then Speedr.actions.changeWordsDisplayed 1
             when 'less words'     then Speedr.actions.changeWordsDisplayed -1
-            when 'toggle'         then Speedr.box.loop.toggle()
-            when 'reset'          then Speedr.box.loop.reset()
+            when 'toggle'         then Speedr.loop.toggle()
+            when 'reset'          then Speedr.loop.reset()
             when 'prev word'      then Speedr.actions.navigateText 'prev', 'word'
             when 'prev sentence'  then Speedr.actions.navigateText 'prev', 'sentence'
             when 'prev paragraph' then Speedr.actions.navigateText 'prev', 'paragraph'

@@ -164,6 +164,8 @@ window.Speedr = {
   utility: require('./speedr/utility.coffee'),
   parse: require('./speedr/parse.coffee'),
   box: require('./speedr/box.coffee'),
+  loop: require('./speedr/loop.coffee'),
+  stats: require('./speedr/stats.coffee'),
   addons: {
     controls: require('./speedr/addons/controls.coffee'),
     context: require('./speedr/addons/context.coffee'),
@@ -188,7 +190,7 @@ Speedr.init();
 
 
 
-},{"./common/defaults.coffee":1,"./speedr/actions.coffee":4,"./speedr/addons/context.coffee":5,"./speedr/addons/controls.coffee":6,"./speedr/addons/countdown.coffee":7,"./speedr/addons/menuButton.coffee":8,"./speedr/addons/minimap.coffee":9,"./speedr/addons/status.coffee":10,"./speedr/addons/tooltips.coffee":11,"./speedr/addons/wpm.coffee":12,"./speedr/box.coffee":13,"./speedr/chrome.coffee":14,"./speedr/keyDownListener.coffee":15,"./speedr/parse.coffee":17,"./speedr/utility.coffee":18}],4:[function(require,module,exports){
+},{"./common/defaults.coffee":1,"./speedr/actions.coffee":4,"./speedr/addons/context.coffee":5,"./speedr/addons/controls.coffee":6,"./speedr/addons/countdown.coffee":7,"./speedr/addons/menuButton.coffee":8,"./speedr/addons/minimap.coffee":9,"./speedr/addons/status.coffee":10,"./speedr/addons/tooltips.coffee":11,"./speedr/addons/wpm.coffee":12,"./speedr/box.coffee":13,"./speedr/chrome.coffee":14,"./speedr/keyDownListener.coffee":15,"./speedr/loop.coffee":16,"./speedr/parse.coffee":17,"./speedr/stats.coffee":18,"./speedr/utility.coffee":19}],4:[function(require,module,exports){
 module.exports = {
   calculateInterval: function() {
     return Speedr.interval = 60000 / User.settings.wpm;
@@ -264,7 +266,7 @@ module.exports = {
       return;
     }
     if (Speedr.pause === false) {
-      Speedr.box.loop.stop();
+      Speedr.loop.stop();
     }
     User.settings.wordsDisplayed = settings.wordsDisplayed + words;
     Speedr.i = 0;
@@ -290,7 +292,7 @@ module.exports = {
     i = Speedr.i;
     settings = User.settings;
     if (Speedr.pause === false) {
-      Speedr.box.loop.stop();
+      Speedr.loop.stop();
     }
     if (i === 0 && direction === 'prev') {
       return;
@@ -538,7 +540,7 @@ module.exports = function() {
   playPause.className = 'speedr-button speedr-button--centered js-speedr-tooltip';
   playPause.textContent = 'start';
   playPause.setAttribute('data-tooltip', "Start" + (Speedr.utility.getBinding('toggle')));
-  playPause.addEventListener('click', Speedr.box.loop.toggle);
+  playPause.addEventListener('click', Speedr.loop.toggle);
   controls.appendChild(playPause);
   controls.appendChild(controlsLeft);
   controls.appendChild(controlsRight);
@@ -936,28 +938,12 @@ module.exports = {
     Speedr.interval = Speedr.actions.calculateInterval();
     Speedr.i = 0;
     return Speedr.minimapElements = {};
-  },
-  stats: {
-    start: function() {
-      this.time = new Date().getTime();
-      this.index = Speedr.i;
-      if (User.settings.showCountdown) {
-        return this.time += User.settings.countdownSpeed;
-      }
-    },
-    stop: function() {
-      var time, words;
-      time = new Date().getTime() - this.time;
-      words = Speedr.i - this.index + 1;
-      return Speedr.chrome.stats.save(time, words);
-    }
-  },
-  loop: require('./loop.coffee')
+  }
 };
 
 
 
-},{"./loop.coffee":16}],14:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = {
   settings: {
     get: new Promise(function(resolve, reject) {
@@ -1018,12 +1004,12 @@ module.exports = {
             if (!Speedr.active) {
               return Speedr.box.init(window.getSelection().toString());
             } else {
-              return Speedr.box.loop.toggle();
+              return Speedr.loop.toggle();
             }
             break;
           case 'parse.selection.start':
             Speedr.box.init(window.getSelection().toString());
-            return setTimeout(Speedr.box.loop.toggle, 400);
+            return setTimeout(Speedr.loop.toggle, 400);
         }
       });
     }
@@ -1064,10 +1050,10 @@ module.exports = function(event) {
         Speedr.actions.changeWordsDisplayed(-1);
         break;
       case 'toggle':
-        Speedr.box.loop.toggle();
+        Speedr.loop.toggle();
         break;
       case 'reset':
-        Speedr.box.loop.reset();
+        Speedr.loop.reset();
         break;
       case 'prev word':
         Speedr.actions.navigateText('prev', 'word');
@@ -1103,9 +1089,9 @@ module.exports = function(event) {
 module.exports = {
   toggle: function() {
     if (Speedr.pause) {
-      return Speedr.box.loop.startPrepare();
+      return Speedr.loop.startPrepare();
     } else {
-      return Speedr.box.loop.stop();
+      return Speedr.loop.stop();
     }
   },
   stop: function() {
@@ -1114,7 +1100,7 @@ module.exports = {
     settings = User.settings;
     toggleClass = Speedr.utility.toggleClass;
     Speedr.pause = true;
-    clearTimeout(Speedr.loop);
+    clearTimeout(Speedr.loopTimeout);
     Speedr.i--;
     if (settings.showStatus) {
       Speedr.actions.updateStatus();
@@ -1145,7 +1131,7 @@ module.exports = {
       clearTimeout(Speedr.scrollWatcher);
     }
     if (Speedr.box.options.sync === true) {
-      return Speedr.box.stats.stop();
+      return Speedr.stats.stop();
     }
   },
   startPrepare: function() {
@@ -1159,7 +1145,7 @@ module.exports = {
       playButton.setAttribute('data-tooltip', "Stop" + (Speedr.utility.getBinding('toggle')));
     }
     if (Speedr.i === Speedr.text.parsed.length - 1) {
-      Speedr.box.loop.reset();
+      Speedr.loop.reset();
     }
     Speedr.i++;
     Speedr.pause = false;
@@ -1176,11 +1162,11 @@ module.exports = {
       this.start();
     }
     if (Speedr.box.options.sync === true) {
-      return Speedr.box.stats.start();
+      return Speedr.stats.start();
     }
   },
   start: function() {
-    Speedr.loop = Speedr.box.loop.create();
+    Speedr.loopTimeout = Speedr.loop.create();
     if (Speedr.scrollWatcher) {
       return Speedr.addons.minimap.scrollWatcher();
     }
@@ -1189,7 +1175,7 @@ module.exports = {
     var settings;
     settings = User.settings;
     if (Speedr.pause === false) {
-      Speedr.box.loop.stop();
+      Speedr.loop.stop();
     }
     Speedr.box.showWord(Speedr.i = 0);
     if (settings.showStatus) {
@@ -1233,15 +1219,15 @@ module.exports = {
       }
       if (word.paragraphEnd) {
         if (settings.pauseOnParagraph) {
-          return Speedr.box.loop.stop();
+          return Speedr.loop.stop();
         }
         if (settings.delayOnParagraph) {
           delay = settings.paragraphDelayTime;
         }
       }
-      return Speedr.loop = setTimeout(Speedr.box.loop.create, Speedr.interval + delay);
+      return Speedr.loopTimeout = setTimeout(Speedr.loop.create, Speedr.interval + delay);
     } else {
-      Speedr.box.loop.stop();
+      Speedr.loop.stop();
       if (Speedr.scrollWatcher) {
         return clearTimeout(Speedr.scrollWatcher);
       }
@@ -1312,6 +1298,25 @@ module.exports = {
 
 
 },{}],18:[function(require,module,exports){
+module.exports = {
+  start: function() {
+    this.time = new Date().getTime();
+    this.index = Speedr.i;
+    if (User.settings.showCountdown) {
+      return this.time += User.settings.countdownSpeed;
+    }
+  },
+  stop: function() {
+    var time, words;
+    time = new Date().getTime() - this.time;
+    words = Speedr.i - this.index + 1;
+    return Speedr.chrome.stats.save(time, words);
+  }
+};
+
+
+
+},{}],19:[function(require,module,exports){
 var common;
 
 common = require('./../common/utility.coffee');

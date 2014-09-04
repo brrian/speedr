@@ -11,6 +11,10 @@ window.Speedr =
 
     box: require './speedr/box.coffee'
 
+    loop: require './speedr/loop.coffee'
+
+    stats: require './speedr/stats.coffee'
+
     addons:
         controls: require './speedr/addons/controls.coffee'
 

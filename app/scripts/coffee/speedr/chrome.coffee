@@ -48,8 +48,8 @@ module.exports =
                         sendResponse window.getSelection().toString().slice 0, 75
 
                     when 'parse.selection'
-                        unless Speedr.active then Speedr.box.init window.getSelection().toString() else Speedr.box.loop.toggle()
+                        unless Speedr.active then Speedr.box.init window.getSelection().toString() else Speedr.loop.toggle()
 
                     when 'parse.selection.start'
                         Speedr.box.init window.getSelection().toString()
-                        setTimeout Speedr.box.loop.toggle, 400
+                        setTimeout Speedr.loop.toggle, 400
