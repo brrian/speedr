@@ -6,6 +6,7 @@
     line-height: 5px;
     border-left-style: solid;
     border-left-width: 1px;
+    backface-visibility: hidden;
     overflow-y: auto;
     overflow-x: hidden;
     border-top-right-radius: 3px;

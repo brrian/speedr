@@ -1,29 +1,59 @@
 module.exports = (event) ->
-    keyCombo = Speedr.utility.generateKeyCombo event
-
-    action = User.bindings[keyCombo]
+    action = User.bindings[Speedr.utility.generateKeyCombo event]
 
     if !Speedr.active and action is 'open' and window.getSelection().type is 'Range'
         Speedr.box.init window.getSelection().toString()
         false
     else if Speedr.active
         switch action     
-            when 'close'          then Speedr.box.destroy()
-            when 'slower'         then Speedr.actions.changeWPM -25
-            when 'faster'         then Speedr.actions.changeWPM 25
-            when 'bigger'         then Speedr.actions.changeFontSize 2
-            when 'smaller'        then Speedr.actions.changeFontSize -2
-            when 'more words'     then Speedr.actions.changeWordsDisplayed 1
-            when 'less words'     then Speedr.actions.changeWordsDisplayed -1
-            when 'toggle'         then Speedr.loop.toggle()
-            when 'reset'          then Speedr.loop.reset()
-            when 'prev word'      then Speedr.actions.navigateText 'prev', 'word'
-            when 'prev sentence'  then Speedr.actions.navigateText 'prev', 'sentence'
-            when 'prev paragraph' then Speedr.actions.navigateText 'prev', 'paragraph'
-            when 'next word'      then Speedr.actions.navigateText 'next', 'word'
-            when 'next sentence'  then Speedr.actions.navigateText 'next', 'sentence'
-            when 'next paragraph' then Speedr.actions.navigateText 'next', 'paragraph'
-            when 'toggle menu'    then Speedr.actions.toggleMenu()
-            when 'toggle theme'   then Speedr.actions.toggleTheme()
-
-        false
+            when 'close'
+                Speedr.box.destroy()
+                false
+            when 'slower'
+                Speedr.actions.changeWPM -25
+                false
+            when 'faster'
+                Speedr.actions.changeWPM 25
+                false
+            when 'bigger'
+                Speedr.actions.changeFontSize 2
+                false
+            when 'smaller'
+                Speedr.actions.changeFontSize -2
+                false
+            when 'more words'
+                Speedr.actions.changeWordsDisplayed 1
+                false
+            when 'less words'
+                Speedr.actions.changeWordsDisplayed -1
+                false
+            when 'toggle'
+                Speedr.loop.toggle()
+                false
+            when 'reset'
+                Speedr.loop.reset()
+                false
+            when 'prev word'
+                Speedr.actions.navigateText 'prev', 'word'
+                false
+            when 'prev sentence'
+                Speedr.actions.navigateText 'prev', 'sentence'
+                false
+            when 'prev paragraph'
+                Speedr.actions.navigateText 'prev', 'paragraph'
+                false
+            when 'next word'
+                Speedr.actions.navigateText 'next', 'word'
+                false
+            when 'next sentence'
+                Speedr.actions.navigateText 'next', 'sentence'
+                false
+            when 'next paragraph'
+                Speedr.actions.navigateText 'next', 'paragraph'
+                false
+            when 'toggle menu'
+                Speedr.actions.toggleMenu()
+                false
+            when 'toggle theme'
+                Speedr.actions.toggleTheme()
+                false

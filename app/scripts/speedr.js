@@ -889,7 +889,7 @@ module.exports = {
     newBox = oldBox.cloneNode(true);
     oldBox.parentNode.replaceChild(newBox, oldBox);
     overlay = doc.getElementById('js-speedr-container');
-    if (this.options.animate) {
+    if (Speedr.box.options.animate) {
       newBox.className += ' speedr-flip-out';
       if (overlay) {
         overlay.className += ' speedr-fade-out';
@@ -1020,9 +1020,8 @@ module.exports = {
 
 },{}],15:[function(require,module,exports){
 module.exports = function(event) {
-  var action, keyCombo;
-  keyCombo = Speedr.utility.generateKeyCombo(event);
-  action = User.bindings[keyCombo];
+  var action;
+  action = User.bindings[Speedr.utility.generateKeyCombo(event)];
   if (!Speedr.active && action === 'open' && window.getSelection().type === 'Range') {
     Speedr.box.init(window.getSelection().toString());
     return false;
@@ -1030,56 +1029,56 @@ module.exports = function(event) {
     switch (action) {
       case 'close':
         Speedr.box.destroy();
-        break;
+        return false;
       case 'slower':
         Speedr.actions.changeWPM(-25);
-        break;
+        return false;
       case 'faster':
         Speedr.actions.changeWPM(25);
-        break;
+        return false;
       case 'bigger':
         Speedr.actions.changeFontSize(2);
-        break;
+        return false;
       case 'smaller':
         Speedr.actions.changeFontSize(-2);
-        break;
+        return false;
       case 'more words':
         Speedr.actions.changeWordsDisplayed(1);
-        break;
+        return false;
       case 'less words':
         Speedr.actions.changeWordsDisplayed(-1);
-        break;
+        return false;
       case 'toggle':
         Speedr.loop.toggle();
-        break;
+        return false;
       case 'reset':
         Speedr.loop.reset();
-        break;
+        return false;
       case 'prev word':
         Speedr.actions.navigateText('prev', 'word');
-        break;
+        return false;
       case 'prev sentence':
         Speedr.actions.navigateText('prev', 'sentence');
-        break;
+        return false;
       case 'prev paragraph':
         Speedr.actions.navigateText('prev', 'paragraph');
-        break;
+        return false;
       case 'next word':
         Speedr.actions.navigateText('next', 'word');
-        break;
+        return false;
       case 'next sentence':
         Speedr.actions.navigateText('next', 'sentence');
-        break;
+        return false;
       case 'next paragraph':
         Speedr.actions.navigateText('next', 'paragraph');
-        break;
+        return false;
       case 'toggle menu':
         Speedr.actions.toggleMenu();
-        break;
+        return false;
       case 'toggle theme':
         Speedr.actions.toggleTheme();
+        return false;
     }
-    return false;
   }
 };
 
@@ -1356,7 +1355,7 @@ module.exports = {
     if (elementClasses.indexOf(className) === -1) {
       return element.className += " " + className;
     } else {
-      return element.className = elementClasses.replace(className, '');
+      return element.className = elementClasses.replace(" " + className, '');
     }
   },
   runOnceAfterAnimation: function(element, callback) {

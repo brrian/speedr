@@ -31,7 +31,7 @@ module.exports =
         if elementClasses.indexOf(className) is -1
             element.className += " #{className}"
         else
-            element.className = elementClasses.replace(className, '')
+            element.className = elementClasses.replace(" #{className}", '')
 
     runOnceAfterAnimation: (element, callback) ->
         prefixes = ['webkitAnimationEnd', 'animationend']

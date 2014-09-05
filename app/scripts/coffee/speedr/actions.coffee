@@ -123,9 +123,9 @@ module.exports =
         doc = document
         toggleClass = Speedr.utility.toggleClass
 
-        if User.settings.showMenuButton then toggleClass(doc.getElementById('js-speedr-menu-button'), 'speedr-menu-button-active')
+        if User.settings.showMenuButton then toggleClass doc.getElementById('js-speedr-menu-button'), 'speedr-menu-button-active'
         
-        toggleClass(doc.getElementById('js-speedr-menu'), 'speedr-menu-active')
+        toggleClass doc.getElementById('js-speedr-menu'), 'speedr-menu-active'
 
     toggleTheme: ->
         doc = document

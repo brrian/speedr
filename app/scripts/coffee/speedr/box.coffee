@@ -135,7 +135,7 @@ module.exports =
 
         overlay = doc.getElementById 'js-speedr-container'
 
-        if @options.animate
+        if Speedr.box.options.animate
             newBox.className += ' speedr-flip-out'
             if overlay then overlay.className += ' speedr-fade-out'
 
