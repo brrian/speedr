@@ -738,4 +738,6 @@
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   transition: background-color 200ms ease-in-out;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
