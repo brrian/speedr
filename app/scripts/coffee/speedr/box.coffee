@@ -155,10 +155,8 @@ module.exports =
         Speedr.box.reset()
 
     # Split word into different elements along the ORP
-    showWord: (marker = Speedr.i) ->
+    showWord: (word = Speedr.text.parsed[Speedr.i].text) ->
         theme = User.themes[User.settings.primaryTheme]
-
-        word = Speedr.text.parsed[marker].text
 
         if User.settings.wordsDisplayed is 1
             orp = Math.round((word.length + 1) * 0.4) - 1

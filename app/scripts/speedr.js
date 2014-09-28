@@ -914,13 +914,12 @@ module.exports = {
     }
     return Speedr.box.reset();
   },
-  showWord: function(marker) {
-    var html, orp, theme, word, wordBox;
-    if (marker == null) {
-      marker = Speedr.i;
+  showWord: function(word) {
+    var html, orp, theme, wordBox;
+    if (word == null) {
+      word = Speedr.text.parsed[Speedr.i].text;
     }
     theme = User.themes[User.settings.primaryTheme];
-    word = Speedr.text.parsed[marker].text;
     if (User.settings.wordsDisplayed === 1) {
       orp = Math.round((word.length + 1) * 0.4) - 1;
       html = "<div data-before=\"" + (word.slice(0, orp).replace(/["“”]/g, '&quot;')) + "\" data-after=\"" + (word.slice(orp + 1).replace(/["“”]/g, '&quot;')) + "\"><span style=\"color: " + theme.highlightColor + ";\">" + word[orp] + "</span></div>";
@@ -1188,13 +1187,17 @@ module.exports = {
     }
   },
   create: function() {
-    var delay, i, matches, multiplier, nextWord, regex, settings, word;
+    var breakPoint, delay, i, matches, multiplier, nextWord, regExp, regex, settings, word;
     settings = User.settings;
+    if ((Speedr.loop.special != null) && Speedr.loop.special.length) {
+      Speedr.box.showWord(Speedr.loop.special.shift());
+      return Speedr.loopTimeout = setTimeout(Speedr.loop.create, Speedr.interval);
+    }
     delay = 0;
     i = Speedr.i;
     word = Speedr.text.parsed[i];
     nextWord = Speedr.text.parsed[i + 1];
-    Speedr.box.showWord(i);
+    Speedr.box.showWord(word.text);
     Speedr.i++;
     if (settings.showMinimap) {
       Speedr.minimapElements[i].className = 'speedr-minimap-word--read';
@@ -1205,6 +1208,11 @@ module.exports = {
       }
       if (settings.delayOnSentence && nextWord.sentenceStart === i + 1) {
         delay = settings.sentenceDelayTime;
+      }
+      if (nextWord.text.length > 9) {
+        breakPoint = Math.ceil(nextWord.text.length / Math.ceil(nextWord.text.length / 9));
+        regExp = new RegExp(".{1," + breakPoint + "}", 'g');
+        Speedr.loop.special = nextWord.text.match(regExp);
       }
       if (settings.delayOnLongWords) {
         if (settings.wordsDisplayed === 1 && word.text.length > settings.longWordLength) {
@@ -1223,6 +1231,7 @@ module.exports = {
         if (settings.delayOnParagraph) {
           delay = settings.paragraphDelayTime;
         }
+        Speedr.loop.special = [" ", " ", " "];
       }
       return Speedr.loopTimeout = setTimeout(Speedr.loop.create, Speedr.interval + delay);
     } else {
@@ -1288,9 +1297,7 @@ module.exports = {
     });
   },
   splitIntoWords: function(sentence) {
-    var regex;
-    regex = new RegExp("((?:(?:\\S+\\s){" + User.settings.wordsDisplayed + "})|(?:.+)(?=\\n|$))", "g");
-    return sentence.match(regex);
+    return sentence.split(' ');
   }
 };
 

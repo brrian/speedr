@@ -53,7 +53,7 @@ module.exports =
 
     # Return an array of words
     splitIntoWords: (sentence) ->
-        regex = new RegExp "((?:(?:\\S+\\s){#{User.settings.wordsDisplayed}})|(?:.+)(?=\\n|$))", "g"
+        # regex = new RegExp "((?:(?:\\S+\\s){#{User.settings.wordsDisplayed}})|(?:.+)(?=\\n|$))", "g"
 
-        sentence.match regex
-        # sentence.split(' ')
+        # sentence.match regex
+        sentence.split(' ')

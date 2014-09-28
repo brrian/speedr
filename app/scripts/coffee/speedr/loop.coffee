@@ -104,12 +104,17 @@ module.exports =
     create: ->
         settings = User.settings
 
+        # If we have special cases, return with the specified word
+        if Speedr.loop.special? and Speedr.loop.special.length
+            Speedr.box.showWord Speedr.loop.special.shift()
+            return Speedr.loopTimeout = setTimeout Speedr.loop.create, Speedr.interval
+
         delay = 0
         i = Speedr.i
         word = Speedr.text.parsed[i]
         nextWord = Speedr.text.parsed[i + 1]
 
-        Speedr.box.showWord(i)
+        Speedr.box.showWord word.text
         Speedr.i++
 
         if settings.showMinimap then Speedr.minimapElements[i].className = 'speedr-minimap-word--read'
@@ -120,6 +125,13 @@ module.exports =
 
             if settings.delayOnSentence and nextWord.sentenceStart is i + 1
                 delay = settings.sentenceDelayTime
+
+            # If the nextWord's length is really long, break it into an array
+            if nextWord.text.length > 9
+                breakPoint = Math.ceil(nextWord.text.length / Math.ceil(nextWord.text.length / 9))
+                regExp = new RegExp ".{1,#{breakPoint}}", 'g'
+
+                Speedr.loop.special = nextWord.text.match regExp
 
             if settings.delayOnLongWords 
                 if settings.wordsDisplayed is 1 and word.text.length > settings.longWordLength then multiplier = 1
@@ -133,6 +145,8 @@ module.exports =
             if word.paragraphEnd
                 return Speedr.loop.stop() if settings.pauseOnParagraph
                 if settings.delayOnParagraph then delay = settings.paragraphDelayTime
+
+                Speedr.loop.special = [" ", " ", " "]
 
             Speedr.loopTimeout = setTimeout(Speedr.loop.create, Speedr.interval + delay)
         else
