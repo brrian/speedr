@@ -1,0 +1,86 @@
+.speedr-minimap {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    padding: 8px;
+    line-height: 5px;
+    border-left-style: solid;
+    border-left-width: 1px;
+    backface-visibility: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    transition: background-color $themeTransitionSpeed ease-in-out, border-left-color $themeTransitionSpeed ease-in-out, box-shadow $themeTransitionSpeed ease-in-out;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: darken(#f0f0f0, 3%);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.10); 
+    }
+
+    .contents {
+        background-size: 0;
+    }
+
+    &-para {
+        background-image: inherit;
+        background-size: 0;
+        font-size: 11px;
+        line-height: 0;
+        margin-bottom: 2px;
+    }
+
+    &-word {
+        display: inline-block;
+        height: 2px;
+        height: 4px;
+        background-image: inherit;
+        background-size: 4px 2px;
+        background-repeat: repeat-x;
+        background-position: left;
+        margin: 0 -2px 0 0;
+        font-size: 0;
+        line-height: 0;
+        opacity: .4;
+
+        &:first-child {
+            margin-left: 8px;
+        }
+
+        &--read {
+            @extend .speedr-minimap-word;
+            opacity: 1;
+        }
+    }
+
+    // p {
+    //     margin: 0 0 5px 0 !important;
+    //     padding: 0 !important;
+    //     border: 0 !important;
+    //     font-size: 16px !important;
+    //     line-height: 5px !important;
+    //     vertical-align: baseline !important;
+
+    //     span {
+    //         display: inline !important;
+    //         margin-right: -1px;
+    //         opacity: .4;
+
+    //         &:first-child {
+    //             margin-left: 8px;
+    //         }
+
+    //         &.speedr-read {
+    //             opacity: 1;
+    //             line-height: 5px;
+    //         }
+    //     }
+    // }
+}

@@ -1,0 +1,32 @@
+body {
+	font: 15px/1.4 'Roboto';
+	background-color: $boxColor;
+	color: #444;
+	margin: 0;
+	padding: 50px 0 77px 0;
+}
+
+a {
+	color: $highlightColor;
+
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+p {
+	margin-bottom: 10px;
+}
+
+em {
+	font-weight: bold;
+}
+
+i {
+	font-style: italic;
+}
+
+ol {
+	list-style-type: decimal;
+	margin-left: 40px;
+}

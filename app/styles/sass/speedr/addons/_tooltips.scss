@@ -1,0 +1,28 @@
+%tooltip {
+	position: fixed;
+	z-index: 2147483647;
+	display: inline-block;
+	background-color: rgba(#000, .8);
+	font-family: 'Roboto';
+	color: #fff;
+	border-radius: 2px;
+	box-shadow: 0 1px 7px rgba(#000, .2);
+	backface-visibility: hidden;
+	user-select: none;
+}
+
+.speedr-tooltip {
+	@extend %tooltip;
+	margin-top: -30px;
+	padding: 7px 10px;
+	font-size: 11px;
+	transform: translate3d(-50%, 0, 0);
+
+	&-arrow {
+		@include triangle(6px, rgba(#000, .8), up-left);
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		display: block;
+	}
+}

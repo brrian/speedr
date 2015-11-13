@@ -1,7 +1,7 @@
 {
     "name": "__MSG_appName__",
     "short_name": "__MSG_appShortName__",
-    "version": "0.1.0",
+    "version": "0.4.2",
     "manifest_version": 2,
     "description": "__MSG_appDescription__",
     "icons": {
@@ -11,6 +11,7 @@
     "default_locale": "en",
     "background": {
         "scripts": [
+            "scripts/chromereload.js",
             "scripts/background.js"
         ]
     },
@@ -40,7 +41,9 @@
         }
     ],
     "permissions": [
-        "storage"
+        "tabs",
+        "storage",
+        "contextMenus"
     ],
     "web_accessible_resources": [
         "images/*.svg",

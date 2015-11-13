@@ -1,52 +1,523 @@
 @font-face {
-  font-family: 'Source Sans';
-  src: url("chrome-extension://__MSG_@@extension_id__/fonts/SourceSansPro-Regular.ttf");
-  font-weight: 400;
+  font-family: 'Roboto';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Roboto-Regular.ttf");
+  font-weight: normal;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\000037}}
+@font-face {
+  font-family: 'Roboto';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Roboto-Light.ttf");
+  font-weight: lighter;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/OpenSans-Light.ttf");
+  font-weight: lighter;
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/RobotoSlab-Light.ttf");
+  font-weight: lighter;
+}
+@font-face {
+  font-family: 'Lora';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Lora-Regular.ttf");
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Nunito-Light.ttf");
+  font-weight: lighter;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000337}}
+.font-open-sans {
+  font-family: 'Open Sans';
+  font-weight: lighter;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000342}}
+.font-roboto-slab {
+  font-family: 'Roboto Slab';
+  font-weight: lighter;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000347}}
+.font-lora {
+  font-family: 'Lora';
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_fonts\.scss}line{font-family:\0000351}}
+.font-nunito {
+  font-family: 'Nunito';
+  font-weight: lighter;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\000031}}
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\000035}}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\0000326}}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\0000330}}
+body {
+  line-height: 1;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\0000333}}
+ol, ul {
+  list-style: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\0000336}}
+blockquote, q {
+  quotes: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\0000339}}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/global\/_reset\.scss}line{font-family:\0000344}}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+@-webkit-keyframes fade-in-out {
+  /* line 2, sass/page/_animations.scss */
+  0%, 100% {
+    opacity: 0;
+  }
+
+  /* line 5, sass/page/_animations.scss */
+  20%, 80% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-out {
+  /* line 2, sass/page/_animations.scss */
+  0%, 100% {
+    opacity: 0;
+  }
+
+  /* line 5, sass/page/_animations.scss */
+  20%, 80% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes shake {
+  /* line 11, sass/page/_animations.scss */
+  0%, 100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  /* line 15, sass/page/_animations.scss */
+  10%, 30%, 50%, 70%, 90% {
+    -webkit-transform: translateX(-6px);
+    transform: translateX(-6px);
+  }
+
+  /* line 19, sass/page/_animations.scss */
+  20%, 40%, 60%, 80% {
+    -webkit-transform: translateX(6px);
+    transform: translateX(6px);
+  }
+}
+@keyframes shake {
+  /* line 11, sass/page/_animations.scss */
+  0%, 100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  /* line 15, sass/page/_animations.scss */
+  10%, 30%, 50%, 70%, 90% {
+    -webkit-transform: translateX(-6px);
+    transform: translateX(-6px);
+  }
+
+  /* line 19, sass/page/_animations.scss */
+  20%, 40%, 60%, 80% {
+    -webkit-transform: translateX(6px);
+    transform: translateX(6px);
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_animations\.scss}line{font-family:\0000324}}
+.fade-in-out {
+  -webkit-animation: fade-in-out 5s 1;
+  animation: fade-in-out 5s 1;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_animations\.scss}line{font-family:\0000325}}
+.shake {
+  -webkit-animation: shake 300ms;
+  animation: shake 300ms;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\000031}}
+body {
+  font: 15px/1.4 'Roboto';
+  background-color: #f2f0ec;
+  color: #444;
+  margin: 0;
+  padding: 50px 0 77px 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\000039}}
 a {
-  color: #ff2f04;
+  color: #dc322f;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000310}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000312}}
 a:hover {
   text-decoration: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000315}}
-body {
-  font-family: 'Source Sans', sans-serif;
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000318}}
-body.popup {
-  width: 300px;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000317}}
+p {
+  margin-bottom: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000323}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000321}}
+em {
+  font-weight: bold;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000325}}
+i {
+  font-style: italic;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_base\.scss}line{font-family:\0000329}}
+ol {
+  list-style-type: decimal;
+  margin-left: 40px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\000031}}
 section {
   width: 800px;
-  margin: 0 auto 50px auto;
+  padding-top: 15px;
+  margin: 0 auto 35px auto;
+  overflow: hidden;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\000037}}
+section h1 {
+  font-size: 18px;
+  color: #dc322f;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000329}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000316}}
+#mc_embed_signup {
+  margin-top: 20px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000319}}
+#mc_embed_signup input {
+  font-size: 16px;
+  margin: 0;
+  outline: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000325}}
+#mc_embed_signup input[type=email] {
+  padding: 8px 10px;
+  width: 275px;
+  border: 1px solid  #ccc;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000333}}
+#mc_embed_signup input[type=submit] {
+  background-color: #e97c7c;
+  color: #fff;
+  padding: 9px 14px;
+  margin-left: -5px;
+  border: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000342}}
+#mc_embed_signup input[type=submit]:hover {
+  background-color: #e25050;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000347}}
+#mc_embed_signup .mc-field-group {
+  display: inline-block;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000352}}
+#mc_embed_signup .subscribe__status {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000356}}
+#mc_embed_signup .subscribe__status.error {
+  color: #ce2c2c;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_layout\.scss}line{font-family:\0000360}}
+#mc_embed_signup .subscribe__status.success {
+  color: #28aa33;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_general\.scss}line{font-family:\000032}}
+.text-small {
+  font-size: 13px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\000031}}
 input[type=text] {
+  font-family: 'Roboto';
+  font-size: 14px;
+  color: #444;
+  background-color: transparent;
+  width: 40px;
   text-align: center;
+  border: none;
+  border-bottom: dotted 1px #444;
+  outline: none;
+  transition: border-bottom-color 200ms ease-in-out;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000333}}
-input.short {
-  width: 30px;
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000337}}
-input.long {
-  width: 155px;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000313}}
+input[type=text]:focus {
+  border-bottom-color: #dc322f;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000342}}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000318}}
+input[type=radio], input[type=checkbox] {
+  display: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000321}}
+input[type=radio] + label:before, input[type=checkbox] + label:before {
+  content: '';
+  position: relative;
+  top: 6px;
+  display: inline-block;
+  background-image: url("../images/button.png");
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000333}}
+input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:before {
+  background-position: 20px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000340}}
 .form-group {
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
+  margin: 0 0 35px 30px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000343}}
+.form-group-half {
+  width: 50%;
+  float: left;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000348}}
+.form-group-thirds {
+  width: 33%;
+  float: left;
+  margin-bottom: 15px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000355}}
+.form-details {
+  font-size: .857em;
+  color: #999;
+  margin-top: 6px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000360}}
+.form-details.form-details-button {
+  margin-left: 30px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000365}}
+.form-font-family {
+  font-size: 31px;
+  margin: 10px 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000369}}
+.form-font-family input[type=radio] + label:before {
+  top: 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000374}}
+.form-error {
+  position: absolute;
+  color: #dc322f;
+  font-size: .857em;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_form\.scss}line{font-family:\0000379}}
+.form-error-with-checkbox {
+  margin-left: 30px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\.scss}line{font-family:\0000347}}
-.disabled {
-  opacity: .3;
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\000031}}
+.binding {
+  display: inline-block;
+  background-color: #f2f0ec;
+  padding-right: 7px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\000037}}
+.binding.binding-text:before {
+  font-size: 16px;
+  font-weight: lighter;
+  font-style: italic;
+  color: #999;
+  height: 31px;
+  line-height: 31px;
+  text-transform: lowercase;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000317}}
+.binding.binding-text.binding-text-empty:before {
+  content: "No binding set";
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000321}}
+.binding.binding-text.binding-text-waiting:before {
+  content: "Waiting for input";
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000326}}
+.binding-group {
+  margin: 0 0 15px 30px;
+  cursor: default;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000331}}
+.binding-group:hover .controls {
+  opacity: 1;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000336}}
+.binding-group .controls {
+  display: inline-block;
+  margin-left: 20px;
+  font-size: 13px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000344}}
+.binding-group .controls span {
+  display: inline-block;
+  margin-right: 15px;
+  color: #999;
+  transition: color 200ms ease-in-out;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000350}}
+.binding-group .controls span:hover {
+  color: #444;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000357}}
+.binding-container {
+  position: relative;
+  display: inline-block;
+  width: 275px;
+  height: 40px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000363}}
+.binding-container:before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: calc(50% - 5px);
+  width: 100%;
+  border-top: dotted 1px #444;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000374}}
+.binding-details {
+  display: inline-block;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000377}}
+.binding-details .error {
+  margin-top: 3px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_binding\.scss}line{font-family:\0000383}}
+.keyboard-key {
+  background: linear-gradient(to bottom, #f2f2f2 0%, #e6e6e6 100%);
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+  padding: 8px 11px;
+  margin-right: 3px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\000031}}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f2f0ec;
+  padding: 15px 0 25px 0;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000310}}
+footer section {
+  margin-bottom: 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000314}}
+footer button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: color 200ms ease-in-out;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000323}}
+footer .save-settings {
+  font-size: 1.286em;
+  color: #dc322f;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000327}}
+footer .save-settings:hover {
+  color: #b9221f;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000332}}
+footer .restore-defaults {
+  position: relative;
+  top: -2px;
+  font-size: .857em;
+  letter-spacing: 1px;
+  color: #aaa;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000339}}
+footer .restore-defaults:hover {
+  color: #909090;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/Brian\/Documents\/speedr\/app\/styles\/sass\/page\/_footer\.scss}line{font-family:\0000344}}
+footer .flash-message {
+  position: relative;
+  top: 3px;
+  float: right;
+  opacity: 0;
 }

@@ -1,138 +1,415 @@
 <!doctype html>
 <html>
     <head>
-        <title>Speedr settings</title>
+        <title>Speedr &ndash; Settings</title>
         <link href="styles/page.css" rel="stylesheet">
     </head>
     <body>
-        <section class="settings-section">
-            <h1>Speed Reading</h1>
-            <div class="form-group">
-                <label>
-                    Speed reading speed: <input type="text" id="js-wpm" class="short"> wpm</label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-delayOnPunctuation"> Delay <input type="text" id="js-punctuationDelayTime" class="short"> ms on punctuation</label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-delayOnLongWords"> Delay <input type="text" id="js-longWordDelayTime" class="short"> ms on words longer than <input type="text" id="js-longWordLength" class="short"> letters</label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-delayOnSentence"> Delay <input type="text" id="js-sentenceDelayTime" class="short"> ms at the end of every sentence</label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-delayOnParagraph"> Delay <input type="text" id="js-paragraphDelayTime" class="short"> ms at the end of every paragraph</label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-pauseOnParagraph"> Pause at the end of every paragraph</label>
-            </div>
-        </section>
+        <div class="preferences">
+            <section class="settings-section">
+                <h1>Visual</h1>
 
-        <section class="settings-section">
-            <h1>Visual</h1>
-            <div class="form-group">
-                <label>
-                    Font size: <input type="text" id="js-fontSize" class="short"> px</label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-minimap"> Show minimap
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="js-controls"> Show player controls
-                </label>
-            </div>
-        </section>
+                <div class="form-group">
+                    <label for="box-width">Speedr dimensions:</label>
+                    <input type="text" id="box-width" name="boxWidth"> &times; <input type="text" id="box-height" name="boxHeight"> px
+                    <div class="form-error"></div>
+                </div>
 
-        <section class="bindings-section">
-            <h1>Key Bindings</h1>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-open" class="binding long"> Open Speedr
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-toggle" class="binding long"> Play/pause
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-reset" class="binding long"> Restart
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-close" class="binding long"> Close window
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-faster" class="binding long"> Increase WPM by 25
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-slower" class="binding long"> Decrease WPM by 25
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-bigger" class="binding long"> Increase font size by 2px
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-smaller" class="binding long"> Decrease font size by 2px
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-next-word" class="binding long"> Next word
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-next-sentence" class="binding long"> Next sentence
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-next-paragraph" class="binding long"> Next paragraph
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-prev-word" class="binding long"> Previous word
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-prev-sentence" class="binding long"> Previous sentence
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="text" id="js-prev-paragraph" class="binding long"> Previous paragraph
-                </label>
-            </div>
-        </section>
-        
-        <section>
-            <button id="js-save-settings">Save settings</button>
-        </section>
+                <div class="form-group">
+                    <label for="font-size">Font size:</label>
+                    <input type="text" id="font-size" name="fontSize"> px
+                    <div class="form-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <input type="radio" id="js-font-weight" name="fontWeight" value="lighter" checked="true" style="display: none;">
+                    <div>Font:</div>
+                    <div class="form-group-half form-font-family">
+                        <input type="radio" id="font-open-sans-light" name="fontFamily" value="Open Sans" data-font-weight="lighter">
+                        <label for="font-open-sans-light" class="font-open-sans">Open Sans</label>
+                    </div>
+                    <div class="form-group-half form-font-family">
+                        <input type="radio" id="font-lora" name="fontFamily" value="Lora" data-font-weight="normal">
+                        <label for="font-lora" class="font-lora">Lora</label>
+                    </div>
+                    <div class="form-group-half form-font-family">
+                        <input type="radio" id="font-nunito" name="fontFamily" value="Nunito" data-font-weight="lighter">
+                        <label for="font-nunito" class="font-nunito">Nunito</label>
+                    </div>
+                    <div class="form-group-half form-font-family">
+                        <input type="radio" id="font-roboto-slab" name="fontFamily" value="Roboto Slab" data-font-weight="lighter">
+                        <label for="font-roboto-slab" class="font-roboto-slab">Roboto Slab</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h1>Speed Reading</h1>
+
+                <div class="form-group">
+                    <label for="wpm">Reading speed:</label>
+                    <input type="text" id="wpm" name="wpm"> wpm
+                    <div class="form-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="words-displayed">Words displayed:</label>
+                    <input type="text" id="words-displayed" name="wordsDisplayed"> at a time
+                    <div class="form-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="delay-punctuation" name="delayOnPunctuation">
+                    <label for="delay-punctuation">Delay <input type="text" name="punctuationDelayTime"> ms on punctuation <div class="form-error form-error-with-checkbox"></div></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="delay-long-words" name="delayOnLongWords">
+                    <label for="delay-long-words">Delay <input type="text" name="longWordDelayTime"> ms on words longer than <input type="text" name="longWordLength"> letters <div class="form-error form-error-with-checkbox"></div></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="delay-sentence" name="delayOnSentence">
+                    <label for="delay-sentence">Delay <input type="text" name="sentenceDelayTime"> ms at the end of every sentence <div class="form-error form-error-with-checkbox"></div></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="delay-paragraph" name="delayOnParagraph">
+                    <label for="delay-paragraph">Delay <input type="text" name="paragraphDelayTime"> ms at the end of every paragraph <div class="form-error form-error-with-checkbox"></div></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="pause-paragraph" name="pauseOnParagraph">
+                    <label for="pause-paragraph">Pause at the end of every paragraph</label>
+                    <div class="form-details form-details-button">*Overrides paragraph delay</div>
+                </div>
+            </section>
+
+            <section id="addons" class="settings-section">
+                <h1>Add Ons <span class="text-small">(<a href="help.html#addons">more info</a>)</span></h1>
+
+                <div class="form-group">
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="text-navigation" name="showControls">
+                        <label for="text-navigation">Interface controls</label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="menu-button" name="showMenuButton">
+                        <label for="menu-button">Menu button</label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="status-display" name="showStatus">
+                        <label for="status-display">Status display</label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="wpm-display" name="showWPM">
+                        <label for="wpm-display">WPM display</label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="minimap" name="showMinimap">
+                        <label for="minimap">Minimap <span class="text-small">(width: <input type="text" name="minimapWidth"> px) <div class="form-error form-error-with-checkbox"></div></span></label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="countdown-bar" name="showCountdown">
+                        <label for="countdown-bar">Countdown bar <span class="text-small">(speed: <input type="text" name="countdownSpeed"> ms) <div class="form-error form-error-with-checkbox"></div></span></label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="tooltips" name="showTooltips">
+                        <label for="tooltips">Tooltips</label>
+                    </div>
+                    <div class="form-group-thirds">
+                        <input type="checkbox" id="context" name="showContext">
+                        <label for="context">Contextualizer</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bindings-section">
+                <h1>Key Bindings</h1>
+
+                <div class="binding-group js-binding-open">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Open Speedr</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-close">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Close Speedr</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-toggle">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Play/pause</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-faster">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Increase WPM by 25</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-slower">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Decrease WPM by 25</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-bigger">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Increase font size by 2px</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-smaller">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Decrease font size by 2px</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-more-words">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Increase number of words displayed</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-less-words">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Decrease number of words displayed</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-next-word">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to next word</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-next-sentence">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to next sentence</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-next-paragraph">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to next paragraph</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-prev-word">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to previous word</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-prev-sentence">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to previous sentence</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-prev-paragraph">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to previous paragraph</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-reset">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Go to beginning</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-toggle-menu">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Toggle menu</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <div class="binding-group js-binding-toggle-theme">
+                    <div class="binding-container">
+                        <div class="binding binding-text binding-text-empty"></div>
+                    </div>
+                    <div class="binding-details">
+                        <span>Switch theme</span>
+                        <span class="controls">
+                            <span class="js-edit">Edit</span>
+                            <span class="js-clear">Clear</span>
+                            <span class="js-default">Default</span>
+                        </span>
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <section>
+                <button id="js-save-settings" class="save-settings">Save Preferences</button>
+                <button id="js-restore-defaults" class="restore-defaults">Restore defaults</button>
+                <span id="js-flash-message" class="flash-message">Foobar</span>
+            </section>
+        </footer>
+
         <!-- build:js scripts/vendor.js -->
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <!-- endbuild -->
-        <!-- build:js scripts/options.js -->
         <script src="scripts/options.js"></script>
-        <!-- endbuild -->
     </body>
 </html>

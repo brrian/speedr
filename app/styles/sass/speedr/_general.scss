@@ -1,0 +1,15 @@
+.speedr {
+	&-button-fade {
+		cursor: default;
+		opacity: .6;
+		transition: opacity 250ms ease-in-out;
+
+		&:hover {
+		    opacity: 1;
+		}
+	}
+
+	&-small-text {
+		font-size: 11px;
+	}
+}

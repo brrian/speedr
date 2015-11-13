@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roboto-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roboto-Light.ttf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/OpenSans-Light.ttf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/RobotoSlab-Light.ttf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Lora-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Nunito';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Nunito-Light.ttf');
+    font-weight: lighter;
+}
+
+.font-open-sans {
+    font-family: 'Open Sans';
+    font-weight: lighter;
+}
+
+.font-roboto-slab {
+    font-family: 'Roboto Slab';
+    font-weight: lighter;
+}
+
+.font-lora {
+    font-family: 'Lora';
+}
+
+.font-nunito {
+    font-family: 'Nunito';
+    font-weight: lighter;
+}

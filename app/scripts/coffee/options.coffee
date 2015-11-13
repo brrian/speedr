@@ -1,199 +1,244 @@
+'use strict'
+
 $ = jQuery
 
-# Set some settings
-User = {
-    settings: {
-        wpm: 350
-        minimap: true
-        controls: true
-        fontSize: 33
+Utility = require './common/utility.coffee'
+Defaults = require './common/defaults.coffee'
 
-        delayOnPunctuation: false
-        punctuationDelayTime: 1000
+User = {}
+App = {}
 
-        delayOnSentence: false
-        sentenceDelayTime: 150
+generateKeyCombo = Utility.generateKeyCombo
 
-        pauseOnParagraph: false
-        delayOnParagraph: false
-        paragraphDelayTime: 300
+parseKeyCode = Utility.parseKeyCode
 
-        delayOnLongWords: false
-        longWordLength: 8
-        longWordDelayTime: 100
-    }
-    bindings: {
-        ' ': 'toggle'
-        '%': 'prev word'
-        '&': 'bigger'
-        '\'': 'next word'
-        '(': 'smaller'
-        'Q': 'close'
-        'R': 'reset'
-        'alt+V': 'open'
-        'ctrl+%': 'prev paragraph'
-        'ctrl+\'': 'next paragraph'
-        'shift+%': 'prev sentence'
-        'shift+\'': 'next sentence'
-        'Û': 'slower'
-        'Ý': 'faster'
-    }
-}
+populateDefaults = ->
+    populateSettings(Defaults.settings)
+    populateBindings(Defaults.bindings)
 
-Bindings = {
-    ' ': 'space'
-    '\t': 'tab'
-    'p': 'f1'
-    'q': 'f2'
-    'r': 'f3'
-    's': 'f4'
-    't': 'f5'
-    'u': 'f6'
-    'v': 'f7'
-    'w': 'f8'
-    'x': 'f9'
-    'y': 'f10'
-    'z': 'f11'
-    '{': 'f12'
-    '\u00C0': '`',
-    '\u00BD': '-',
-    '\u00BB': '=',
-    '\u00DB': '[',
-    '\u00DD': ']',
-    '\u00DC': '\\',
-    '\u00BA': ';',
-    '\u00DE': '\'',
-    '\u00BC': ',',
-    '\u00BE': '.',
-    '\u00BF': '/',
-    '$': 'home'
-    '#': 'end'
-    '!': 'page up'
-    '"': 'page down'
-    '.': 'delete'
-    '&': 'up'
-    '(': 'down'
-    '%': 'left'
-    '\'': 'right'
-    'o': 'num /'
-    'j': 'num *'
-    'm': 'num -'
-    'k': 'num +'
-    'n': 'num .'
-    '`': 'num 0'
-    'a': 'num 1'
-    'b': 'num 2'
-    'c': 'num 3'
-    'd': 'num 4'
-    'e': 'num 5'
-    'f': 'num 6'
-    'g': 'num 7'
-    'h': 'num 8'
-    'i': 'num 9'
-}
+populateSettings = (object) ->
+    for setting, value of object
+        type = typeof value
 
-appendUserSettings = ->
-    # If it's a boolean, we check it or uncheck it
-    # If it's a number we change the value
-    for setting, value of User.settings
-        if typeof value is 'boolean'
-            $('#js-' + setting).prop('checked', value)
-        else if typeof value is 'number'
-            $('#js-' + setting).val(value)
+        switch type
+            when 'number'
+                $('input[name=' + setting + ']').val value
+            when 'boolean'
+                $('input[name=' + setting + ']').prop 'checked', value
+            when 'string'
+                $('input[name=' + setting + '][value="' + value + '"]').prop 'checked', true
 
-replaceWhiteSpace = (word) ->
-    word = word.split(' ')
-    word.join('-')
+populateBindings = (object) ->
+    for binding, action of object
+        element = $('.js-binding-' + action.replace ' ', '-')
+        bindingContainer = element.find '.binding'
+        keys = binding.split '+'
 
-parseKeyBinding = (binding) ->
-    # Split the binding into an array and get the last item
-    # If there is an entry in the key bindings object, replace it
-    # Return the joined binding
-    bindingArray = binding.split('+')
-    lastKey = bindingArray[bindingArray.length - 1]
-    if Bindings.hasOwnProperty(lastKey)
-        bindingArray[bindingArray.length - 1] = Bindings[lastKey]
+        # We need this for when we click 'Restore defaults'
+        bindingContainer.empty()
 
-    bindingArray.join('+')
+        element.attr 'data-binding', binding
 
-appendKeyBindings = ->
-    for binding, action of User.bindings
-        action = replaceWhiteSpace(action)
-        humanBinding = parseKeyBinding(binding).toLowerCase()
+        for key in keys
+            bindingContainer.removeClass 'binding-text binding-text-empty'
+            $('<span class="keyboard-key">' + parseKeyCode(key) + '</span>').appendTo bindingContainer
 
-        $('#js-' + action).attr('data-binding', binding).val(humanBinding)
+generateKeyElements = (keyBinding) ->
+    keys = keyBinding.split('+')
+    keysContainer = ''
 
-generateKeyCombo = (event) ->
-    # Create key binding
-    keyCombo = ''
+    for key in keys
+        keysContainer += '<span class="keyboard-key">' + parseKeyCode(key) + '</span>'
 
-    if event.ctrlKey then keyCombo += 'ctrl+'
-    if event.altKey then keyCombo += 'alt+'
-    if event.shiftKey then keyCombo += 'shift+'
+    keysContainer
 
-    keyCombo += String.fromCharCode(event.keyCode)
+keyBindingListener = (event) ->
+    unless event.keyCode is 18 or event.keyCode is 17 or event.keyCode is 16 or event.keyCode is 13 or event.keyCode is 8 or event.keyCode is 91 or event.keyCode is 93
+        binding = $('.binding-text-waiting')
+        bindingGroup = binding.parents '.binding-group'
+        keyBinding = generateKeyCombo(event)
 
-saveSettings = ->
-    newSettings = {}
+        bindingGroup.attr 'data-binding', keyBinding
+        binding.removeClass 'binding-text binding-text-empty binding-text-waiting'
 
-    $('.settings-section').find('input').each(
-        ->
-            setting = $(@).attr('id').replace('js-', '')
+        binding.html generateKeyElements keyBinding
+
+        removeKeyBindingListeners()
+        validateBindings()    
+
+keyDownNullifier = ->
+    false
+
+removeKeyBindingListeners = ->
+    $(window).unbind 'keyup', keyBindingListener
+    $(window).unbind 'keydown', keyDownNullifier
+
+    App.setBinding = false
+
+showDuplicateBindings = (bindingGroups) ->
+    for binding, elements of bindingGroups
+        if elements.length > 1
+            for element in elements
+                $(element).find('.form-error').text 'Duplicate binding detected!'
+
+validateSettings = ->
+    passes = true
+
+    # Clear any existing errors
+    $('.settings-section').find('.form-error').empty()
+
+    $('input[type=text]').each ->
+        value = $(@).val()
+        error = $(@).siblings('.form-error')
+
+        if value.length > 0 and /^[0-9]+$/.test(value) is false
+            console.log error
+            error.text('Please enter a numeric value')
+            passes = false
+
+        return
+
+    passes
+
+validateBindings = ->
+    bindingGroups = {}
+    bindings = {}
+    passes = true
+
+    # Loop through all the binding-groups and push it's binding into an object
+    $('.binding-group').each ->
+        binding = $(@).attr('data-binding')
+
+        $(@).find('.form-error').empty()
+
+        if !bindingGroups.hasOwnProperty binding
+            if binding isnt undefined
+                bindingGroups[binding] = [@]
+
+                $(@).attr('class').match /js-binding-(\S+)/
+                action = RegExp.$1.replace '-', ' '
+
+                bindings[binding] = action
+        else
+            bindingGroups[binding].push @
+
+            passes = false
+
+            return
+
+    showDuplicateBindings(bindingGroups)
+
+    return if passes is true then bindings else false
+
+parseBindings = ->
+    bindings = validateBindings()
+
+    if bindings isnt false then User.bindings = bindings else return false
+
+
+parseSettings = ->
+    if validateSettings() is true
+        # Go through all the inputs
+        settings = {}
+
+        $('.settings-section').find('input').each ->
             type = $(@).attr('type')
+            setting = $(@).attr('name')
 
-            if type is 'text'
-                newSettings[setting] = parseInt($(@).val(), 10)
-            else if type is 'checkbox'
-                newSettings[setting] = $(@).prop('checked')
+            switch type
+                when 'text'
+                    if $(@).val() then value = parseInt $(@).val(), 10
+                when 'radio'
+                    if $(@).prop 'checked' then value = $(@).val()
+                when 'checkbox'
+                    value = $(@).prop 'checked'
+
+            if value isnt undefined then settings[setting] = value
 
             return
-    )
-
-    newSettings
-
-saveBindings = ->
-    newBindings = {}
-
-    $('.bindings-section').find('input').each(
-        ->
-            setting = $(@).attr('id').replace('js-', '').replace('-', ' ')
-            binding = $(@).attr('data-binding')
-
-            newBindings[binding] = setting
-            return
-    )
-
-    newBindings
-
-chrome.storage.sync.get(
-    ['settings', 'bindings']
-    (data) ->
-        if data.settings then User.settings = data.settings
-        if data.bindings then User.bindings = data.bindings
         
-        appendUserSettings()
-        appendKeyBindings()
-)
+        User.settings = settings
+    else
+        return false
 
-$('input.binding').keydown(
-    (event) ->
-        keyCombo = generateKeyCombo(event)
-        humanKeyCombo = parseKeyBinding(keyCombo).toLowerCase();
+$('.js-edit').click ->
+    # Let the app know that we are setting a binding
+    if App.setBinding is true
+        removeKeyBindingListeners()
+        $('.binding-text-waiting').parents('.binding-group').find('.js-clear').trigger('click')
+    
+    App.setBinding = true
 
-        $(@).attr('data-binding', keyCombo).val(humanKeyCombo)
-        false
-)
+    # Empty the binding
+    bindingGroup = $(@).parents '.binding-group'
+    binding = bindingGroup.find '.binding'
 
-$('#js-save-settings').click(
-    ->
-        newSettings = {
-            settings: saveSettings()
-            bindings: saveBindings()
-        }
+    binding.removeClass('binding-text-empty').addClass('binding-text binding-text-waiting').empty()
 
-        chrome.storage.sync.set(
-            newSettings
-            ->
-                alert 'Settings successfully saved!'
-        )
-)
+    $(window).on 'keyup', keyBindingListener
+    $(window).on 'keydown', keyDownNullifier
+
+$('.js-clear').click ->
+    bindingGroup = $(@).parents '.binding-group'
+    binding = bindingGroup.find '.binding'
+
+    bindingGroup.attr 'data-binding', null
+    binding.removeClass('binding-text-waiting').addClass('binding-text binding-text-empty').empty()
+
+    validateBindings()
+
+    $(window).unbind 'keyup', keyBindingListener
+
+$('.js-default').click ->
+    bindings = Defaults.bindings
+    bindingGroup = $(@).parents '.binding-group'
+    binding = bindingGroup.find '.binding'
+    
+    bindingGroup.attr('class').match /js-binding-(\S+)/
+    action = RegExp.$1.replace '-', ' '
+
+    # Loop through all of the bindings until we have a match
+    # This isn't the best way, but the object isn't that big so I think performance will be negligble
+    for keyBinding, bindingAction of bindings
+        if bindingAction is action
+            bindingGroup.attr 'data-binding', keyBinding
+            binding.removeClass 'binding-text binding-text-empty'
+
+            binding.html generateKeyElements keyBinding
+
+    validateBindings()
+
+$('#js-save-settings').click ->
+    # We need to create an object to save to chrome storage
+    flashMessage = $('#js-flash-message')
+    submit = $(@)
+    
+    if parseSettings() isnt false and parseBindings() isnt false
+        chrome.storage.sync.set User, ->
+            flashMessage.addClass 'fade-in-out'
+            flashMessage.text 'Nice! Your preferences have been saved!'
+    else
+        flashMessage.addClass 'fade-in-out'
+        flashMessage.text 'You have some errors! Try checking your settings again.'
+
+        submit.addClass 'shake'
+        submit.one 'webkitAnimationEnd animationend', ->
+            submit.removeClass 'shake'
+
+    flashMessage.one 'webkitAnimationEnd animationend', ->
+        flashMessage.removeClass('fade-in-out').empty()
+
+$('#js-restore-defaults').click ->
+    populateDefaults()
+    validateSettings()
+    validateBindings()
+
+# We need to set the fontWeight programatically
+$('input[name=fontFamily]').change ->
+    $('#js-font-weight').attr 'value', $(@).attr 'data-font-weight'
+
+chrome.storage.sync.get ['settings', 'bindings'], (data) ->
+    if data.settings then populateSettings(data.settings)
+    if data.bindings then populateBindings(data.bindings)
+
+populateDefaults()

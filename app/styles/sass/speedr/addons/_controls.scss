@@ -1,0 +1,66 @@
+.speedr-controls {
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    padding: 0 8px;
+
+    &-left {
+        float: left;
+    }
+
+    &-right {
+        float: right;
+    }
+
+    .speedr-button {
+        position: relative;
+        display: inline-block;
+        padding: 8px 10px;
+        opacity: .6;
+        cursor: default;
+        white-space: nowrap;
+        transition: opacity 120ms ease-in;
+
+        &:hover {
+            opacity: 1;
+
+            .speedr-button-actions {
+                top: -16px;
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        &--centered {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        &-actions {
+            position: absolute;
+            top: -10px;
+            left: 4px;
+            cursor: default;
+            opacity: 0;
+            visibility: hidden;
+            transition: top 100ms ease-in, opacity 100ms ease-in;
+
+            &--right {
+                left: auto;
+                right: 4px;
+            }
+        }
+
+        &-action {
+            display: inline-block;
+            padding: 4px 6px;
+            opacity: .4;
+            transition: opacity 120ms ease-in;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}

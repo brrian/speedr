@@ -1,6 +1,6 @@
 {
   "appName": {
-    "message": "Speedr - Speed Reading. Better.",
+    "message": "Speedr",
     "description": "The name of the application"
   },
   "appShortName": {
@@ -8,7 +8,7 @@
     "description": "The short name of the application"
   },
   "appDescription": {
-    "message": "A Highly Configurable Speed Reading Extension",
+    "message": "A Beautiful, Highly Configurable Speed Reading Extension",
     "description": "The description of the application"
   }
 }

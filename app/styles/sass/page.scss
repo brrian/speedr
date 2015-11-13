@@ -1,49 +1,14 @@
-@font-face {
-    font-family: 'Source Sans';
-    src: url('chrome-extension://__MSG_@@extension_id__/fonts/SourceSansPro-Regular.ttf');
-    font-weight: 400;
-}
+@import 'global/fonts';
+@import 'global/variables';
+@import 'global/reset';
 
-a {
-	color: #ff2f04;
+@import 'page/animations';
 
-	&:hover {
-		text-decoration: none;
-	}
-}
+@import 'page/base';
+@import 'page/layout';
 
-body {
-	font-family: 'Source Sans', sans-serif;
+@import 'page/general';
+@import 'page/form';
+@import 'page/binding';
 
-	&.popup {
-		width: 300px;
-	}
-}
-
-section {
-	width: 800px;
-	margin: 0 auto 50px auto;
-}
-
-input {
-	&[type=text] {
-		text-align: center;
-	}
-
-	&.short {
-		width: 30px;
-	}
-
-	&.long {
-		width: 155px;
-	}
-}
-
-.form-group {
-	border-bottom: 1px solid #eee;
-	padding: 10px 0;
-}
-
-.disabled {
-	opacity: .3;
-}
+@import 'page/footer';
